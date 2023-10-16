@@ -1,0 +1,18 @@
+#nav {
+    width: 100vw;
+    height: 120px;
+    background-color: black;
+    color: antiquewhite;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 20px 0 20px;
+}
+
+.links:hover {
+    transition: .3s;
+    transform: scale(125%);
+    color: orange;
+    cursor: pointer;
+}
