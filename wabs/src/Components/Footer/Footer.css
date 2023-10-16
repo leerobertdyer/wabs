@@ -1,0 +1,14 @@
+#Footer {
+    background-color: rgb(209, 155, 155);
+    height: 10vh;
+    width: 100vw;
+    position:static;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.center {
+    text-align: center;
+}

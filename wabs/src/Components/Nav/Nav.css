@@ -7,7 +7,8 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    margin: 0 20px 0 20px;
+    margin: 0;
+    position:fixed;
 }
 
 .links:hover {
@@ -15,4 +16,14 @@
     transform: scale(125%);
     color: orange;
     cursor: pointer;
+}
+
+#outer {
+    padding-top: 120px;
+    font-family: fantasy;
+    background-color: rgb(209, 155, 155);
+    color: rgb(48, 5, 29);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

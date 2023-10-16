@@ -1,0 +1,15 @@
+body {
+    background-color: black;
+}
+
+.other {
+    background-color: white;
+}
+
+.spacing {
+    height: 14vh;
+    background-color: #fff;
+    background-image: url('../public/Assets/instruments.png');
+    border-top: solid antiquewhite 2px;
+    border-bottom: solid antiquewhite 2px;
+}

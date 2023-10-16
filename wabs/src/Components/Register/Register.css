@@ -1,9 +1,9 @@
 
 
-#login {
+#register {
     background-color: rgb(51, 3, 27);
     width: 100vw;
-    height: 250px;
+    height: 350px;
     display: flex;
     flex-direction: column;
     justify-content: center;
