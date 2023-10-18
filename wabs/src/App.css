@@ -10,6 +10,17 @@ body {
     height: 14vh;
     background-color: #fff;
     background-image: url('../public/Assets/instruments.png');
+    background-size: contain;
     border-top: solid antiquewhite 2px;
     border-bottom: solid antiquewhite 2px;
+}
+
+#outer {
+    padding-top: 120px;
+    font-family: fantasy;
+    background-color: rgb(209, 155, 155);
+    color: rgb(48, 5, 29);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

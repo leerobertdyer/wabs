@@ -1,6 +1,6 @@
 
 
-#register {
+#Register {
     background-color: rgb(51, 3, 27);
     width: 100vw;
     height: 350px;
@@ -17,7 +17,8 @@ input {
     color: rgb(40, 2, 35);
     background-color: antiquewhite;
     margin-bottom: 3px;
-    display: block;
+    display: inline;
+    width: 35vw;
 }
 
 label {

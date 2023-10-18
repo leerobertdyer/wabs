@@ -1,0 +1,139 @@
+#Profile {
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    justify-content: space-between;
+    color: black;
+    background-color: rgb(75, 0, 36);
+    color: antiquewhite;
+    width: 100%;
+}
+
+#topBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 15%;
+    text-align: center;
+    padding: 45px;
+    border-top: 4px solid antiquewhite;
+    border-bottom: 4px solid antiquewhite;
+}
+
+.profilePic {
+    border: double goldenrod 6px;
+    border-radius: 50%;
+    background-color: black;
+    min-width: 150px;
+}
+.profilePic > img {
+    width: 100%;
+    height: auto;
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+    border-radius: 100px;
+    color: black;
+    border: solid white  2px;
+}
+
+#moodAndScore {
+    color: goldenrod;
+    font-size: 125%;
+    margin: 0 0 15px 0;
+}
+
+#mood {
+    padding: 20px;
+    border: goldenrod double 4px;
+    border-radius: 12px;
+    width: 25vw;
+    height: 125px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    
+}
+
+.statusInput {
+    width: 90%;
+}
+
+#score {
+    padding: 20px;
+    border: goldenrod double 4px;
+    border-radius: 12px;
+    width: 25vw;
+    height: 125px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+}
+
+.points {
+    margin: 0 0 15px 0;
+}
+
+.row {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.songs {
+    background-color: rgb(181, 109, 1);
+    color: rgb(10, 0, 5);
+    border-top: 4px solid rgb(75, 0, 36);
+    border-bottom: 4px solid rgb(75, 0, 36);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+audio {
+    color: orange;
+    background-color: black;
+    padding: 30px;
+    border-radius: 30px;
+    border: white solid 3px;
+    margin: 10px 0;
+}
+
+#underSongs {
+    width: 90%;
+    height: 4px;
+    background-color: rgb(75, 0, 36);
+    border: none;
+    margin: -5px 0 3px 0;
+}
+
+#underSongs2 {
+    width: 70%;
+    height: 3px;
+    background-color: rgb(75, 0, 36);
+    border: none;
+    margin: 3px 0 3px 0;
+}
+
+#underSongs3 {
+    width: 40%;
+    height: 2px;
+    background-color: rgb(75, 0, 36);
+    border: none;
+    margin: 2px 0 3px 0;
+}
+
+#underSongs4 {
+    width: 20%;
+    height: 1px;
+    background-color: rgb(75, 0, 36);
+    border: none;
+    margin: 1px 0 3px 4px;
+}

@@ -25,9 +25,7 @@ class Nav extends Component {
                     <p className="links">Collaborate</p>
                     <img src='../../Assets/logo.png' alt="logo" width="100px" />
                 </div>
-                <div id="outer">
-                    <h1>Write A Bad Song</h1>
-                </div>
+
             </div>
         )
     }
