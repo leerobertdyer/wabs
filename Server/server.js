@@ -20,6 +20,9 @@ server.get('/', (req, res) => {
     res.send("home page baby!")
 })
 
+server.get('/profile:id', (req, res) => {
+    
+})
 
 
 

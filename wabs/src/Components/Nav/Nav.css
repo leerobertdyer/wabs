@@ -11,10 +11,21 @@
     position:fixed;
 }
 
-.links:hover {
+#nav .links {
+    color: purple;
+}
+
+#nav .links:hover {
     transition: .3s;
     transform: scale(125%);
     color: orange;
     cursor: pointer;
 }
 
+#nav a.active {
+    color: antiquewhite;
+    border: antiquewhite solid 1px;
+    border-radius: 4px;
+    background-color: purple;
+    padding: 10px;
+  }

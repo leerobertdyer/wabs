@@ -65,3 +65,12 @@ legend {
     text-align: center;
 ;
 }
+
+
+#nav a.active {
+    color: antiquewhite;
+    border: antiquewhite solid 1px;
+    border-radius: 4px;
+    background-color: purple;
+    padding: 10px;
+  }

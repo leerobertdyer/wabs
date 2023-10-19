@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './Login.css';
 
 class Login extends Component {
@@ -14,6 +15,7 @@ class Login extends Component {
     render() {
         return(
             <div id="login">
+                <form>
                 <fieldset>
                 <legend>Login</legend>
                 <div>
@@ -25,7 +27,9 @@ class Login extends Component {
                 <input type="password" placeholder='**top*secret**'id="password" name="password" />
                 </div>
                 <button type='submit' id="submit">Submit</button>
+                <Link to="/register">Register</Link>
                 </fieldset>
+                </form>
             </div>
         )
     }
