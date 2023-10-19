@@ -3,7 +3,6 @@
     flex-direction: column;
     align-items: space-between;
     justify-content: space-between;
-    color: black;
     background-color: rgb(75, 0, 36);
     color: antiquewhite;
     width: 100%;
@@ -17,8 +16,7 @@
     gap: 15%;
     text-align: center;
     padding: 45px;
-    border-top: 4px solid antiquewhite;
-    border-bottom: 4px solid antiquewhite;
+
 }
 
 .profilePic {
@@ -104,36 +102,4 @@ audio {
     border-radius: 30px;
     border: white solid 3px;
     margin: 10px 0;
-}
-
-#underSongs {
-    width: 90%;
-    height: 4px;
-    background-color: rgb(75, 0, 36);
-    border: none;
-    margin: -5px 0 3px 0;
-}
-
-#underSongs2 {
-    width: 70%;
-    height: 3px;
-    background-color: rgb(75, 0, 36);
-    border: none;
-    margin: 3px 0 3px 0;
-}
-
-#underSongs3 {
-    width: 40%;
-    height: 2px;
-    background-color: rgb(75, 0, 36);
-    border: none;
-    margin: 2px 0 3px 0;
-}
-
-#underSongs4 {
-    width: 20%;
-    height: 1px;
-    background-color: rgb(75, 0, 36);
-    border: none;
-    margin: 1px 0 3px 4px;
 }

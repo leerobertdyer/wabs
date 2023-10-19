@@ -62,10 +62,7 @@ class Profile extends Component {
                 </div>
                 <div className='songs'>
                     <h1>SONGS</h1>
-                    <hr id="underSongs" />
-                    <hr id="underSongs2" />
-                    <hr id="underSongs3" />
-                    <hr id="underSongs4" />
+       
                     <div className='row'>
                         <audio controls>
                             <source src="../../Assets/themeSong.mp3" type="audio/mp3" />
