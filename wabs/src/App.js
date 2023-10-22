@@ -20,6 +20,27 @@ class App extends Component {
 
     };
   }
+
+  componentDidMount() {
+    // Fetch homepage data from your server
+    fetch('http://localhost:4000/')
+      .then((response) => response.json())
+      .then((data) => {
+        // Update the state with the fetched data
+        // this.setState({
+        //   user: {
+        //     ...this.state.user,
+            // Assuming the server response is an array of user objects
+            // Update 'users' state property with the fetched data
+            // users: data,
+            console.log(data)
+          },
+        )
+    .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
 render() {
   return (
     <Router>
