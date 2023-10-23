@@ -12,33 +12,42 @@ class App extends Component {
     super(props);
     this.state = {
       user: {
+        id: '',
         userName: 'Bilbo',
         email: '',
         isLoggedIn: true,
         profilePic: '',
+        score: 0
       },
 
     };
+    this.loadUser = this.loadUser.bind(this);
   }
 
-  componentDidMount() {
-    // Fetch homepage data from your server
-    fetch('http://localhost:4000/')
-      .then((response) => response.json())
-      .then((data) => {
-        // Update the state with the fetched data
-        // this.setState({
-        //   user: {
-        //     ...this.state.user,
-            // Assuming the server response is an array of user objects
-            // Update 'users' state property with the fetched data
-            // users: data,
-            console.log(data)
-          },
-        )
-    .catch((error) => {
-        console.error('Error:', error);
-      });
+  // componentDidMount() {
+  //   // not sure I need a home fetch...
+  //   fetch('http://localhost:4000/')
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //           console.log(data)
+  //         },
+  //       )
+  //   .catch((error) => {
+  //       console.error('Error:', error);
+  //     });
+  // }
+
+  loadUser = (data) => {
+    this.setState({
+      user: {
+        id: data.id,
+        userName: data.userName,
+        email: data.email,
+        joined: data.datecreated,
+        score: data.score,
+        isLoggedIn: true
+      }
+    })
   }
 
 render() {
@@ -48,21 +57,14 @@ render() {
         <Nav />
         <div className='spacing'></div>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login loadUser={this.loadUser}/>} />
+          <Route path="/register" element={<Register loadUser={this.loadUser}/>} />
           <Route
-            path="/profile"
-            element={
-              <Profile
-                user={{
-                  userName: 'Bilbo',
-                  email: '',
-                  isLoggedIn: true,
-                  profilePic: '',
-                }}
-              />
-            }
-          />
+          path="/profile"
+          element={
+         <Profile user={this.state.user} />
+           }
+/>
           <Route
             path="/"
             element={

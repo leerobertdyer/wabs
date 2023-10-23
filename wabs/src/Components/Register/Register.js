@@ -39,6 +39,11 @@ onRegisterSubmit = () => {
         email: this.state.email,
         password: this.state.password
     })
+    }).then(resp => resp.json())
+    .then(user => {
+      if (user) {
+        this.props.loadUser(user);
+      }
     })
 }
 

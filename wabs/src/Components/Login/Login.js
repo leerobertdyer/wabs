@@ -17,7 +17,6 @@ class Login extends Component {
             }
           
             onPasswordChange = (event) => {
-              event.preventDefault();
               this.setState({ loginPassword: event.target.value })
             }
           
@@ -41,7 +40,6 @@ class Login extends Component {
                   if (user.id) {
                     console.log(user)
                     this.props.loadUser(user);
-                    this.props.onRouteChange('home');
                   }
           
                 })
