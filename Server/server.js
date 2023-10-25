@@ -17,6 +17,7 @@ const db = knex({
 });
 
 server.use(express.json());
+
 server.use(cors({ origin: 'http://localhost:3000' }));
 
 server.get('/', (req, res) => { //not sure I need this...
@@ -28,15 +29,14 @@ server.get('/', (req, res) => { //not sure I need this...
 
 server.post('/login', (req, res) => {
   const { email, password } = req.body;
-
   // Step 1: Retrieve user data from the 'users' table based on the email.
   db.select('*')
     .from('users')
     .where('email', '=', email)
     .then(userData => {
       if (userData.length === 0) {
-        // If no lenght no data, No user with the provided email exists.
-        return res.status(400).json('Wrong Creds Bro');
+        // no length == no data...
+        return res.status(400).json('no email Creds Bro');
       }
 
       const userId = userData[0].id;
@@ -77,10 +77,13 @@ server.post('/login', (req, res) => {
 
   server.post('/register', (req, res) => {
     const { email, username, password } = req.body;
-  
+if (email || username || password) {
+  console.log(email, username, password)
+}
+console.log('Received data:', req.body);
     bcrypt.hash(password, 10, (err, hash) => {
       if (err) {
-        return res.status(500).json('Error hashing password');
+        console.log('Error hashing password', err);
       }
   
       db.transaction((trx) => {
