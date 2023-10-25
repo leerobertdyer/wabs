@@ -38,7 +38,6 @@ class Login extends Component {
                 .then(resp => resp.json())
                 .then(user => {
                   if (user.id) {
-                    console.log(user)
                     this.props.loadUser(user);
                   }
           

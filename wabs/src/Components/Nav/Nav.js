@@ -8,20 +8,19 @@ import './Nav.css';
 // and route handling...
 
 class Nav extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            isLoggedin: false
-        }
-    }
-
     render() {
+        const { isLoggedIn } = this.props.user.isLoggedIn
         return (
             <div>
                 <div id="nav">
                     <img src='../../Assets/logo.png' alt="logo" width="100px" />
                     <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : 'links')}>Home</NavLink>
-                    <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : 'links')}>Profile</NavLink>
+                    <NavLink 
+                    to={isLoggedIn ? "/profile" : "/login"}
+                    className={({ isActive }) => (isActive ? 'active' : 'links')}>
+                    {isLoggedIn ? 'Profile' : 'Login'}
+                    </NavLink>
+                    {/* <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : 'links')}>Profile</NavLink>           */}
                     <NavLink to="/submit" className={({ isActive }) => (isActive ? 'active' : 'links')}>Submit</NavLink>
                     <NavLink to="/collaborate" className={({ isActive }) => (isActive ? 'active' : 'links')}>Collaborate</NavLink>
                     <img src='../../Assets/logo.png' alt="logo" width="100px" />

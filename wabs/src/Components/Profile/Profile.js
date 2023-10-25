@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Login from '../Login/Login';
 import './Profile.css'
 
 
@@ -7,13 +6,6 @@ class Profile extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            userName: 'Bilbo',
-            status: 'Working on it...',
-            profilePic: '../../Assets/logo.png',
-            songs: [],
-            points: 100,
-            badges: [],
-            isLoggedIn: false,
             statusInput: false
         }
     }
@@ -32,8 +24,7 @@ class Profile extends Component {
         this.setState({ statusInput: true })
     }
     render() {
-        const { profilePic, userName, status, points, statusInput, isLoggedIn } = this.state;
-        if (isLoggedIn){
+        const { profilePic, userName, status, points, statusInput } = this.props.user;
         return (
             <div>
                 <div id="outer">
@@ -89,10 +80,6 @@ class Profile extends Component {
             </div>
         )
     }
-    else {
-        return (<Login />)
-    }
-}
 }
 
 export default Profile

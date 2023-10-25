@@ -13,15 +13,15 @@ class App extends Component {
     this.state = {
       user: {
         id: '',
-        userName: 'Bilbo',
+        userName: '',
         email: '',
-        isLoggedIn: true,
+        isLoggedIn: false,
         profilePic: '',
-        score: 0
+        score: 0,
+        datecreated: ''
       },
 
     };
-    this.loadUser = this.loadUser.bind(this);
   }
 
   // componentDidMount() {
@@ -37,25 +37,38 @@ class App extends Component {
   //     });
   // }
 
+  test = (data) => {
+    console.log(data)
+  }
+
   loadUser = (data) => {
+    console.log(data)
     this.setState({
       user: {
         id: data.id,
-        userName: data.userName,
+        userName: data.username,
         email: data.email,
-        joined: data.datecreated,
+        datecreated: data.datecreated,
         score: data.score,
-        isLoggedIn: true
+        isLoggedIn: true,
+        profilePic: ''
       }
-    })
+    },
+    () => {
+      console.log(this.state.user)
+    }
+    )
+    
   }
 
 render() {
+  const isLoggedIn = this.state.user.isLoggedIn;
   return (
     <Router>
       <div className='App'>
-        <Nav />
+        <Nav user={this.state.user}/>
         <div className='spacing'></div>
+        {isLoggedIn ? <Profile user={this.state.user}/> : null}
         <Routes>
           <Route path="/login" element={<Login loadUser={this.loadUser}/>} />
           <Route path="/register" element={<Register loadUser={this.loadUser}/>} />

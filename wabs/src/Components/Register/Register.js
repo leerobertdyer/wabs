@@ -50,7 +50,7 @@ onRegisterSubmit = () => {
     render() {
         return(
             <div id="Register">
-                <form>
+                <form method="POST">
                 <fieldset>
                 <legend>Register</legend>
                 <div>
