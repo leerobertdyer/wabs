@@ -1,75 +1,60 @@
-import React, {Component} from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import './Register.css'
+import { useState } from "react";
+
+function Register(props) {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [registered, setRegistered] = useState(false)
+    const navigate = useNavigate();
 
 
-
-class Register extends Component {
-constructor(props) {
-    super(props)
-    this.state = {
-        username: '',
-        email: '',
-        password: ''
+    const onRegisterSubmit = (event) => {
+        event.preventDefault()
+        fetch('http://localhost:4000/register', {
+            method: "POST",
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+                username,
+                email,
+                password
+            })
+        }).then(resp => resp.json())
+            .then(user => {
+                if (user) {
+                    this.props.loadUser(user);
+                    setRegistered(true)
+                }
+            })
     }
 
-}
+    if (registered) {
+        navigate('/');
+        return null;
+    }
 
-onUserNameChange = (event) => {
-this.setState({username: event.target.value})
-console.log(this.state.username)
-}
-
-onEmailChange = (event) => {
-this.setState({email: event.target.value})
-console.log(this.state.email)
-}
-
-onPasswordChange = (event) => {
-this.setState({password: event.target.value})
-console.log(this.state.password)
-}
-
-onRegisterSubmit = () => {
-    fetch('http://localhost:4000/register', {
-    method: "POST",
-    headers: {'content-type': 'application/json'},
-    body: JSON.stringify({
-        username: this.state.username,
-        email: this.state.email,
-        password: this.state.password
-    })
-    }).then(resp => resp.json())
-    .then(user => {
-      if (user) {
-        this.props.loadUser(user);
-      }
-    })
-}
-
-    render() {
-        return(
-            <div id="Register">
-                <form method="POST">
+    return (
+        <div id="Register">
+            <form method="POST" onSubmit={onRegisterSubmit}>
                 <fieldset>
-                <legend>Register</legend>
-                <div>
-                <label htmlFor="userName">User Name:</label>
-                <input type="text" placeholder='lee_boy_69' name="userName" id="userName" onChange={this.onUserNameChange}/>
-                <label htmlFor="email">Email:</label>
-                <input type="email" placeholder='lee@tinysunstudio.com' name="email" id="email"onChange={this.onEmailChange} />
-                </div>
-                <div>
-                <label htmlFor="password">Password:</label>
-                <input type="password" placeholder='**top*secret**'id="password" name="password" onChange={this.onPasswordChange}/>
-                </div>
-                <button type='submit' id="submit" onClick={this.onRegisterSubmit}>Submit</button>
-                <NavLink to="/Login"className={({ isActive }) => (isActive ? 'active' : '')}>Login</NavLink>
+                    <legend>Register</legend>
+                    <div>
+                        <label htmlFor="userName">User Name:</label>
+                        <input type="text" placeholder='lee_boy_69' name="userName" id="userName" onChange={(event) => setUsername(event.target.value)} />
+                        <label htmlFor="email">Email:</label>
+                        <input type="email" placeholder='lee@tinysunstudio.com' name="email" id="email" onChange={(event) => setEmail(event.target.value)} />
+                    </div>
+                    <div>
+                        <label htmlFor="password">Password:</label>
+                        <input type="password" placeholder='**top*secret**' id="password" name="password" onChange={(event) => setPassword(event.target.value)} />
+                    </div>
+                    <button type='submit' id="submit">Submit</button>
+                    <NavLink to="/Login" className={({ isActive }) => (isActive ? 'active' : '')}>Login</NavLink>
                 </fieldset>
-                </form>
-            </div>
-        )
-    }
+            </form>
+        </div>
+    )
 }
 
 export default Register;

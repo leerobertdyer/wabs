@@ -93,6 +93,7 @@ console.log('Received data:', req.body);
             email: email,
             username: username,
             datecreated: new Date(),
+            score: 0
           })
           .then((userIds) => {
             const userId = userIds[0].id;

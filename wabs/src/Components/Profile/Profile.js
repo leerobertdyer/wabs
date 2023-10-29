@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Profile.css'
-
+import { Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 class Profile extends Component {
     constructor(props) {
@@ -23,10 +24,13 @@ class Profile extends Component {
     toggleInput = () => {
         this.setState({ statusInput: true })
     }
+
     render() {
-        const { profilePic, userName, status, points, statusInput } = this.props.user;
-        return (
+        const { profilePic, userName, status, points, statusInput, isLoggedIn } = this.props.user;
+            return (      
             <div>
+                {isLoggedIn ? (
+                    <div>
                 <div id="outer">
                     <h1>Hello, {userName}!</h1>
                 </div>
@@ -56,9 +60,10 @@ class Profile extends Component {
                             <p className="points">Rank: [rank]</p>
                         </div>
                     </div>
+
+                                        {/*  REPLACE WITH AUDIO PLAYER COMPONENT SORTED BY LOGGED IN USER'S SONGS */}
                     <div className='songs'>
                         <h1>SONGS</h1>
-
                         <div className='row'>
                             <audio controls>
                                 <source src="../../Assets/themeSong.mp3" type="audio/mp3" />
@@ -77,6 +82,12 @@ class Profile extends Component {
                         </div>
                     </div>
                 </div>
+                </div>) 
+                : <div>
+                    <div id="loginFromProfile">
+                    <h2>Please </h2><Link to="/login">Log In</Link>
+                    </div>
+                    </div>}               
             </div>
         )
     }

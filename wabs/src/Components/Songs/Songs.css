@@ -1,0 +1,63 @@
+.songPlayer {
+    width: 60vw;
+    height: fit-content;
+    background-color: rgb(69, 40, 0);
+    margin: 20px auto 20px auto;
+    border: solid goldenrod 1px;
+    border-radius: 22px;
+    font-family: 'Amatic SC', sans-serif;
+}
+
+.titleBox {
+    padding: 2px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: rgb(15, 14, 13);
+    color: goldenrod;
+    border-top: solid goldenrod 1px;
+    border-bottom: solid 4px teal;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+}
+
+.songBox {
+    display: flex;
+    flex-flow: wrap row;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    gap: 5px;
+}
+
+.songCard {
+    background-color: rgb(15, 14, 13);
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 44px;
+}
+
+.songInfo {
+    color: antiquewhite;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+
+.info {
+    margin: 3px;
+}
+
+.audio2 {
+    color: goldenrod;
+    background-color: rgb(15, 14, 13);
+    padding: 20px;
+    border-radius: 44px;
+    border: teal solid 3px;
+    width: 40%;
+}

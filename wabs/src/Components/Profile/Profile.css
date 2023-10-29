@@ -97,10 +97,41 @@ button {
 }
 
 audio {
-    color: orange;
+    color: goldenrod;
+    background-color: rgb(15, 14, 13);
+    padding: 20px;
+    border-radius: 44px;
+    border: goldenrod solid 3px;
+    width: 40%;
+}
+
+#loginFromProfile {
+    margin-top: 250px;
     background-color: black;
-    padding: 30px;
-    border-radius: 30px;
-    border: white solid 3px;
-    margin: 10px 0;
+    color: antiquewhite;
+    border: solid antiquewhite 5px;
+    border-radius: 15px;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    margin: 100px auto;
+    gap: 20px;
+}
+
+.thumbnail {
+    border: solid silver 2px;
+    background-color: goldenrod;
+    border-radius: 50%;
+    padding: 20px;
+    width: 15%;
+}
+
+.thumbnail2 {
+    border: solid goldenrod 2px;
+    background-color: teal;
+    border-radius: 50%;
+    padding: 20px;
+    width: 15%;
 }

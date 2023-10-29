@@ -1,5 +1,14 @@
 body {
-    background-color: black;
+    background-color:rgb(24, 24, 24);
+}
+
+.App {
+    position: relative;
+    min-height: 100vh;
+}
+
+#mainWrapper {
+    padding-bottom: 2.5rem;
 }
 
 .other {
@@ -7,12 +16,9 @@ body {
 }
 
 .spacing {
-    height: 14vh;
-    background-color: #fff;
-    background-image: url('../public/Assets/instruments.png');
-    background-size: contain;
-    border-top: solid antiquewhite 2px;
-    border-bottom: solid antiquewhite 2px;
+    height: 120px;
+    background-color: rgb(24, 24, 24);
+ 
 }
 
 #outer {
