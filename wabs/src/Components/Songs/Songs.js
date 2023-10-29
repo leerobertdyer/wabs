@@ -6,11 +6,12 @@ function Songs () {
     const [sortAudio, setSortAudio] = useState('Newest')
     const [songTitle, setSongTitle] = useState('WABS Theme Song')
     const [songwriter, setSongwriter] = useState('Tiny Sun')
-    
+
+
     return (
         <div className='songPlayer'>
             <div className='titleBox'>
-                <h1>{sortAudio} Songs:</h1>
+                <h1>{sortAudio} Songs:</h1> <h3>Sort by: </h3><p className='sort'>songwriter </p><p className='sort'>oldest</p>
             </div>
             <div className='songBox'>
                 <div className='songCard'>

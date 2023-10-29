@@ -36,23 +36,25 @@ function Register(props) {
 
     return (
         <div id="Register">
-            <form method="POST" onSubmit={onRegisterSubmit}>
-                <fieldset>
-                    <legend>Register</legend>
-                    <div>
-                        <label htmlFor="userName">User Name:</label>
-                        <input type="text" placeholder='lee_boy_69' name="userName" id="userName" onChange={(event) => setUsername(event.target.value)} />
-                        <label htmlFor="email">Email:</label>
-                        <input type="email" placeholder='lee@tinysunstudio.com' name="email" id="email" onChange={(event) => setEmail(event.target.value)} />
-                    </div>
-                    <div>
-                        <label htmlFor="password">Password:</label>
-                        <input type="password" placeholder='**top*secret**' id="password" name="password" onChange={(event) => setPassword(event.target.value)} />
-                    </div>
-                    <button type='submit' id="submit">Submit</button>
-                    <NavLink to="/Login" className={({ isActive }) => (isActive ? 'active' : '')}>Login</NavLink>
-                </fieldset>
-            </form>
+            <div className="formContainer">
+                <form method="POST" onSubmit={onRegisterSubmit}>
+                    <fieldset>
+                        <legend>Register</legend>
+                        <div>
+                            <label htmlFor="userName">User Name:</label>
+                            <input className="formInput" type="text" placeholder='lee_boy_69' name="userName" id="userName" onChange={(event) => setUsername(event.target.value)} />
+                            <label htmlFor="email">Email:</label>
+                            <input className="formInput" type="email" placeholder='lee@tinysunstudio.com' name="email" id="email" onChange={(event) => setEmail(event.target.value)} />
+                        </div>
+                        <div>
+                            <label htmlFor="password">Password:</label>
+                            <input className="formInput" type="password" placeholder='**top*secret**' id="password" name="password" onChange={(event) => setPassword(event.target.value)} />
+                        </div>
+                        <button className="formSubmitButton" type='submit' id="submit">Submit</button>
+                        <NavLink to="/Login" className={({ isActive }) => (isActive ? 'active' : '')}>Login</NavLink>
+                    </fieldset>
+                </form>
+            </div>
         </div>
     )
 }

@@ -61,3 +61,7 @@
     border: teal solid 3px;
     width: 40%;
 }
+
+.sort {
+    display: inline;
+}
