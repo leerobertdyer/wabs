@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import './Nav.css';
 
 
@@ -15,21 +15,21 @@ class Nav extends Component {
                 <div id="nav">
                     <img src='../../Assets/logo.png' alt="logo" width="100px" />
                     <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : 'links')}>Home</NavLink>
-{/*                    
-                    <NavLink 
-                    to={user.isLoggedIn ? "/" : "/login"}
-                    className={({ isActive }) => (isActive ? 'active' : 'links')}
-                    onClick={user.isLoggedIn ? unloadUser : null}>
-                    {user.isLoggedIn ? 'Sign Out' : 'Login'}
-                    </NavLink>
-                     */}
+
                     <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : 'links')}>Profile</NavLink>     
 
                     <NavLink to="/submit" className={({ isActive }) => (isActive ? 'active' : 'links')}>Submit</NavLink>
 
                     <NavLink to="/collaborate" className={({ isActive }) => (isActive ? 'active' : 'links')}>Collaborate</NavLink>
 
-                    <img src='../../Assets/logo.png' alt="logo" width="100px" />
+                    <div id="loginBox">
+                    <Link 
+                    to={user.isLoggedIn ? "/" : "/login"}
+                    onClick={user.isLoggedIn ? unloadUser : null}>
+                    {user.isLoggedIn ? 'Sign Out' : 'Login'}
+                    </Link>
+                    </div>                   
+                    
                 </div>
 
             </div>

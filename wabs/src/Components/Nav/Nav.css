@@ -29,3 +29,14 @@
     background-color: purple;
     padding: 10px;
   }
+  
+  #loginBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: white;
+    width: 150px;
+    height: 50px;
+    border-radius: 22px;
+  }

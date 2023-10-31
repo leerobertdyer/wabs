@@ -1,51 +1,45 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 
+function Login(props) {
+const [loginEmail, setLoginEmail] = useState('')
+const [loginPassword, setLoginPassword] = useState('')
 
-class Login extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      loginEmail: '',
-      loginPassword: ''
-    }
+  const navigate = useNavigate();
 
-  }
-  onEmailChange = (event) => {
+ const onEmailChange = (event) => {
     event.preventDefault();
-    this.setState({ loginEmail: event.target.value })
+    setLoginEmail(event.target.value)
   }
 
-  onPasswordChange = (event) => {
-    this.setState({ loginPassword: event.target.value })
+  const onPasswordChange = (event) => {
+    setLoginPassword(event.target.value)
   }
 
-  onSubmitSignin = (event) => {
+  const onSubmitSignin = (event) => {
     event.preventDefault();
-    const { loginEmail, loginPassword } = this.state;
     if (!loginEmail.trim() || !loginPassword.trim()) {
       return;
     }
-
     fetch('http://localhost:4000/login', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        email: this.state.loginEmail,
-        password: this.state.loginPassword
+        email: loginEmail,
+        password: loginPassword
       })
     })
       .then(resp => resp.json())
       .then(user => {
         if (user.id) {
-          this.props.loadUser(user);
+          props.loadUser(user);
+          navigate('/profile');
         }
 
       })
   }
 
-  render() {
     return (
       <div id="login">
         <div className='formContainer'>
@@ -54,13 +48,23 @@ class Login extends Component {
               <legend>Login</legend>
               <div>
                 <label htmlFor="username">Username/Email:</label>
-                <input className="formInput" type="text" placeholder='David Blowie' name="username" id="username" onChange={this.onEmailChange} />
+                <input className="formInput" 
+                type="text" 
+                placeholder='David Blowie' 
+                name="username" id="username" 
+                onChange={onEmailChange} />
               </div>
               <div>
                 <label htmlFor="password">Password:</label>
-                <input className="formInput" type="password" placeholder='**top*secret**' id="password" name="password" onChange={this.onPasswordChange} />
+                <input className="formInput" 
+                type="password" 
+                placeholder='**top*secret**' 
+                id="password" name="password" 
+                onChange={onPasswordChange} />
               </div>
-              <button className="formSubmitButton" type='submit' id="submit" onClick={this.onSubmitSignin}>Submit</button>
+              <button className="formSubmitButton" 
+              type='submit' id="submit" 
+              onClick={onSubmitSignin}>Submit</button>
               <Link to="/register">Register</Link>
             </fieldset>
           </form>
@@ -69,6 +73,6 @@ class Login extends Component {
     )
   }
 
-}
+
 
 export default Login;

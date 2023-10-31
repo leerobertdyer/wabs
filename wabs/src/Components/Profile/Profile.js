@@ -2,21 +2,35 @@ import React, { Component } from 'react';
 import './Profile.css'
 import { Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
+import Songs from '../Songs/Songs';
 
 class Profile extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            statusInput: false
+            statusInput: false,
+            profilePhoto: ''
         }
     }
     handlePhotoSubmit = (event) => {
-        const file = event.target.files[0]
-        if (file) {
-            console.log(file.name)
-            //It's working in theory, but will need to send the image to server somehow...
-        }
+        const photo = event.target.files[0]
+        const user = this.props.user
+        if (photo) {
+            fetch('http://localhost:4000/editProfilePic', {
+                method: "POST",
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                    user,
+                    photo
+                })
+            }).then(resp => resp.json())
+                .then(photo => {
+                    if (photo) {
+                        this.setState({profilePhoto: photo})
+                    }
+                })
     }
+}
 
     handleStatusChange = (event) => {
         this.setState({ status: event.target.value })
@@ -26,7 +40,7 @@ class Profile extends Component {
     }
 
     render() {
-        const { profilePic, userName, status, points, statusInput, isLoggedIn } = this.props.user;
+        const { userName, status, points, statusInput, isLoggedIn } = this.props.user;
             return (      
             <div>
                 {isLoggedIn ? (
@@ -38,7 +52,7 @@ class Profile extends Component {
                     <div id="topBar">
                         <div className="pad">
                             <div className="profilePic">
-                                <img src={profilePic} alt="Profile" />
+                                <img src={this.profilePhoto} alt="Profile" />
                             </div>
                             <button>+pic</button>
                         </div>
@@ -60,27 +74,7 @@ class Profile extends Component {
                             <p className="points">Rank: [rank]</p>
                         </div>
                     </div>
-
-                                        {/*  REPLACE WITH AUDIO PLAYER COMPONENT SORTED BY LOGGED IN USER'S SONGS */}
-                    <div className='songs'>
-                        <h1>SONGS</h1>
-                        <div className='row'>
-                            <audio controls>
-                                <source src="../../Assets/themeSong.mp3" type="audio/mp3" />
-                            </audio>
-                            <audio controls>
-                                <source src="../../Assets/themeSong.mp3" type="audio/mp3" />
-                            </audio>
-                        </div>
-                        <div className='row'>
-                            <audio controls>
-                                <source src="../../Assets/themeSong.mp3" type="audio/mp3" />
-                            </audio>
-                            <audio controls>
-                                <source src="../../Assets/themeSong.mp3" type="audio/mp3" />
-                            </audio>
-                        </div>
-                    </div>
+                            <Songs />
                 </div>
                 </div>) 
                 : <div>

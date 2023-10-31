@@ -4,6 +4,17 @@ const server = express();
 const port = 4000;
 import bcrypt from 'bcrypt';
 import knex from 'knex';
+import multer from 'multer'
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/photos'); // Specify the directory where uploaded files should be stored
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Generate a unique filename
+  }
+});
+
+const upload = multer({ storage: storage });
 
 const db = knex({
   client: 'pg', 
@@ -77,8 +88,8 @@ server.post('/login', (req, res) => {
 
   server.post('/register', (req, res) => {
     const { email, username, password } = req.body;
-if (email || username || password) {
-  console.log(email, username, password)
+if (!email || !username || !password) {
+  return res.status(400).json('Missing email, username, or password...')
 }
 console.log('Received data:', req.body);
     bcrypt.hash(password, 10, (err, hash) => {
@@ -88,20 +99,20 @@ console.log('Received data:', req.body);
   
       db.transaction((trx) => {
         trx('users')
-          .returning('id')
+          .returning('*')
           .insert({
             email: email,
             username: username,
             datecreated: new Date(),
             score: 0
           })
-          .then((userIds) => {
-            const userId = userIds[0].id;
+          .then((user) => {
+            const userId = user[0].id;
             return trx('login')
-              .returning('id')
+              .returning('*')
               .insert({
                 hash: hash,
-                userid: userId, // Set the 'userid' explicitly
+                userid: userId, 
               })
           .then((user) => {
             trx.commit();
@@ -125,6 +136,15 @@ server.put('/submit', (req, res) => { //handle new song submissions
 })
 
 
+server.post('/editProfilePic', upload.single('photo'), (req, res) => {
+  const { photo, user } = req.body
+  console.log(photo, user)
+  // You can access the uploaded file info with req.file
+  // Update the user's profile with the file path, e.g., store it in a database
+});
+
 server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });
+
+

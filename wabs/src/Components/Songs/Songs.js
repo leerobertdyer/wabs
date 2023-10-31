@@ -7,11 +7,21 @@ function Songs () {
     const [songTitle, setSongTitle] = useState('WABS Theme Song')
     const [songwriter, setSongwriter] = useState('Tiny Sun')
 
+const handleSort = (event) => {
+    setSortAudio(event.target.textContent)
+}
 
+// Need to replace this return with a function that fills the return with a given selection of Songs, and alternates colors
     return (
         <div className='songPlayer'>
             <div className='titleBox'>
-                <h1>{sortAudio} Songs:</h1> <h3>Sort by: </h3><p className='sort'>songwriter </p><p className='sort'>oldest</p>
+                <h1>{sortAudio} Songs:</h1> 
+                <div className='sortSongs'>
+                  <h3>Sort by: </h3>
+                  <p className='sort' onClick={handleSort}>Newest </p>
+                  <p className='sort' onClick={handleSort}>Oldest</p>
+                  <p className='sort' onClick={handleSort}>Most Popular</p>
+            </div>
             </div>
             <div className='songBox'>
                 <div className='songCard'>

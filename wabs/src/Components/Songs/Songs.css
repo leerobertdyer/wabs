@@ -11,14 +11,41 @@
 .titleBox {
     padding: 2px;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: center;
     background-color: rgb(15, 14, 13);
     color: goldenrod;
     border-top: solid goldenrod 1px;
     border-bottom: solid 4px teal;
     border-top-left-radius: 22px;
     border-top-right-radius: 22px;
+}
+
+.sortSongs {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-around;
+    margin-left: 6vw;
+    color: white;
+    gap: 20px;
+    padding: 4px;
+    border: solid white 2px;
+    border-radius: 22px;
+    width: 40%;
+}
+
+.sortSongs > p {
+    color: rgb(222, 4, 222);
+    font-size: larger;
+}
+
+.sortSongs > p:hover {
+    transition: .3s;
+    transform: scale(130%);
+    color: goldenrod;
+    cursor: pointer;
 }
 
 .songBox {
@@ -60,8 +87,4 @@
     border-radius: 44px;
     border: teal solid 3px;
     width: 40%;
-}
-
-.sort {
-    display: inline;
 }
