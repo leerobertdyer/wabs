@@ -5,7 +5,13 @@ const port = 4000;
 import bcrypt from 'bcrypt';
 import knex from 'knex';
 import multer from 'multer'
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const storage = multer.diskStorage({
+
   destination: function (req, file, cb) {
     cb(null, 'uploads/photos'); // Specify the directory where uploaded files should be stored
   },
@@ -28,8 +34,9 @@ const db = knex({
 });
 
 server.use(express.json());
-
 server.use(cors({ origin: 'http://localhost:3000' }));
+server.use('/uploads', express.static('uploads'));
+
 
 server.get('/', (req, res) => { //not sure I need this...
     db.select('*').from('users')
@@ -58,11 +65,9 @@ server.post('/login', (req, res) => {
         .where('userid', '=', userId)
         .then(loginData => {
           if (loginData.length === 0) {
-            // This user doesn't have login data; something's wrong.
             return res.status(400).json('Insufficient Creds Bro, database err');
           }
 
-          // Step 3: Compare the hashed password from the request with the one in the 'login' table.
           bcrypt.compare(password, loginData[0].hash, (err, result) => {
             if (result) {
               return db.select('*')
@@ -91,7 +96,7 @@ server.post('/login', (req, res) => {
 if (!email || !username || !password) {
   return res.status(400).json('Missing email, username, or password...')
 }
-console.log('Received data:', req.body);
+// console.log('Received data:', req.body);
     bcrypt.hash(password, 10, (err, hash) => {
       if (err) {
         console.log('Error hashing password', err);
@@ -128,19 +133,24 @@ console.log('Received data:', req.body);
       });
     });
 
-  
-server.put('/submit', (req, res) => { //handle new song submissions
-  //will need to study up transactions to ensure it updates the user score and the songs database
-  //this is also where any ai api would go...
+    
+server.put('/upload-profile-pic', upload.single('photo'), (req, res) => {
+  const user  = req.body.user.id;
+  const uploadedPhoto = req.file;
+   if (!uploadedPhoto) {
+    return res.status(400).json({ error: 'No file provided' });
+  }
+  const filepath = path.join(__dirname, 'uploads', 'photos', uploadedPhoto.filename);
 
-})
-
-
-server.post('/editProfilePic', upload.single('photo'), (req, res) => {
-  const { photo, user } = req.body
-  console.log(photo, user)
-  // You can access the uploaded file info with req.file
-  // Update the user's profile with the file path, e.g., store it in a database
+  db('users')
+  .where('id', user)
+  .update({profilephoto: uploadedPhoto.filename})
+  .then(() => {
+    res.status(200).json({newPhoto: uploadedPhoto.filename})
+  }).catch((error) => {
+    console.error('Error updating Database: ', error);
+    res.status(500).json({error: 'Server XXXX Error'})
+  })
 });
 
 server.listen(port, () => {

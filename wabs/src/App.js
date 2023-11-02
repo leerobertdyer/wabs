@@ -51,7 +51,8 @@ class App extends Component {
         datecreated: data.datecreated,
         score: data.score,
         isLoggedIn: true,
-        profilePic: ''
+        profilephoto: data.profilephoto,
+        status: data.status
       }
     },
     () => {

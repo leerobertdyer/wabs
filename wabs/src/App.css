@@ -24,10 +24,11 @@ body {
 #outer {
     padding-top: 20px;
     font-family: fantasy;
-    background-color: rgb(209, 155, 155);
+    background-color: rgb(146, 146, 146);
     color: rgb(48, 5, 29);
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0;
 }
 

@@ -29,21 +29,21 @@
     justify-content: space-around;
     margin-left: 6vw;
     color: white;
-    gap: 20px;
+    gap: 1em;
     padding: 4px;
     border: solid white 2px;
     border-radius: 22px;
-    width: 40%;
+    width: 45%;
 }
 
 .sortSongs > p {
     color: rgb(222, 4, 222);
-    font-size: larger;
+    font-size: 1em;
 }
 
 .sortSongs > p:hover {
     transition: .3s;
-    transform: scale(130%);
+    transform: scale(120%);
     color: goldenrod;
     cursor: pointer;
 }
