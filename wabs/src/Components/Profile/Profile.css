@@ -22,22 +22,15 @@
     border: double goldenrod 6px;
     border-radius: 20%;
     background-color: black;
-    min-width: 100px;
-    max-width: 400px;
+    min-width: 80px;
+    max-width: 200px;
+    max-height: 200px;
     overflow: hidden;
     margin-left: 25px;
 }
 .profilePic {
     width: 100%;
     height: auto;
-}
-
-button {
-    display: block;
-    margin: 20px auto;
-    border-radius: 100px;
-    color: black;
-    border: solid white  2px;
 }
 
 .moodAndScore {
@@ -76,7 +69,7 @@ button {
     width: 90%;
 }
 
-.points {
+.score {
     margin: 0 0 15px 0;
 }
 
@@ -138,4 +131,10 @@ audio {
     border-radius: 50%;
     padding: 20px;
     width: 15%;
+}
+
+#statusAndInput {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }

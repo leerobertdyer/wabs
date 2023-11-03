@@ -14,73 +14,102 @@ function Profile(props) {
     const handleSetProfilePhoto = (lastPhotoVar) => {
         setProfilePhoto(`${serverUrl}/uploads/photos/${lastPhotoVar}`)
     }
+
     const handlePhotoSubmit = (event) => {
         const photo = event.target.files[0];
-    
+
         if (photo) {
             const formData = new FormData();
             formData.append('user[id]', user.id);
             formData.append('photo', photo);
-    
+
             fetch('http://localhost:4000/upload-profile-pic', {
                 method: "PUT",
-                body: formData, 
+                body: formData,
             })
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                } else {
-                    throw new Error(`Failed to upload yer damn photo: ${response.status}`);
-                }      
-             }).then(data => {
-                handleSetProfilePhoto(data.newPhoto);
-             })
-            .catch(error => {
-                console.error('Error:', error.message);
-            });
+                .then(response => {
+                    if (response.ok) {
+                        return response.json()
+                    } else {
+                        throw new Error(`Failed to upload yer damn photo: ${response.status}`);
+                    }
+                }).then(data => {
+                    handleSetProfilePhoto(data.newPhoto);
+                })
+                .catch(error => {
+                    console.error('Error:', error.message);
+                });
         }
     }
-    
+
+    let changedStatus = ''
 
     const handleStatusChange = (event) => {
-        setStatus(event.target.value)
+        event.preventDefault();
+        fetch('http://localhost:4000/update-status', {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+                id: user.id,
+                newStatus: changedStatus
+            })
+        })
+            .then(resp => {
+                if (resp.ok) {
+                    return resp.json()
+                } else { throw new Error(`Failed to upload yer new statatus: ${resp.status}`) }
+            }).then(data => {
+                setStatus(data.status)
+            })
     }
 
-    const { userName, points, isLoggedIn } = props.user;
-
+    const { userName, score, isLoggedIn } = props.user;
+    let inputToggle = false;
     return (
         <div>
             {isLoggedIn ? (
                 <div>
-                    <div id="outer">
-                        <h1>Hello, {userName}!</h1>
-                    </div>
                     <div id="Profile">
                         <div id="topBar">
                             <div id="picInputStatus">
-                            <div id="picAndInput">
-                                <div className="profilePicContainer">
-                                    <img src={profilePhoto} alt="Profile" className='profilePic' />
+                                <div id="picAndInput">
+                                    <div className="profilePicContainer">
+                                        <img src={profilePhoto} alt="Profile" className='profilePic' />
+                                    </div>
+                                    <form encType="multipart/form-data">
+                                        <label className="picInputLabel"
+                                            htmlFor="filePicker">+pic</label>
+                                        <input
+                                            type="file"
+                                            id="filePicker"
+                                            name="photo"
+                                            accept="image/png, image/jpeg"
+                                            style={{ display: 'none' }}
+                                            onChange={handlePhotoSubmit}
+                                        />
+                                    </form></div>
+                                <div id="statusAndInput">
+                                    <h3 className="status">"{status}"</h3>
+                                    <form>
+                                        {/* <label htmlFor="statusInput">
+                                            +status
+                                        </label> */}
+                                            <div>
+                                                <input type="text"
+                                                    id="statusChanger"
+                                                    name="statusInput"
+                                                    onChange={(event) => changedStatus = event.target.value} />
+                                                <input type="submit"
+                                                    onClick={handleStatusChange} />
+                                            </div>
+                                    </form>
                                 </div>
-                                <form encType="multipart/form-data">
-                                    <label htmlFor="filePicker">+pic</label>
-                                    <input
-                                        type="file"
-                                        id="filePicker"
-                                        name="photo"
-                                        accept="image/png, image/jpeg"
-                                        style={{ display: 'none' }}
-                                        onChange={handlePhotoSubmit}
-                                    />
-                                </form></div>
-                                <h3 className="status">{status}</h3>
-                                
                             </div>
                             <div id="scoreConCon">
-                            <div className="scoreContainer">
-                                <h2 id="moodAndScore">{userName}'s score:</h2>
-                                <p className="points">{points}</p>
-                                <p className="points">Rank: [rank]</p>
+                                <div className="scoreContainer">
+                                    <h2 id="moodAndScore">{userName}'s score:</h2>
+                                    <p className="score">{score}</p>
+                                    <p className="score">Rank: [rank]</p>
                                 </div>
                             </div>
                         </div>

@@ -153,6 +153,19 @@ server.put('/upload-profile-pic', upload.single('photo'), (req, res) => {
   })
 });
 
+server.put('/update-status', (req, res) => {
+  const { id, newStatus } = req.body
+  db('users')
+  .where('id', id)
+  .update({status: newStatus})
+  .then(() => {
+    res.status(200).json({status: newStatus})
+  }).catch((error) => {
+    console.error('Error setting new status in Database', error);
+    res.status(500).json({error: 'Server Status Error'})
+  })
+});
+
 server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });
