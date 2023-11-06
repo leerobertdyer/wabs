@@ -167,8 +167,7 @@ server.put('/update-status', (req, res) => {
   })
 });
 
-server.post('/submit', songUpload.single('songUpload'), (req, res) => {
-  const userId = req.body.user.id;
+server.post('/submit', songUpload.single('song'), (req, res) => {
   const uploadedSong = req.file;
   if (!uploadedSong) {
     return res.status(400).json({ error: 'No song provided' });
@@ -176,16 +175,17 @@ server.post('/submit', songUpload.single('songUpload'), (req, res) => {
   const filepath = path.join(__dirname, 'uploads', 'songs', uploadedSong.filename);
   db('songs')
   .update({
-    songwriter: userId,
+    title: req.body.title,
+    lyrics: req.body.lyrics,
+    songwriter: req.body.songwriter,
     song: uploadedSong.filename,
-    title: req.body.song.title,
-    lyrics: req.body.song.lyrics,
-    votes: 0
+    votes: 0,
+    songdate: new Date()
   }).then(() => {
     res.status(200).json({song: uploadedSong.filename})
   }).catch((error) => {
     console.error('Error submitting new song in Database', error);
-    res.status(500).json({error: 'Server Status Error'})
+    res.status(500).json({error: 'Server Status  Error'})
   })
 });
 

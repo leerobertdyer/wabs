@@ -83,17 +83,13 @@ render() {
         <div id='mainWrapper'>
         <Nav user={this.state.user} unloadUser={this.unloadUser}/>
         <div className='spacing'></div>
-      <Submit />
+        
         <Routes>
           <Route path='/' element={<Songs />}/>
-          <Route path="/login" element={<Login loadUser={this.loadUser}/>} />
-          <Route path="/register" element={<Register loadUser={this.loadUser}/>} />
-          <Route
-          path="/profile"
-          element={
-         <Profile user={this.state.user}/>
-           }
-/>
+          <Route path="/login" element={ <Login loadUser={this.loadUser}/> } />
+          <Route path="/register" element={ <Register loadUser={this.loadUser}/> } />
+          <Route path="/profile" element={ <Profile user={this.state.user}/> } />
+          <Route path="/submit" element={ <Submit user={this.state.user} /> } />
         </Routes>
      
         <Footer />

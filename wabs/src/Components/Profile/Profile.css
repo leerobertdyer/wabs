@@ -11,7 +11,7 @@
 #topBar {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     gap: 8vw;
     text-align: center;
     width: 100%;
@@ -34,29 +34,6 @@
     height: 100%;
 }
 
-.moodAndScore {
-    color: goldenrod;
-    font-size: 125%;
-    margin: 0 0 15px 0;
-}
-#scoreConCon {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: start;
-    height: 100%;
-}
-.scoreContainer {
-    padding: 20px;
-    border: goldenrod double 4px;
-    border-radius: 12px;
-    width: 25vw;
-    height: 125px;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    
-}
 #picInputStatus {
     display: flex;
     align-items: end;
@@ -68,10 +45,6 @@
 }
 .statusInput {
     width: 90%;
-}
-
-.score {
-    margin: 0 0 15px 0;
 }
 
 .row {

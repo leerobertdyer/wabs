@@ -120,13 +120,6 @@ function Profile(props) {
                                     </form>
                                 </div>
                             </div>
-                            <div id="scoreConCon">
-                                <div className="scoreContainer">
-                                    <h2 id="moodAndScore">{userName}'s score:</h2>
-                                    <p className="score">{score}</p>
-                                    <p className="score">Rank: [rank]</p>
-                                </div>
-                            </div>
                         </div>
                         <Songs />
                     </div>
