@@ -10,17 +10,27 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const storage = multer.diskStorage({
-
+const profilePicStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/photos'); // Specify the directory where uploaded files should be stored
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname); // Generate a unique filename
+    cb(null, Date.now() + '-' + file.originalname); 
   }
 });
+const profilePicUpload = multer({ storage: profilePicStorage });
 
-const upload = multer({ storage: storage });
+
+const songStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/songs');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); 
+  }
+});
+const songUpload = multer({ storage: songStorage });
+
 
 const db = knex({
   client: 'pg', 
@@ -30,7 +40,6 @@ const db = knex({
     password: '',
     database: 'wabs',
   },
-  // Other Knex configuration options
 });
 
 server.use(express.json());
@@ -38,7 +47,7 @@ server.use(cors({ origin: 'http://localhost:3000' }));
 server.use('/uploads', express.static('uploads'));
 
 
-server.get('/', (req, res) => { //not sure I need this...
+server.get('/', (req, res) => { // home feed should display a variety of things: newest song submissions, collabs, and status updates
     db.select('*').from('users')
     .then(data => {
         res.json(data)
@@ -47,19 +56,14 @@ server.get('/', (req, res) => { //not sure I need this...
 
 server.post('/login', (req, res) => {
   const { email, password } = req.body;
-  // Step 1: Retrieve user data from the 'users' table based on the email.
   db.select('*')
     .from('users')
     .where('email', '=', email)
     .then(userData => {
       if (userData.length === 0) {
-        // no length == no data...
         return res.status(400).json('no email Creds Bro');
       }
-
       const userId = userData[0].id;
-
-      // Step 2: Use the 'id' to fetch the hashed password from the 'login' table.
       return db.select('hash')
         .from('login')
         .where('userid', '=', userId)
@@ -67,7 +71,6 @@ server.post('/login', (req, res) => {
           if (loginData.length === 0) {
             return res.status(400).json('Insufficient Creds Bro, database err');
           }
-
           bcrypt.compare(password, loginData[0].hash, (err, result) => {
             if (result) {
               return db.select('*')
@@ -96,12 +99,10 @@ server.post('/login', (req, res) => {
 if (!email || !username || !password) {
   return res.status(400).json('Missing email, username, or password...')
 }
-// console.log('Received data:', req.body);
     bcrypt.hash(password, 10, (err, hash) => {
       if (err) {
         console.log('Error hashing password', err);
       }
-  
       db.transaction((trx) => {
         trx('users')
           .returning('*')
@@ -134,11 +135,11 @@ if (!email || !username || !password) {
     });
 
     
-server.put('/upload-profile-pic', upload.single('photo'), (req, res) => {
+server.put('/upload-profile-pic', profilePicUpload.single('photo'), (req, res) => {
   const user  = req.body.user.id;
   const uploadedPhoto = req.file;
    if (!uploadedPhoto) {
-    return res.status(400).json({ error: 'No file provided' });
+    return res.status(400).json({ error: 'No profile photo provided' });
   }
   const filepath = path.join(__dirname, 'uploads', 'photos', uploadedPhoto.filename);
 
@@ -162,6 +163,28 @@ server.put('/update-status', (req, res) => {
     res.status(200).json({status: newStatus})
   }).catch((error) => {
     console.error('Error setting new status in Database', error);
+    res.status(500).json({error: 'Server Status Error'})
+  })
+});
+
+server.post('/submit', songUpload.single('songUpload'), (req, res) => {
+  const userId = req.body.user.id;
+  const uploadedSong = req.file;
+  if (!uploadedSong) {
+    return res.status(400).json({ error: 'No song provided' });
+  }
+  const filepath = path.join(__dirname, 'uploads', 'songs', uploadedSong.filename);
+  db('songs')
+  .update({
+    songwriter: userId,
+    song: uploadedSong.filename,
+    title: req.body.song.title,
+    lyrics: req.body.song.lyrics,
+    votes: 0
+  }).then(() => {
+    res.status(200).json({song: uploadedSong.filename})
+  }).catch((error) => {
+    console.error('Error submitting new song in Database', error);
     res.status(500).json({error: 'Server Status Error'})
   })
 });

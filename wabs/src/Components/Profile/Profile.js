@@ -10,6 +10,7 @@ function Profile(props) {
     const profilePhotoUrl = `${serverUrl}/uploads/photos/${filename}`
     const [profilePhoto, setProfilePhoto] = useState(profilePhotoUrl);
     const [status, setStatus] = useState(props.user.status)
+    const [showStatus, setShowStatus] = useState(false)
 
     const handleSetProfilePhoto = (lastPhotoVar) => {
         setProfilePhoto(`${serverUrl}/uploads/photos/${lastPhotoVar}`)
@@ -43,12 +44,17 @@ function Profile(props) {
     }
 
     let changedStatus = ''
-
+    const showHiddenStatus = () => {
+        if (!showStatus){
+        setShowStatus(true);}
+        else {setShowStatus(false)}
+    }
     const handleStatusChange = (event) => {
         event.preventDefault();
+        if (changedStatus.length > 0){
         fetch('http://localhost:4000/update-status', {
-            method: 'PUT',
             headers: { 'content-type': 'application/json' },
+            method: 'PUT',
             body: JSON.stringify({
                 id: user.id,
                 newStatus: changedStatus
@@ -60,11 +66,15 @@ function Profile(props) {
                 } else { throw new Error(`Failed to upload yer new statatus: ${resp.status}`) }
             }).then(data => {
                 setStatus(data.status)
-            })
+                setShowStatus(false)
+            })} else {
+                setShowStatus(false)
+                return null;
+            }
     }
 
+
     const { userName, score, isLoggedIn } = props.user;
-    let inputToggle = false;
     return (
         <div>
             {isLoggedIn ? (
@@ -77,7 +87,7 @@ function Profile(props) {
                                         <img src={profilePhoto} alt="Profile" className='profilePic' />
                                     </div>
                                     <form encType="multipart/form-data">
-                                        <label className="picInputLabel"
+                                        <label className="picInputLabel clickMe"
                                             htmlFor="filePicker">+pic</label>
                                         <input
                                             type="file"
@@ -90,18 +100,23 @@ function Profile(props) {
                                     </form></div>
                                 <div id="statusAndInput">
                                     <h3 className="status">"{status}"</h3>
-                                    <form>
+                                    <form className='formRow'> 
                                         {/* <label htmlFor="statusInput">
                                             +status
                                         </label> */}
-                                            <div>
+                                        <label htmlFor="statusChanger"
+                                        className='labelInline clickMe'
+                                        onClick={showHiddenStatus}>+status</label>
+                                            {showStatus ? (
+                                            <div className='formRow'>
                                                 <input type="text"
                                                     id="statusChanger"
                                                     name="statusInput"
                                                     onChange={(event) => changedStatus = event.target.value} />
                                                 <input type="submit"
+                                                    className='clickMe smallFormButton'
                                                     onClick={handleStatusChange} />
-                                            </div>
+                                            </div>) : null }
                                     </form>
                                 </div>
                             </div>

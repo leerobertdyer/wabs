@@ -7,6 +7,7 @@ import Footer from './Components/Footer/Footer';
 import Register from './Components/Register/Register';
 import Profile from './Components/Profile/Profile';
 import Songs from './Components/Songs/Songs';
+import Submit from './Components/Submit/Submit';
 
 
 class App extends Component {
@@ -75,13 +76,14 @@ class App extends Component {
   }
 
 render() {
-  const isLoggedIn = this.state.user.isLoggedIn;
+
   return (
     <Router>
       <div className='App'>
         <div id='mainWrapper'>
         <Nav user={this.state.user} unloadUser={this.unloadUser}/>
         <div className='spacing'></div>
+      <Submit />
         <Routes>
           <Route path='/' element={<Songs />}/>
           <Route path="/login" element={<Login loadUser={this.loadUser}/>} />

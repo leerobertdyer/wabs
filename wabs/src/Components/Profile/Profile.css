@@ -11,7 +11,7 @@
 #topBar {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     gap: 8vw;
     text-align: center;
     width: 100%;
@@ -24,13 +24,14 @@
     background-color: black;
     min-width: 80px;
     max-width: 200px;
+    min-height: 80px;
     max-height: 200px;
     overflow: hidden;
     margin-left: 25px;
 }
 .profilePic {
     width: 100%;
-    height: auto;
+    height: 100%;
 }
 
 .moodAndScore {
@@ -137,4 +138,35 @@ audio {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-left: 24px;
+}
+
+.labelInline {
+    display: inline;
+}
+
+.formRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 12px;
+}
+
+.clickMe {
+    cursor: pointer;
+}
+
+.smallFormButton {
+    background-color: goldenrod;
+    padding: 8px;
+    color: white;
+    border: solid white 2px;
+    border-radius: 12px;
+    width: 7vw;
+}
+
+.smallFormButton:hover {
+    color: goldenrod;
+    background-color: white;
+    border: goldenrod solid 3px;
 }
