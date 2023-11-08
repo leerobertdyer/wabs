@@ -32,6 +32,7 @@ const [loginPassword, setLoginPassword] = useState('')
     })
       .then(resp => resp.json())
       .then(user => {
+        console.log(user)
         if (user.id) {
           props.loadUser(user);
           navigate('/profile');

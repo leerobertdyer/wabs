@@ -16,13 +16,13 @@ function Register(props) {
             method: "POST",
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({
-                "username": username,
-                "email": email,
+                "username": username.toLowerCase(),
+                "email": email.toLowerCase(),
                 "password": password
             })
         }).then(resp => resp.json())
             .then(user => {
-                if (user) {
+                if (user) { // This line lets you through even if database fails...
                     props.loadUser(user);
                     setRegistered(true)
                 }

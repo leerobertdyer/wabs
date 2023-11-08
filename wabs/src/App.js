@@ -15,7 +15,7 @@ class App extends Component {
     super(props);
     this.state = {
       user: {
-        id: '',
+        uer_id: '',
         userName: '',
         email: '',
         isLoggedIn: false,
@@ -46,14 +46,14 @@ class App extends Component {
     console.log(data)
     this.setState({
       user: {
-        id: data.id,
+        user_id: data.id,
         userName: data.username,
-        email: data.email,
-        datecreated: data.datecreated,
+        email: data.user_email,
+        datecreated: data.date_user_joined,
         score: data.score,
         isLoggedIn: true,
-        profilephoto: data.profilephoto,
-        status: data.status
+        profilePic: data.user_profile_pic,
+        status: data.user_status
       }
     },
     () => {
@@ -65,7 +65,7 @@ class App extends Component {
 
   unloadUser = () => {
     this.setState({user: {
-      id: '',
+      user_id: '',
       userName: '',
       email: '',
       isLoggedIn: false,

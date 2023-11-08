@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import './Submit.css'
 
-function Submit(props) {
+function Submit(props) {  
     const [title, setTitle] = useState('')
     const [lyrics, setLyrics] = useState('')
     const [song, setSong] = useState(null)
 
-    const handleSongSubmit = (event) => {
+    const handleSongSubmit = (event) => {  // Current Issue: songwriter is not in users. Need to update id in users to user_id and same for other tables...
         event.preventDefault()
-        const user = props.user.id //THIS IS THE ISSUE
-        console.log('user: ', user)
+        const user = props.user.id
+        console.log(user)
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('lyrics', lyrics)
+        formData.append('user_id', user)
         if (song) {
-            console.log(song)
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('lyrics', lyrics)
-            formData.append('songwriter', user)
-            formData.append('song', song)
-
+            formData.append('song_file', song)
+            console.log(title, lyrics, user)
+            console.log(formData);
 
             fetch('http://localhost:4000/submit', {
                 method: 'post',
