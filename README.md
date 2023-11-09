@@ -1,12 +1,11 @@
 # WriteABadSong
 A social Media website based around songwriting that encourages quantity over quality, and promotes collaboration.
 
+Still very much in development ;)
 
 
 
 # WORK LOG:
-  ## FIX SECURITY PROBLEM FIRST!!!! - I've not gotten the gitignore to ignore the .env yet...
-
 -   Started switching from Multer to Dropbox api so i can use the 
     ELEPHANTSQL database without running out of room.
 -   I'll need to clean out the multer references, and update 

@@ -11,7 +11,7 @@ import { Dropbox } from 'dropbox'
 import dotenv from 'dotenv'
 import pg from 'pg'
 
-dotenv.config();
+dotenv.config({ path: './.env'});
 
 const client = new pg.Client({
   connectionString: process.env.ELEPHANTSQL_URL,

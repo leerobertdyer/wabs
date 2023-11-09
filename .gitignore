@@ -1,4 +1,4 @@
-.vscode
+/.vscode
 wabs/node_modules
 wabs/.pnp
 wabs/.pnp.js
@@ -8,4 +8,4 @@ wabs/npm-debug.log*
 
 server/node_modules/
 server/npm-debug.log
-.env
+/.env
