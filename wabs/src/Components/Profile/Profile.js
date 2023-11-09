@@ -1,26 +1,25 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import './Profile.css'
 import { Link } from 'react-router-dom';
 import Songs from '../Songs/Songs';
 
 function Profile(props) {
     const user = props.user
-    const serverUrl = 'http://localhost:4000';
-    const filename = user.profilephoto
-    const profilePhotoUrl = `${serverUrl}/uploads/photos/${filename}`
-    const [profilePhoto, setProfilePhoto] = useState(profilePhotoUrl);
+    const [profilePhoto, setProfilePhoto] = useState(user.user_profile_pic);
     const [status, setStatus] = useState(props.user.status)
     const [showStatus, setShowStatus] = useState(false)
 
-    const handleSetProfilePhoto = (lastPhotoVar) => {
-        setProfilePhoto(`${serverUrl}/uploads/photos/${lastPhotoVar}`)
+    const handleSetProfilePhoto = (newPhoto) => {
+        console.log('newPhoto: ', newPhoto.user_profile_pic)
+        setProfilePhoto(newPhoto) 
     }
 
     const handlePhotoSubmit = (event) => {
         const photo = event.target.files[0];
+        console.log(photo)
         if (photo) {
             const formData = new FormData();
-            formData.append('user[id]', user.id);
+            formData.append('user_id', user.user_id); 
             formData.append('photo', photo);
             fetch('http://localhost:4000/upload-profile-pic', {
                 method: "PUT",
@@ -33,6 +32,7 @@ function Profile(props) {
                         throw new Error(`Failed to upload yer damn photo: ${response.status}`);
                     }
                 }).then(data => {
+                    console.log(data)
                     handleSetProfilePhoto(data.newPhoto);
                 })
                 .catch(error => {
@@ -72,7 +72,7 @@ function Profile(props) {
     }
 
 
-    const { userName, score, isLoggedIn } = props.user;
+    const { isLoggedIn } = props.user;
     return (
         <div>
             {isLoggedIn ? (

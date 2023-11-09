@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Navigate } from "react-router-dom";
 import './Register.css'
 import { useState } from "react";
 
@@ -7,8 +7,6 @@ function Register(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [registered, setRegistered] = useState(false)
-    const navigate = useNavigate();
-
 
     const onRegisterSubmit = (event) => {
         event.preventDefault()
@@ -22,7 +20,8 @@ function Register(props) {
             })
         }).then(resp => resp.json())
             .then(user => {
-                if (user) { // This line lets you through even if database fails...
+                console.log(user)
+                if (user.user_id) { 
                     props.loadUser(user);
                     setRegistered(true)
                 }
@@ -30,9 +29,9 @@ function Register(props) {
     }
 
     if (registered) {
-        navigate('/');
-        return null;
+        return <Navigate to="/profile" />;
     }
+
 
     return (
         <div id="Register">

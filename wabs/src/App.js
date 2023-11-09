@@ -19,7 +19,7 @@ class App extends Component {
         userName: '',
         email: '',
         isLoggedIn: false,
-        profilePic: '',
+        user_profile_pic: '',
         score: 0,
         datecreated: ''
       },
@@ -46,13 +46,13 @@ class App extends Component {
     console.log(data)
     this.setState({
       user: {
-        user_id: data.id,
+        user_id: data.user_id,
         userName: data.username,
         email: data.user_email,
         datecreated: data.date_user_joined,
         score: data.score,
         isLoggedIn: true,
-        profilePic: data.user_profile_pic,
+        user_profile_pic: data.user_profile_pic,
         status: data.user_status
       }
     },
@@ -69,7 +69,7 @@ class App extends Component {
       userName: '',
       email: '',
       isLoggedIn: false,
-      profilePic: '',
+      user_profile_pic: '',
       score: 0,
       datecreated: ''
     }})

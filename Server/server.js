@@ -61,7 +61,7 @@ const db = knex({
 });
 
 server.use(express.json());
-server.use(cors({ origin: 'http://localhost:3000' }));
+server.use(cors({ origin: 'http://localhost:3000' })); // Will need to change this for deployment
 server.use('/uploads', express.static('uploads'));
 
 
@@ -72,47 +72,6 @@ server.get('/', (req, res) => { // home feed should display a variety of things:
         res.json(data)
     })
 })
-
-server.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  db.select('*')
-    .from('users')
-    .where('user_email', '=', email.toLowerCase())
-    .then(userData => {
-      if (userData.length === 0) {
-        return res.status(400).json('no email Creds Bro');
-      }
-      const userId = userData[0].id;
-      return db.select('hash')
-        .from('login')
-        .where('user_id', '=', userId)
-        .then(loginData => {
-          if (loginData.length === 0) {
-            return res.status(400).json('Insufficient Creds Bro, database err');
-          }
-          bcrypt.compare(password, loginData[0].hash, (err, result) => {
-            if (result) {
-              return db.select('*')
-                .from('users')
-                .where('user_id', '=', userId)
-                .then(user => {
-                  res.json(user[0]);
-                })
-                .catch(err => {
-                  res.status(400).json('Unable to get user');
-                });
-            } else {
-              res.status(400).json('Very Much Wrong Creds Bro');
-            }
-          });
-        });
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(400).json({ error: 'Wrong Creds Bro', details: err });
-    });
-});
-
 
   server.post('/register', (req, res) => {
     const { email, username, password } = req.body;
@@ -132,10 +91,11 @@ if (!email || !username || !password) {
             date_user_joined: new Date(),
             score: 0,
             user_status: 'New in town...',
-            user_profile_pic: 'https://www.dropbox.com/scl/fi/p2wxffl51e50wybb5nrz1/logo.png?rlkey=hkgaocdy6duq4ze2w9b3tvhkq&dl=0'
+            user_profile_pic: 'https://dl.dropboxusercontent.com/scl/fi/p2wxffl51e50wybb5nrz1/logo.png?rlkey=hkgaocdy6duq4ze2w9b3tvhkq&dl=0'
           })
           .then((user) => {
-            const userId = user[0].id;
+            const userData = user[0]; 
+            const userId = user[0].user_id;
             return trx('login')
               .returning('*')
               .insert({
@@ -144,40 +104,92 @@ if (!email || !username || !password) {
               })
           .then((user) => {
             trx.commit();
-            res.json(user[0]);
+            res.json(userData);
           });
         })
               .catch((err) => {
                 trx.rollback();
-                res.status(400).json('Unable to register1' + err.message);
+                res.status(400).json({ error: 'Unable to register1', message: err.message });
               });
           })
           
       });
     });
 
+  server.post('/login', (req, res) => {
+    const { email, password } = req.body;
+    db.select('*')
+      .from('users')
+      .where('user_email', '=', email.toLowerCase())
+      .then(userData => {
+        if (userData.length === 0) {
+          return res.status(400).json('no email Creds Bro');
+        }
+        const userId = userData[0].id;
+        return db.select('hash')
+          .from('login')
+          .where('user_id', '=', userId)
+          .then(loginData => {
+            if (loginData.length === 0) {
+              return res.status(400).json('Insufficient Creds Bro, database err');
+            }
+            bcrypt.compare(password, loginData[0].hash, (err, result) => {
+              if (result) {
+                return db.select('*')
+                  .from('users')
+                  .where('user_id', '=', userId)
+                  .then(user => {
+                    res.json(user[0]);
+                  })
+                  .catch(err => {
+                    res.status(400).json('Unable to get user');
+                  });
+              } else {
+                res.status(400).json('Very Much Wrong Creds Bro');
+              }
+            });
+          });
+      })
+      .catch(err => {
+        console.log(err)
+        res.status(400).json({ error: 'Wrong Creds Bro', details: err });
+      });
+  });
     
-server.put('/upload-profile-pic', async (req, res) => {
-  const user  = req.body.user.id;
+server.put('/upload-profile-pic', upload.single('photo'), async (req, res) => {
+  const user  = req.body.user_id;
   const uploadedPhoto = req.file;
    if (!uploadedPhoto) {
     return res.status(400).json({ error: 'No profile photo provided' });
   }
-  // const filepath = path.join(__dirname, 'uploads', 'photos', uploadedPhoto.filename); // might not need it
-  const photoFileStream = fs.createReadStream(uploadedPhoto.path)
+  const photoFileStream = streamifier.createReadStream(uploadedPhoto.buffer)
+  let databaseLink;
   try {
   const dropboxResponse = await dbx.filesUpload({
-    path: `/uploads/photos/${uploadedPhoto.filename}`,
+    path: `/uploads/photos/${uploadedPhoto.originalname}`,
     contents: photoFileStream
   });
-
-  const dropboxPath = dropboxResponse.metadata.path_display;
+  console.log(dropboxResponse);
+  const dropboxPath = dropboxResponse.result.id;
+  console.log('dpx path: ', dropboxPath)
+  try {
+    const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
+      path: dropboxResponse.result.path_display,
+      settings: { requested_visibility: {'.tag.tag': 'public' } },
+    });
+    const shareableLink = linkResponse.result.url;
+    databaseLink = shareableLink.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
+    // console.log('Shareable link:', shareableLink);
+    // console.log('Database link: ', databaseLink)
+  } catch (error) {
+    console.error('Error creating shared link:', error);
+  }
 
   await db('users')
   .where('user_id', user)
-  .update({user_profile_pic: dropboxPath})
+  .update({user_profile_pic: databaseLink})
   
-res.status(200).json({newPhoto: dropboxPath})
+res.status(200).json({newPhoto: databaseLink})
 } catch(error) {
     console.error('Error updating Database: ', error);
     res.status(500).json({error: 'Server XXXX Error'})

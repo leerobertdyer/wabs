@@ -4,13 +4,11 @@ A social Media website based around songwriting that encourages quantity over qu
 Still very much in development ;)
 
 ## DROPBOX API:
-when using links in html element, I'll have to change 
+MAIN ISSUE: my token expires every four hours, I'll need to update how I authorize the app...
+https://www.dropbox.com/developers/documentation/http/documentation#oauth2-authorize - DPX API DOCUMENTATION
+
+when using links in html element, remember to change 
 https://www.dropbox.com to https://dl.dropboxusercontent.com
-
-
-LINK TO API DOC I think will help (also last response in chat gpt will be helpful to get the shared link and use it in an audio element...)
-
-https://www.dropbox.com/developers/documentation/http/documentation#sharing-create_shared_link_with_settings
 
 # WORK LOG:
 -   vague success on getting the upload to run without errors,
