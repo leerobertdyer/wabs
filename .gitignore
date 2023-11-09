@@ -8,4 +8,4 @@ wabs/npm-debug.log*
 
 server/node_modules/
 server/npm-debug.log
-server/.env
+.env
