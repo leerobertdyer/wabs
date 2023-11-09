@@ -15,15 +15,13 @@ function Submit(props) {
         formData.append('lyrics', lyrics)
         formData.append('user_id', user)
         if (song) {
-            console.log(song)
+            console.log('SONG: ', song)
             formData.append('song_file', song)
             formData.append('test', 'testValue')
             console.log(title, lyrics, user)
             for (const entry of formData.entries()) {
                 console.log(entry);
               }
-              
-
             fetch('http://localhost:4000/submit', {
                 method: 'POST',
                 body: formData,
@@ -32,7 +30,7 @@ function Submit(props) {
                     return resp.json()
                 } else { throw new Error(`Failed to Upload: ${resp.status}`) }
             }).then(data => {
-                console.log(data)
+                console.log('MY_DATA: ', data) // i'm getting nothing here. maybe should respond from server with something???
             }).catch(error => {
                 console.log("Something ain't right...", error.message)
                 console.log('Full response:', error.response);

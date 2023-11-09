@@ -3,6 +3,11 @@ A social Media website based around songwriting that encourages quantity over qu
 
 Still very much in development ;)
 
+## DROPBOX API:
+when using links in html element, I'll have to change 
+https://www.dropbox.com to https://dl.dropboxusercontent.com
+
+
 LINK TO API DOC I think will help (also last response in chat gpt will be helpful to get the shared link and use it in an audio element...)
 
 https://www.dropbox.com/developers/documentation/http/documentation#sharing-create_shared_link_with_settings
