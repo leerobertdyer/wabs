@@ -1,9 +1,7 @@
 -- using the app itself to insert
 -- may use this to delete and start fresh....
 
-INSERT INTO users(
-    
-)
+SELECT * FROM users;
 
 DELETE FROM login;
 

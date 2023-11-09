@@ -18,12 +18,10 @@ function Profile(props) {
 
     const handlePhotoSubmit = (event) => {
         const photo = event.target.files[0];
-
         if (photo) {
             const formData = new FormData();
             formData.append('user[id]', user.id);
             formData.append('photo', photo);
-
             fetch('http://localhost:4000/upload-profile-pic', {
                 method: "PUT",
                 body: formData,

@@ -10,8 +10,10 @@ import { fileURLToPath } from 'url';
 import { Dropbox } from 'dropbox'
 import dotenv from 'dotenv'
 import pg from 'pg'
+import fs from 'fs'
+import streamifier from 'streamifier'
 
-dotenv.config({ path: './.env'});
+dotenv.config({ path: '../.env'});
 
 const client = new pg.Client({
   connectionString: process.env.ELEPHANTSQL_URL,
@@ -24,10 +26,13 @@ client.connect()
     console.error('Error connecting to ElephantSQL:', err)});
 
 const dropboxApiKey = process.env.DROPBOX_API_KEY;
-const dropbox = new Dropbox({ accessToken: dropboxApiKey });
+const dbx = new Dropbox({ accessToken: dropboxApiKey });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage});
 
 // multer profile pic storage - Might be replaced by dropbox api...
 const profilePicStorage = multer.diskStorage({
@@ -72,7 +77,7 @@ server.post('/login', (req, res) => {
   const { email, password } = req.body;
   db.select('*')
     .from('users')
-    .where('user_email', '=', email.lower())
+    .where('user_email', '=', email.toLowerCase())
     .then(userData => {
       if (userData.length === 0) {
         return res.status(400).json('no email Creds Bro');
@@ -152,23 +157,31 @@ if (!email || !username || !password) {
     });
 
     
-server.put('/upload-profile-pic', profilePicUpload.single('photo'), (req, res) => {
+server.put('/upload-profile-pic', async (req, res) => {
   const user  = req.body.user.id;
   const uploadedPhoto = req.file;
    if (!uploadedPhoto) {
     return res.status(400).json({ error: 'No profile photo provided' });
   }
-  const filepath = path.join(__dirname, 'uploads', 'photos', uploadedPhoto.filename);
+  // const filepath = path.join(__dirname, 'uploads', 'photos', uploadedPhoto.filename); // might not need it
+  const photoFileStream = fs.createReadStream(uploadedPhoto.path)
+  try {
+  const dropboxResponse = await dbx.filesUpload({
+    path: `/uploads/photos/${uploadedPhoto.filename}`,
+    contents: photoFileStream
+  });
 
-  db('users')
-  .where('id', user)
-  .update({profilephoto: uploadedPhoto.filename})
-  .then(() => {
-    res.status(200).json({newPhoto: uploadedPhoto.filename})
-  }).catch((error) => {
+  const dropboxPath = dropboxResponse.metadata.path_display;
+
+  await db('users')
+  .where('user_id', user)
+  .update({user_profile_pic: dropboxPath})
+  
+res.status(200).json({newPhoto: dropboxPath})
+} catch(error) {
     console.error('Error updating Database: ', error);
     res.status(500).json({error: 'Server XXXX Error'})
-  })
+  }
 });
 
 server.put('/update-status', (req, res) => {
@@ -184,32 +197,42 @@ server.put('/update-status', (req, res) => {
   })
 });
 
-server.post('/submit', (req, res) => {
-  const uploadedSong = req.song_file;
+server.post('/submit', upload.single('song_file'), async (req, res) => {
+  const uploadedSong = req.file;
+  console.log(uploadedSong)
   if (!uploadedSong) {
     return res.status(400).json({ error: 'No song provided' });
   }
-  const songFilePath = path.join(__dirname, 'uploads', 'songs', uploadedSong.filename);
-  const songFileStream = fs.createReadStream(songFilePath);
-  dbx.filesUpload({
-    path: '/songs/' + uploadedSong.filename,
-    contents: songFileStream,
-  }).then(() => {
-    return db('songs')
+
+  const songFileStream = streamifier.createReadStream(uploadedSong.buffer); 
+
+  try {
+  const dropboxResponse = await dbx.filesUpload({
+    path: `/uploads/songs/${uploadedSong.originalname}`,
+    contents: songFileStream
+  });
+  console.log(dropboxResponse);
+
+  const dropboxPath = dropboxResponse.result.id
+
+  console.log('dpx path: ', dropboxPath)
+  
+    await db('songs')
     .insert({
       title: req.body.title,
       lyrics: req.body.lyrics,
       user_id: req.body.user_id,
-      song_file: uploadedSong.filename,
+      song_file: dropboxPath,
       votes: 0,
       song_date: new Date()
     });
-  }).then(() => {
+    
     res.status(200).json({song: uploadedSong.filename})
-  }).catch((error) => {
+}
+ catch(error) {
     console.error('Error submitting new song in Database', error);
     res.status(500).json({error: 'Server Status  Error'})
-  })
+  }
 });
 
 server.listen(port, () => {

@@ -3,16 +3,20 @@ A social Media website based around songwriting that encourages quantity over qu
 
 Still very much in development ;)
 
-
-
 # WORK LOG:
--   Started switching from Multer to Dropbox api so i can use the 
+-   vague success on getting the upload to run without errors,
+but still not seeing the files show up in my dropbox///
+-   and when i finally figure that out still need to figure out how to access them...
+-   Started working with dropbox api so I can use 
     ELEPHANTSQL database without running out of room.
 -   I'll need to clean out the multer references, and update 
 -   LOGIN.js
 -   REGISTER.js
 -   SUBMIT.js
--   I'm currently having trouble logging in. Registered users are getting stored in database
+-  Registered users are getting stored in database, but login doesn't work
+- Submit doesn't work either
+- can't login to test the profile pic update either. Pretty much broke my app lol
+-   BUT! I did solve the db problem where I kept spending an hour every time i switched computers...
 
 
 ## current gameplan:

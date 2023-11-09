@@ -6,22 +6,27 @@ function Submit(props) {
     const [lyrics, setLyrics] = useState('')
     const [song, setSong] = useState(null)
 
-    const handleSongSubmit = (event) => {  // Current Issue: songwriter is not in users. Need to update id in users to user_id and same for other tables...
+    const handleSongSubmit = (event) => { 
         event.preventDefault()
-        const user = props.user.id
+        const user = 1 // change back to props.user.user_id when I fix login...
         console.log(user)
         const formData = new FormData();
         formData.append('title', title);
         formData.append('lyrics', lyrics)
         formData.append('user_id', user)
         if (song) {
+            console.log(song)
             formData.append('song_file', song)
+            formData.append('test', 'testValue')
             console.log(title, lyrics, user)
-            console.log(formData);
+            for (const entry of formData.entries()) {
+                console.log(entry);
+              }
+              
 
             fetch('http://localhost:4000/submit', {
-                method: 'post',
-                body: formData
+                method: 'POST',
+                body: formData,
             }).then(resp => {
                 if (resp.ok) {
                     return resp.json()
@@ -30,6 +35,7 @@ function Submit(props) {
                 console.log(data)
             }).catch(error => {
                 console.log("Something ain't right...", error.message)
+                console.log('Full response:', error.response);
             });
         } else { console.log("Make sure there's a file..") }
     }
