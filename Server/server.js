@@ -10,7 +10,6 @@ import { fileURLToPath } from 'url';
 import { Dropbox } from 'dropbox'
 import dotenv from 'dotenv'
 import pg from 'pg'
-import fs from 'fs'
 import streamifier from 'streamifier'
 
 dotenv.config({ path: '../.env'});
@@ -25,8 +24,10 @@ client.connect()
   .catch((err) => {
     console.error('Error connecting to ElephantSQL:', err)});
 
-const dropboxApiKey = process.env.DROPBOX_API_KEY;
-const dbx = new Dropbox({ accessToken: dropboxApiKey });
+const APP_KEY = process.env.DROPBOX_APP_KEY
+const APP_SECRET = process.env.DROPBOX_APP_SECRET
+const REDIRECT_URI = 'http://localhost:4000/auth-callback'
+const dbx = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, fetch });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,36 +35,22 @@ const __dirname = path.dirname(__filename);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage});
 
-// multer profile pic storage - Might be replaced by dropbox api...
-const profilePicStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/photos'); 
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname); 
-  }
-});
-const profilePicUpload = multer({ storage: profilePicStorage });
- //multer songStorage - See above...
-const songStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/songs');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname); 
-  }
-});
-const songUpload = multer({ storage: songStorage });
-
 const db = knex({
   client: 'pg', 
   connection: process.env.ELEPHANTSQL_URL
 });
 
 server.use(express.json());
-server.use(cors({ origin: 'http://localhost:3000' })); // Will need to change this for deployment
-server.use('/uploads', express.static('uploads'));
 
+const corsOptions = {
+  origin: 'http://localhost:3000', // Update this when deploying
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+server.use(cors(corsOptions));
+
+server.use('/uploads', express.static('uploads'));
 
 server.get('/', (req, res) => { // home feed should display a variety of things: newest song submissions, collabs, and status updates
     db.select('*').from('users')
@@ -73,7 +60,7 @@ server.get('/', (req, res) => { // home feed should display a variety of things:
     })
 })
 
-  server.post('/register', (req, res) => {
+server.post('/register', (req, res) => {
     const { email, username, password } = req.body;
 if (!email || !username || !password) {
   return res.status(400).json('Missing email, username, or password...')
@@ -116,7 +103,7 @@ if (!email || !username || !password) {
       });
     });
 
-  server.post('/login', (req, res) => {
+server.post('/login', (req, res) => {
     const { email, password } = req.body;
     db.select('*')
       .from('users')
@@ -125,7 +112,7 @@ if (!email || !username || !password) {
         if (userData.length === 0) {
           return res.status(400).json('no email Creds Bro');
         }
-        const userId = userData[0].id;
+        const userId = userData[0].user_id;
         return db.select('hash')
           .from('login')
           .where('user_id', '=', userId)
@@ -156,6 +143,34 @@ if (!email || !username || !password) {
       });
   });
     
+  server.post('/auth', cors(corsOptions), async (req, res) => {
+    try {
+      const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline');
+      console.log('Authorization URL:', authUrl);
+      res.redirect(authUrl);
+    } catch (error) {
+      console.error('Error generating authentication URL:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+  
+
+
+server.get('/auth-callback', async (req, res) => {
+  const { code } = req.query;
+  // Step 3: Exchange the authorization code for an access token
+  try {
+    const tokenResponse = await dbx.getAccessTokenFromCode(REDIRECT_URI, code);
+    const accessToken = tokenResponse.result.access_token;
+    // Step 4: Use the obtained access token for Dropbox API requests
+    // (Your existing file upload logic can go here) -> maybe I can view files here...
+    res.status(200).send('Authentication successful!');
+  } catch (error) {
+    console.error('Error obtaining access token:', error);
+    res.status(500).json({ error: 'Failed to obtain access token' });
+  }
+});
+
 server.put('/upload-profile-pic', upload.single('photo'), async (req, res) => {
   const user  = req.body.user_id;
   const uploadedPhoto = req.file;
@@ -209,7 +224,7 @@ server.put('/update-status', (req, res) => {
   })
 });
 
-server.post('/submit', upload.single('song_file'), async (req, res) => {
+server.post('/submit', cors(corsOptions), upload.single('song_file'), async (req, res) => {
   const uploadedSong = req.file;
   // console.log(uploadedSong)
   if (!uploadedSong) {
