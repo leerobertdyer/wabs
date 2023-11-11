@@ -27,6 +27,7 @@ client.connect()
 const APP_KEY = process.env.DROPBOX_APP_KEY
 const APP_SECRET = process.env.DROPBOX_APP_SECRET
 const REDIRECT_URI = 'http://localhost:4000/auth-callback'
+const REDIRECT_URI_CALLBACK = 'http://localhost:4000/auth-redirect'
 const dbx = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, fetch });
 
 const __filename = fileURLToPath(import.meta.url);
@@ -143,28 +144,34 @@ server.post('/login', (req, res) => {
       });
   });
     
-  server.post('/auth', cors(corsOptions), async (req, res) => {
-    try {
-      const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline');
-      // console.log('Authorization URL:', authUrl);
-      res.json({ authUrl: authUrl })
-    } catch (error) {
-      console.error('Error generating authentication URL:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+server.post('/auth', async (req, res) => {
+  try {
+    const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline');
+    console.log('Authorization URL:', authUrl);
+    res.json({ authUrl: authUrl })
+  } catch (error) {
+    console.error('Error generating authentication URL:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
   
 server.get('/auth-callback', async (req, res) => {
-  const { code } = req.query;
+  const { code } = req.query; 
   try {
-    const tokenResponse = await dbx.auth.getAccessTokenFromCode(REDIRECT_URI, code);
+    console.log('received auth code: ', code)
+    const tokenResponse = await dbx.auth.getAccessTokenFromCode(REDIRECT_URI_CALLBACK, code);
+    console.log('token response: ', tokenResponse)
     const accessToken = tokenResponse.result.access_token;
-    res.redirect('http://localhost:3000') 
+    res.json({"accessToken": accessToken})
   } catch (error) {
     console.error('Error obtaining access token:', error);
     res.status(500).json({ error: 'Failed to obtain access token' });
   }
 });
+
+server.get('/auth-redirect', async (req, res) => {
+  res.redirect('http://localhost:3000/')
+})
 
 server.put('/upload-profile-pic', upload.single('photo'), async (req, res) => {
   const user  = req.body.user_id;
@@ -219,7 +226,9 @@ server.put('/update-status', (req, res) => {
   })
 });
 
-server.post('/submit', cors(corsOptions), upload.single('song_file'), async (req, res) => {
+
+
+server.post('/submit', upload.single('song_file'), async (req, res) => {
   const uploadedSong = req.file;
   // console.log(uploadedSong)
   if (!uploadedSong) {
