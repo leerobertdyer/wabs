@@ -13,16 +13,19 @@ function Submit(props) {
         try {
             const authUrlResponse = await fetch('http://localhost:4000/auth', {
                 method: 'POST',
-            });
-           
+            })
+            console.log('authUrlResponse:', authUrlResponse);
+
+
             if (!authUrlResponse.ok) {
                 throw new Error(`Failed to get auth URL: ${authUrlResponse.status}`);
             }
+
             const authData = await authUrlResponse.json();
             const authUrl = authData.authUrl; 
             console.log('authData: ', authData)
             console.log('authUrl ', authUrl)
-            window.open(authUrl, '_blank');
+            window.location.href = authUrl;
             if (song) {
                 formData.append('title', title);
                 formData.append('lyrics', lyrics)

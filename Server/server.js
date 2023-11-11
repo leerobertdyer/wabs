@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import { Dropbox } from 'dropbox'
 import dotenv from 'dotenv'
 import pg from 'pg'
-import streamifier from 'streamifier'
+import { Readable } from 'stream';
 
 dotenv.config({ path: '../.env'});
 
@@ -146,7 +146,7 @@ server.post('/login', (req, res) => {
   server.post('/auth', cors(corsOptions), async (req, res) => {
     try {
       const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline');
-      console.log('Authorization URL:', authUrl);
+      // console.log('Authorization URL:', authUrl);
       res.json({ authUrl: authUrl })
     } catch (error) {
       console.error('Error generating authentication URL:', error);
@@ -158,13 +158,10 @@ server.post('/login', (req, res) => {
 
 server.get('/auth-callback', async (req, res) => {
   const { code } = req.query;
-  // Step 3: Exchange the authorization code for an access token
   try {
-    const tokenResponse = await dbx.getAccessTokenFromCode(REDIRECT_URI, code);
+    const tokenResponse = await dbx.auth.getAccessTokenFromCode(REDIRECT_URI, code);
     const accessToken = tokenResponse.result.access_token;
-    // Step 4: Use the obtained access token for Dropbox API requests
-    // (Your existing file upload logic can go here) -> maybe I can view files here...
-    res.status(200).send('Authentication successful!');
+    res.redirect('http://localhost:3000') 
   } catch (error) {
     console.error('Error obtaining access token:', error);
     res.status(500).json({ error: 'Failed to obtain access token' });
@@ -177,7 +174,7 @@ server.put('/upload-profile-pic', upload.single('photo'), async (req, res) => {
    if (!uploadedPhoto) {
     return res.status(400).json({ error: 'No profile photo provided' });
   }
-  const photoFileStream = streamifier.createReadStream(uploadedPhoto.buffer)
+  const photoFileStream = Readable.from(uploadedPhoto.buffer)
   let databaseLink;
   try {
   const dropboxResponse = await dbx.filesUpload({
@@ -230,16 +227,17 @@ server.post('/submit', cors(corsOptions), upload.single('song_file'), async (req
   if (!uploadedSong) {
     return res.status(400).json({ error: 'No song provided' });
   }
-  const songFileStream = streamifier.createReadStream(uploadedSong.buffer); 
+  const songFileStream = Readable.from(uploadedSong.buffer); 
   let databaseLink;
+  console.log('songFileStream: ', songFileStream)
   try {
   const dropboxResponse = await dbx.filesUpload({
     path: `/uploads/songs/${uploadedSong.originalname}`,
     contents: songFileStream
   });
-  // console.log(dropboxResponse);
+  console.log('dropboxResponse: ', dropboxResponse);
   const dropboxPath = dropboxResponse.result.id
-  // console.log('dpx path: ', dropboxPath)
+  console.log('dpx path: ', dropboxPath)
   try {
     const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
       path: dropboxResponse.result.path_display,
