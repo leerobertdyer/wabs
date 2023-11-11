@@ -1,51 +1,66 @@
 import React, { useState } from 'react';
 import './Submit.css'
 
-function Submit(props) {  
+function Submit(props) {
     const [title, setTitle] = useState('')
     const [lyrics, setLyrics] = useState('')
     const [song, setSong] = useState(null)
-
-    const handleSongSubmit = (event) => { 
+    
+    const handleSongSubmit = async (event) => {
         event.preventDefault()
-        const user = 1 // change back to props.user.user_id when I fix login...
-        console.log(user)
+        const user = props.user.user_id
         const formData = new FormData();
-        formData.append('title', title);
-        formData.append('lyrics', lyrics)
-        formData.append('user_id', user)
-        if (song) {
-            console.log('SONG: ', song)
-            formData.append('song_file', song)
-            formData.append('test', 'testValue')
-            console.log(title, lyrics, user)
-            for (const entry of formData.entries()) {
-                console.log(entry);
-              }
-            fetch('http://localhost:4000/submit', {
+        try {
+            const authUrlResponse = await fetch('http://localhost:4000/auth', {
                 method: 'POST',
-                body: formData,
-            }).then(resp => {
-                if (resp.ok) {
-                    return resp.json()
-                } else { throw new Error(`Failed to Upload: ${resp.status}`) }
-            }).then(data => {
-                console.log('MY_DATA: ', data) // i'm getting nothing here. maybe should respond from server with something???
-            }).catch(error => {
-                console.log("Something ain't right...", error.message)
-                console.log('Full response:', error.response);
             });
-        } else { console.log("Make sure there's a file..") }
-    }
+           
+            if (!authUrlResponse.ok) {
+                throw new Error(`Failed to get auth URL: ${authUrlResponse.status}`);
+            }
+            const authData = await authUrlResponse.json();
+            const authUrl = authData.authUrl; 
+            console.log('authData: ', authData)
+            console.log('authUrl ', authUrl)
+            window.open(authUrl, '_blank');
+            if (song) {
+                formData.append('title', title);
+                formData.append('lyrics', lyrics)
+                formData.append('user_id', user)
+                formData.append('song_file', song);
+                formData.append('test', 'testValue');
+                console.log(title, lyrics, user);
+
+                const submitResponse = await fetch('http://localhost:4000/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authData.access_token}`
+                    },
+                    body: formData,
+                });
+
+                if (submitResponse.ok) {
+                    const submitData = await submitResponse.json();
+                    console.log('Song submission successful:', submitData);
+                } else {
+                    throw new Error(`Failed to submit song: ${submitResponse.status}`);
+                }
+            } else {
+                console.log("Make sure there's a file..");
+            }
+        } catch (error) {
+            console.error('Error during song submission:', error);
+        }
+    };
 
 
     return (
         <div id="mainSubmitDiv"
             className='black'>
             <form className='submitSongForm'
-            action="/submit" 
-            method="post" 
-            encType="multipart/form-data">
+                action="/submit"
+                method="post"
+                encType="multipart/form-data">
                 <legend className='submitSongLegend'>Submit A Song!</legend>
                 <div className='formBlock'>
                     <label htmlFor="songTitle"
@@ -66,7 +81,7 @@ function Submit(props) {
                         cols="30" rows="10"
                         placeholder='I wrote me a song.... it had some words.... and now it exits...'
                         required
-                        onChange={(event) => { setLyrics(event.target.value) }}/>                    
+                        onChange={(event) => { setLyrics(event.target.value) }} />
                 </div><div></div>
                 <label htmlFor="songFile"
                     className='clickMe black smallFormButton center'>Song+</label>
@@ -76,7 +91,7 @@ function Submit(props) {
                     accept="audio/*"
                     required
                     style={{ display: 'none' }}
-                    onChange={(event) => {setSong(event.target.files[0])}} />
+                    onChange={(event) => { setSong(event.target.files[0]) }} />
                 <input type="submit"
                     value="Submit"
                     className='formSubmitButton'

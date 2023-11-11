@@ -147,7 +147,7 @@ server.post('/login', (req, res) => {
     try {
       const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline');
       console.log('Authorization URL:', authUrl);
-      res.redirect(authUrl);
+      res.json({ authUrl: authUrl })
     } catch (error) {
       console.error('Error generating authentication URL:', error);
       res.status(500).json({ error: 'Internal Server Error' });
