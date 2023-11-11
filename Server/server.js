@@ -154,8 +154,6 @@ server.post('/login', (req, res) => {
     }
   });
   
-
-
 server.get('/auth-callback', async (req, res) => {
   const { code } = req.query;
   try {
@@ -229,8 +227,8 @@ server.post('/submit', cors(corsOptions), upload.single('song_file'), async (req
   }
   const songFileStream = Readable.from(uploadedSong.buffer); 
   let databaseLink;
-  console.log('songFileStream: ', songFileStream)
   try {
+    console.log('works here')
   const dropboxResponse = await dbx.filesUpload({
     path: `/uploads/songs/${uploadedSong.originalname}`,
     contents: songFileStream

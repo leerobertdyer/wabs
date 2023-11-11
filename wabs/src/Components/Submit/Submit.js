@@ -5,7 +5,7 @@ function Submit(props) {
     const [title, setTitle] = useState('')
     const [lyrics, setLyrics] = useState('')
     const [song, setSong] = useState(null)
-    
+
     const handleSongSubmit = async (event) => {
         event.preventDefault()
         const user = props.user.user_id
@@ -16,16 +16,15 @@ function Submit(props) {
             })
             console.log('authUrlResponse:', authUrlResponse);
 
-
             if (!authUrlResponse.ok) {
                 throw new Error(`Failed to get auth URL: ${authUrlResponse.status}`);
             }
 
             const authData = await authUrlResponse.json();
-            const authUrl = authData.authUrl; 
+            const authUrl = authData.authUrl;
             console.log('authData: ', authData)
             console.log('authUrl ', authUrl)
-            window.location.href = authUrl;
+            // window.location.href = authUrl;
             if (song) {
                 formData.append('title', title);
                 formData.append('lyrics', lyrics)
@@ -46,7 +45,8 @@ function Submit(props) {
                     const submitData = await submitResponse.json();
                     console.log('Song submission successful:', submitData);
                 } else {
-                    throw new Error(`Failed to submit song: ${submitResponse.status}`);
+                    const errorText = await submitResponse.text();
+                    console.error('Failed to submit song. Server response:', submitResponse.status, errorText);
                 }
             } else {
                 console.log("Make sure there's a file..");
