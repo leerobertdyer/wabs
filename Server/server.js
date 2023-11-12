@@ -27,7 +27,7 @@ client.connect()
 const APP_KEY = process.env.DROPBOX_APP_KEY
 const APP_SECRET = process.env.DROPBOX_APP_SECRET
 const REDIRECT_URI = 'http://localhost:4000/auth-callback'
-const REDIRECT_URI_CALLBACK = 'http://localhost:4000/auth-redirect'
+const REDIRECT_URI_CALLBACK = 'http://localhost:4000/auth-final'
 const dbx = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, fetch });
 
 const __filename = fileURLToPath(import.meta.url);
@@ -147,31 +147,85 @@ server.post('/login', (req, res) => {
 server.post('/auth', async (req, res) => {
   try {
     const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline');
-    console.log('Authorization URL:', authUrl);
+    // console.log('Authorization URL:', authUrl);
     res.json({ authUrl: authUrl })
   } catch (error) {
     console.error('Error generating authentication URL:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-  
+
+let tempAuthToken = ''
+
 server.get('/auth-callback', async (req, res) => {
-  const { code } = req.query; 
+  const { code } = req.query;
   try {
-    console.log('received auth code: ', code)
-    const tokenResponse = await dbx.auth.getAccessTokenFromCode(REDIRECT_URI_CALLBACK, code);
-    console.log('token response: ', tokenResponse)
-    const accessToken = tokenResponse.result.access_token;
-    res.json({"accessToken": accessToken})
+    // console.log('received auth code: ', code)
+    if (tempAuthToken === '') {
+      const tokenResponse = await dbx.auth.getAccessTokenFromCode(REDIRECT_URI, code);
+      // console.log('token response: ', tokenResponse)
+      tempAuthToken  = tokenResponse.result.access_token;
+      // console.log('accessToken: ', (tempAuthToken));
+      res.redirect(`http://localhost:3000/?accessToken=${tempAuthToken}`)
+      tempAuthToken = ''
+    }
+    else {
+      console.log("token obtained, mission partial success..")
+      res.redirect(`http://localhost:3000/?accessToken=${token}`)
+    }
   } catch (error) {
     console.error('Error obtaining access token:', error);
     res.status(500).json({ error: 'Failed to obtain access token' });
   }
 });
 
-server.get('/auth-redirect', async (req, res) => {
-  res.redirect('http://localhost:3000/')
-})
+server.post('/submit', upload.single('song_file'), async (req, res) => {
+  const uploadedSong = req.file;
+  // console.log(uploadedSong)
+  if (!uploadedSong) {
+    return res.status(400).json({ error: 'No song provided' });
+  }
+  const songFileStream = Readable.from(uploadedSong.buffer); 
+  console.log('buffer size: ', uploadedSong.buffer.length)
+  let databaseLink;
+  try {
+    console.log('works here')
+    const dropboxResponse = await dbx.filesUpload({
+      path: `/uploads/songs/${uploadedSong.originalname}`,
+      contents: songFileStream
+    });
+    console.log('dropboxResponse: ', dropboxResponse);
+    const dropboxPath = dropboxResponse.result.id
+    console.log('dpx path: ', dropboxPath)
+    try {
+      const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
+        path: dropboxResponse.result.path_display,
+        settings: { requested_visibility: { '.tag': 'public' } },
+      });
+      const shareableLink = linkResponse.result.url;
+      databaseLink = shareableLink.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
+      // console.log('Shareable link:', shareableLink);
+      // console.log('Database link: ', databaseLink)
+    } catch (error) {
+      console.error('Error creating shared link:', error);
+    }
+    await db('songs')
+    .insert({
+      title: req.body.title,
+      lyrics: req.body.lyrics,
+      user_id: req.body.user_id,
+      song_file: databaseLink,
+      votes: 0,
+      song_date: new Date()
+    });
+    res.status(200).json({song: uploadedSong.filename})
+  }
+  catch(error) {
+    console.error('Error submitting new song in Database', error);
+    res.status(500).json({error: 'Server Status  Error'})
+  }
+});
+
 
 server.put('/upload-profile-pic', upload.single('photo'), async (req, res) => {
   const user  = req.body.user_id;
@@ -224,54 +278,6 @@ server.put('/update-status', (req, res) => {
     console.error('Error setting new status in Database', error);
     res.status(500).json({error: 'Server Status Error'})
   })
-});
-
-
-
-server.post('/submit', upload.single('song_file'), async (req, res) => {
-  const uploadedSong = req.file;
-  // console.log(uploadedSong)
-  if (!uploadedSong) {
-    return res.status(400).json({ error: 'No song provided' });
-  }
-  const songFileStream = Readable.from(uploadedSong.buffer); 
-  let databaseLink;
-  try {
-    console.log('works here')
-  const dropboxResponse = await dbx.filesUpload({
-    path: `/uploads/songs/${uploadedSong.originalname}`,
-    contents: songFileStream
-  });
-  console.log('dropboxResponse: ', dropboxResponse);
-  const dropboxPath = dropboxResponse.result.id
-  console.log('dpx path: ', dropboxPath)
-  try {
-    const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
-      path: dropboxResponse.result.path_display,
-      settings: { requested_visibility: { '.tag': 'public' } },
-    });
-    const shareableLink = linkResponse.result.url;
-    databaseLink = shareableLink.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
-    // console.log('Shareable link:', shareableLink);
-    // console.log('Database link: ', databaseLink)
-  } catch (error) {
-    console.error('Error creating shared link:', error);
-  }
-    await db('songs')
-    .insert({
-      title: req.body.title,
-      lyrics: req.body.lyrics,
-      user_id: req.body.user_id,
-      song_file: databaseLink,
-      votes: 0,
-      song_date: new Date()
-    });
-    res.status(200).json({song: uploadedSong.filename})
-}
- catch(error) {
-    console.error('Error submitting new song in Database', error);
-    res.status(500).json({error: 'Server Status  Error'})
-  }
 });
 
 server.listen(port, () => {
