@@ -8,35 +8,57 @@ function Submit(props) {
 
     const handleSongSubmit = async (event) => {
         event.preventDefault()
-        const user = props.user.user_id
+        const user = 13 //  props.user.user_id
         const formData = new FormData();
+        const waitForAccessToken = () => {
+            const timeout = 30000;
+            const start = Date.now();
+            return new Promise(async (resolve, reject) => {
+              const checkParams = async () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const accessToken = urlParams.get('accessToken');
+          
+                if (accessToken) {
+                  resolve(accessToken);
+                }
+                else if (Date.now() - start < timeout) {
+                    setTimeout(checkParams, 500)
+                } else {
+                    reject(new Error('Timeout: Access token not received.'));
+                  }
+              };
+              checkParams();
+            });
+          };
         try {
             const authUrlResponse = await fetch('http://localhost:4000/auth', {
                 method: 'POST',
             })
-            console.log('authUrlResponse:', authUrlResponse);
 
             if (!authUrlResponse.ok) {
                 throw new Error(`Failed to get auth URL: ${authUrlResponse.status}`);
             }
 
             const authData = await authUrlResponse.json();
-            const authUrl = authData.authUrl;
-            console.log('authData: ', authData)
-            console.log('authUrl ', authUrl)
+            const authUrl = authData.authUrl
+            console.log('authData', authData)
+            console.log('authurl: ', authUrl)
+
+            window.open(authUrl, '_blank')
             // window.location.href = authUrl;
+
             if (song) {
                 formData.append('title', title);
                 formData.append('lyrics', lyrics)
                 formData.append('user_id', user)
                 formData.append('song_file', song);
-                formData.append('test', 'testValue');
-                console.log(title, lyrics, user);
-
+                console.log(title, lyrics, user, song);
+                const accessToken = await waitForAccessToken();
+                console.log("in submit after songs: ", accessToken )
                 const submitResponse = await fetch('http://localhost:4000/submit', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${authData.access_token}`
+                        'Authorization': `Bearer ${accessToken}`
                     },
                     body: formData,
                 });
