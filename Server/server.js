@@ -167,18 +167,19 @@ server.get('/auth-callback', async (req, res) => {
       // console.log('token response: ', tokenResponse)
       tempAuthToken  = tokenResponse.result.access_token;
       // console.log('accessToken: ', (tempAuthToken));
-      res.redirect(`http://localhost:3000/?accessToken=${tempAuthToken}`)
+      res.redirect(`http://localhost:3000/access?accessToken=${tempAuthToken}`)
       tempAuthToken = ''
     }
     else {
       console.log("token obtained, mission partial success..")
-      res.redirect(`http://localhost:3000/?accessToken=${token}`)
+      res.redirect(`http://localhost:3000/access?accessToken=${token}`)
     }
   } catch (error) {
     console.error('Error obtaining access token:', error);
     res.status(500).json({ error: 'Failed to obtain access token' });
   }
 });
+
 
 server.post('/submit', upload.single('song_file'), async (req, res) => {
   const uploadedSong = req.file;
