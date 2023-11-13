@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Login from './Components/Login/Login';
@@ -8,7 +8,7 @@ import Register from './Components/Register/Register';
 import Profile from './Components/Profile/Profile';
 import Songs from './Components/Songs/Songs';
 import Submit from './Components/Submit/Submit';
-
+import Access from './Components/Access/Access';
 
 class App extends Component {
   constructor(props) {
@@ -23,6 +23,12 @@ class App extends Component {
         score: 0,
         datecreated: ''
       },
+      song: {
+        title: '',
+        lyrics: '',
+        song_file: ''
+      },
+      isAuthorizing: false
 
     };
   }
@@ -56,48 +62,55 @@ class App extends Component {
         status: data.user_status
       }
     },
-    () => {
-      console.log(this.state.user)
-    }
+      () => {
+        console.log(this.state.user)
+      }
     )
-    
+
   }
 
   unloadUser = () => {
-    this.setState({user: {
-      user_id: '',
-      userName: '',
-      email: '',
-      isLoggedIn: false,
-      user_profile_pic: '',
-      score: 0,
-      datecreated: ''
-    }})
+    this.setState({
+      user: {
+        user_id: '',
+        userName: '',
+        email: '',
+        isLoggedIn: false,
+        user_profile_pic: '',
+        score: 0,
+        datecreated: ''
+      }
+    })
   }
 
-render() {
+  render() {
 
-  return (
-    <Router>
-      <div className='App'>
-        <div id='mainWrapper'>
-        <Nav user={this.state.user} unloadUser={this.unloadUser}/>
-        <div className='spacing'></div>
-        
-        <Routes>
-          <Route path='/' element={<Songs />}/>
-          <Route path="/login" element={ <Login loadUser={this.loadUser}/> } />
-          <Route path="/register" element={ <Register loadUser={this.loadUser}/> } />
-          <Route path="/profile" element={ <Profile user={this.state.user}/> } />
-          <Route path="/submit" element={ <Submit user={this.state.user} /> } />
-        </Routes>
-     
-        <Footer />
-      </div>
-      </div>
-    </Router>
-  );
-}
+    return (
+      <Router>
+        <div className='App'>
+          {
+            this.isAuthorizing ? 
+            <Access user={this.state.user} song={this.state.song}/> 
+            : 
+            <div id='mainWrapper'>
+                <Nav user={this.state.user} unloadUser={this.unloadUser} />
+                <div className='spacing'></div>
+                
+                <Routes>
+                  <Route path='/' element={<Songs />} />
+                  <Route path="/login" element={<Login loadUser={this.loadUser} />} />
+                  <Route path="/register" element={<Register loadUser={this.loadUser} />} />
+                  <Route path="/profile" element={<Profile user={this.state.user} />} />
+                  <Route path="/submit" element={<Submit user={this.state.user} song={this.state.song} isAuthorizing={this.isAuthorizing} />} />
+                </Routes>
+
+                <Footer />
+              </div>
+          }
+        </div>
+      </Router>
+    );
+  }
 }
 
 export default App;

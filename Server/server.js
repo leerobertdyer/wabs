@@ -183,7 +183,7 @@ server.get('/auth-callback', async (req, res) => {
 
 server.post('/submit', upload.single('song_file'), async (req, res) => {
   const uploadedSong = req.file;
-  // console.log(uploadedSong)
+  console.log(uploadedSong)
   if (!uploadedSong) {
     return res.status(400).json({ error: 'No song provided' });
   }
