@@ -13,18 +13,11 @@ import pg from 'pg'
 import { Readable } from 'stream';
 import { start } from 'repl';
 import session from 'express-session';
+import connectPgSimple from 'connect-pg-simple';
+import pgPromise from 'pg-promise';
 
-dotenv.config({ path: '../.env'});
 
-
-const oneDay = 1000 * 60 * 60 * 24;
-server.use(session({
-    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-    saveUninitialized:true,
-    cookie: { maxAge: oneDay },
-    //store: eventually will need one connect-pg-simple maybe...
-    resave: false 
-}));
+dotenv.config({ path: '../.env' });
 
 const client = new pg.Client({
   connectionString: process.env.ELEPHANTSQL_URL,
@@ -34,24 +27,41 @@ const client = new pg.Client({
 client.connect()
   .then(() => console.log('Connected to ElephantSQL', client.database))
   .catch((err) => {
-    console.error('Error connecting to ElephantSQL:', err)});
+    console.error('Error connecting to ElephantSQL:', err)
+  });
 
 const APP_KEY = process.env.DROPBOX_APP_KEY
 const APP_SECRET = process.env.DROPBOX_APP_SECRET
 const REDIRECT_URI = 'http://localhost:4000/auth-callback'
-const REDIRECT_URI_CALLBACK = 'http://localhost:4000/auth-final'
 const dbx = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, fetch });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage});
+const upload = multer({ storage: storage });
+
+// const pgp = pgPromise({});
 
 const db = knex({
-  client: 'pg', 
-  connection: process.env.ELEPHANTSQL_URL
+  client: 'pg',
+  connection: process.env.ELEPHANTSQL_URL,
 });
+
+// const pgSessionStore = connectPgSimple(session);
+// const sessionStore = new pgSessionStore({
+//   pgPromise: pgp, 
+//   tableName: 'session',
+//   createTableIfMissing: true
+// });
+// const oneDay = 1000 * 60 * 60 * 24;
+// server.use(session({
+//   secret: process.env.SESSION_KEY,
+//   saveUninitialized: true,
+//   cookie: { maxAge: oneDay },
+//   store: sessionStore,
+//   resave: false
+// }));
 
 server.use(express.json());
 
@@ -66,96 +76,108 @@ server.use(cors(corsOptions));
 server.use('/uploads', express.static('uploads'));
 
 server.get('/', (req, res) => { // home feed should display a variety of things: newest song submissions, collabs, and status updates
-    db.select('*').from('users')
-    .then(data => {
-      console.log(data)
-        res.json(data)
-    })
+  //
 })
 
+server.get('/check-session', (req, res) => {
+  if (req.session.user) {
+    console.log(req.session.user)
+    res.json(req.session.user)
+  }
+  else {
+    console.log('no user')
+    res.status(204).end();
+  }
+})
+
+
 server.post('/register', (req, res) => {
-    const { email, username, password } = req.body;
-if (!email || !username || !password) {
-  return res.status(400).json('Missing email, username, or password...')
-}
-    bcrypt.hash(password, 10, (err, hash) => {
-      if (err) {
-        console.log('Error hashing password', err);
-      }
-      db.transaction((trx) => {
-        trx('users')
-          .returning('*')
-          .insert({
-            user_email: email,
-            username: username,
-            date_user_joined: new Date(),
-            score: 0,
-            user_status: 'New in town...',
-            user_profile_pic: 'https://dl.dropboxusercontent.com/scl/fi/p2wxffl51e50wybb5nrz1/logo.png?rlkey=hkgaocdy6duq4ze2w9b3tvhkq&dl=0'
-          })
-          .then((user) => {
-            const userData = user[0]; 
-            const userId = user[0].user_id;
-            return trx('login')
-              .returning('*')
-              .insert({
-                hash: hash,
-                user_id: userId, 
-              })
-          .then((user) => {
-            trx.commit();
-            res.json(userData);
-          });
+  const { email, username, password } = req.body;
+  if (!email || !username || !password) {
+    return res.status(400).json('Missing email, username, or password...')
+  }
+  bcrypt.hash(password, 10, (err, hash) => {
+    if (err) {
+      console.log('Error hashing password', err);
+    }
+    db.transaction((trx) => {
+      trx('users')
+        .returning('*')
+        .insert({
+          user_email: email,
+          username: username,
+          date_user_joined: new Date(),
+          score: 0,
+          user_status: 'New in town...',
+          user_profile_pic: 'https://dl.dropboxusercontent.com/scl/fi/y7kg02pndbzra2v0hlg15/logo.png?rlkey=wzp1tr9f2m1z9rg1j9hraaog6&dl=0'
         })
-              .catch((err) => {
-                trx.rollback();
-                res.status(400).json({ error: 'Unable to register1', message: err.message });
-              });
-          })
-          
-      });
-    });
+        .then((user) => {
+          const userData = user[0];
+          const userId = user[0].user_id;
+          return trx('login')
+            .returning('*')
+            .insert({
+              hash: hash,
+              user_id: userId,
+            })
+            .then((user) => {
+              trx.commit();
+              res.json(userData);
+            });
+        })
+        .catch((err) => {
+          trx.rollback();
+          res.status(400).json({ error: 'Unable to register1', message: err.message });
+        });
+    })
+
+  });
+});
 
 server.post('/login', (req, res) => {
-    const { email, password } = req.body;
-    db.select('*')
-      .from('users')
-      .where('user_email', '=', email.toLowerCase())
-      .then(userData => {
-        if (userData.length === 0) {
-          return res.status(400).json('no email Creds Bro');
-        }
-        const userId = userData[0].user_id;
-        return db.select('hash')
-          .from('login')
-          .where('user_id', '=', userId)
-          .then(loginData => {
-            if (loginData.length === 0) {
-              return res.status(400).json('Insufficient Creds Bro, database err');
+  const { email, password } = req.body;
+  db.select('*')
+    .from('users')
+    .where('user_email', '=', email.toLowerCase())
+    .then(userData => {
+      if (userData.length === 0) {
+        return res.status(400).json('no email Creds Bro');
+      }
+      const user = userData[0];
+      return db.select('hash')
+        .from('login')
+        .where('user_id', '=', user.user_id)
+        .then(loginData => {
+          if (loginData.length === 0) {
+            return res.status(400).json('Insufficient Creds Bro, database err');
+          }
+          bcrypt.compare(password, loginData[0].hash, (err, result) => {
+            if (result) {
+              req.session.user = userData[0];
+              res.json(userData[0]);
+            } else {
+              res.status(400).json('Very Much Wrong Creds Bro');
             }
-            bcrypt.compare(password, loginData[0].hash, (err, result) => {
-              if (result) {
-                return db.select('*')
-                  .from('users')
-                  .where('user_id', '=', userId)
-                  .then(user => {
-                    res.json(user[0]);
-                  })
-                  .catch(err => {
-                    res.status(400).json('Unable to get user');
-                  });
-              } else {
-                res.status(400).json('Very Much Wrong Creds Bro');
-              }
-            });
           });
-      })
-      .catch(err => {
-        console.log(err)
-        res.status(400).json({ error: 'Wrong Creds Bro', details: err });
-      });
+        });
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(400).json({ error: 'Wrong Creds Bro', details: err });
+    });
+});
+
+server.post('/signout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.status(200).send('OK');
+    }
   });
-    
+});
+
 server.post('/auth', async (req, res) => {
   try {
     const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline');
@@ -176,7 +198,7 @@ server.get('/auth-callback', async (req, res) => {
     if (tempAuthToken === '') {
       const tokenResponse = await dbx.auth.getAccessTokenFromCode(REDIRECT_URI, code);
       // console.log('token response: ', tokenResponse)
-      tempAuthToken  = tokenResponse.result.access_token;
+      tempAuthToken = tokenResponse.result.access_token;
       // console.log('accessToken: ', (tempAuthToken));
       res.redirect(`http://localhost:3000/access?accessToken=${tempAuthToken}`)
       tempAuthToken = ''
@@ -198,7 +220,7 @@ server.post('/submit', upload.single('song_file'), async (req, res) => {
   if (!uploadedSong) {
     return res.status(400).json({ error: 'No song provided' });
   }
-  const songFileStream = Readable.from(uploadedSong.buffer); 
+  const songFileStream = Readable.from(uploadedSong.buffer);
   console.log('buffer size: ', uploadedSong.buffer.length)
   let databaseLink;
   try {
@@ -223,78 +245,78 @@ server.post('/submit', upload.single('song_file'), async (req, res) => {
       console.error('Error creating shared link:', error);
     }
     await db('songs')
-    .insert({
-      title: req.body.title,
-      lyrics: req.body.lyrics,
-      user_id: req.body.user_id,
-      song_file: databaseLink,
-      votes: 0,
-      song_date: new Date()
-    });
-    res.status(200).json({song: uploadedSong.filename})
+      .insert({
+        title: req.body.title,
+        lyrics: req.body.lyrics,
+        user_id: req.body.user_id,
+        song_file: databaseLink,
+        votes: 0,
+        song_date: new Date()
+      });
+    res.status(200).json({ song: uploadedSong.filename })
   }
-  catch(error) {
+  catch (error) {
     console.error('Error submitting new song in Database', error);
-    res.status(500).json({error: 'Server Status  Error'})
+    res.status(500).json({ error: 'Server Status  Error' })
   }
 });
 
 
 server.put('/upload-profile-pic', upload.single('photo'), async (req, res) => {
-  const user  = req.body.user_id;
+  const user = req.body.user_id;
   const uploadedPhoto = req.file;
-   if (!uploadedPhoto) {
+  if (!uploadedPhoto) {
     return res.status(400).json({ error: 'No profile photo provided' });
   }
   const photoFileStream = Readable.from(uploadedPhoto.buffer)
   let databaseLink;
   try {
-  const dropboxResponse = await dbx.filesUpload({
-    path: `/uploads/photos/${uploadedPhoto.originalname}`,
-    contents: photoFileStream
-  });
-  console.log(dropboxResponse);
-  const dropboxPath = dropboxResponse.result.id;
-  console.log('dpx path: ', dropboxPath)
-  try {
-    const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
-      path: dropboxResponse.result.path_display,
-      settings: { requested_visibility: {'.tag.tag': 'public' } },
+    const dropboxResponse = await dbx.filesUpload({
+      path: `/uploads/photos/${uploadedPhoto.originalname}`,
+      contents: photoFileStream
     });
-    const shareableLink = linkResponse.result.url;
-    databaseLink = shareableLink.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
-    // console.log('Shareable link:', shareableLink);
-    // console.log('Database link: ', databaseLink)
-  } catch (error) {
-    console.error('Error creating shared link:', error);
-  }
+    console.log(dropboxResponse);
+    const dropboxPath = dropboxResponse.result.id;
+    console.log('dpx path: ', dropboxPath)
+    try {
+      const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
+        path: dropboxResponse.result.path_display,
+        settings: { requested_visibility: { '.tag.tag': 'public' } },
+      });
+      const shareableLink = linkResponse.result.url;
+      databaseLink = shareableLink.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
+      // console.log('Shareable link:', shareableLink);
+      // console.log('Database link: ', databaseLink)
+    } catch (error) {
+      console.error('Error creating shared link:', error);
+    }
 
-  await db('users')
-  .where('user_id', user)
-  .update({user_profile_pic: databaseLink})
-  
-res.status(200).json({newPhoto: databaseLink})
-} catch(error) {
+    await db('users')
+      .where('user_id', user)
+      .update({ user_profile_pic: databaseLink })
+
+    res.status(200).json({ newPhoto: databaseLink })
+  } catch (error) {
     console.error('Error updating Database: ', error);
-    res.status(500).json({error: 'Server XXXX Error'})
+    res.status(500).json({ error: 'Server XXXX Error' })
   }
 });
 
 server.put('/update-status', (req, res) => {
   const { id, newStatus } = req.body
   db('users')
-  .where('id', id)
-  .update({status: newStatus})
-  .then(() => {
-    res.status(200).json({status: newStatus})
-  }).catch((error) => {
-    console.error('Error setting new status in Database', error);
-    res.status(500).json({error: 'Server Status Error'})
-  })
+    .where('id', id)
+    .update({ status: newStatus })
+    .then(() => {
+      res.status(200).json({ status: newStatus })
+    }).catch((error) => {
+      console.error('Error setting new status in Database', error);
+      res.status(500).json({ error: 'Server Status Error' })
+    })
 });
 
 server.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
+  console.log(`Server is running on port ${port}`);
+});
 
 

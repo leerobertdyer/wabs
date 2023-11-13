@@ -24,7 +24,7 @@ class Nav extends Component {
 
                     <div id="loginBox">
                     <Link 
-                    to={user.isLoggedIn ? "/" : "/login"}
+                    to={user.isLoggedIn ? "/signout" : "/login"}
                     onClick={user.isLoggedIn ? unloadUser : null}>
                     {user.isLoggedIn ? 'Sign Out' : 'Login'}
                     </Link>

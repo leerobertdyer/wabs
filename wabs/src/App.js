@@ -33,18 +33,33 @@ class App extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   // not sure I need a home fetch...
-  //   fetch('http://localhost:4000/')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //           console.log(data)
-  //         },
-  //       )
-  //   .catch((error) => {
-  //       console.error('Error:', error);
-  //     });
-  // }
+  componentDidMount() {
+    this.checkAuthentication();
+  }
+
+  checkAuthentication = () => {
+    fetch('http://localhost:4000/check-session', { credentials: 'include' })
+      .then((response) => {
+        if (response.status === 204){
+          console.log('No user session stored...')
+          return null
+        } else{
+          console.log('Getting there?')
+          console.log(response)
+          return response.json()
+        }
+      })
+      .then((data) => {
+        if (data) {
+          console.log(data)
+          this.setState({ user: data });
+        }
+      })
+      .catch((error) => {
+        console.error('Error checking authentication:', error);
+      });
+  };
+
 
 
 updateSong = (newSong) => {
@@ -86,18 +101,30 @@ updateSong = (newSong) => {
   }
 
   unloadUser = () => {
-    this.setState({
-      user: {
-        user_id: '',
-        userName: '',
-        email: '',
-        isLoggedIn: false,
-        user_profile_pic: '',
-        score: 0,
-        datecreated: ''
+    fetch('http://localhost:4000/signout', {
+      method: 'POST', 
+      credentials: 'include',
+    })
+    .then(response => {
+      if (response.ok) {
+        this.setState({
+          user: {
+            user_id: '',
+            userName: '',
+            email: '',
+            isLoggedIn: false,
+            user_profile_pic: '',
+            score: 0,
+            datecreated: ''
+          }
+        });
       }
     })
-  }
+    .catch(error => {
+      console.error('Logout failed:', error);
+    });
+  };
+  
 
   render() {
 
