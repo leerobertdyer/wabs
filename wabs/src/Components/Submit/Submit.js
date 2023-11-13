@@ -2,14 +2,21 @@ import React, { useState } from 'react';
 import './Submit.css'
 
 function Submit(props) {
-    const [title, setTitle] = useState(props.song.title)
-    const [lyrics, setLyrics] = useState(props.song.lyrics)
-    const [ song, setSong] = useState(props.song.song_file)
-    const [ isAuthorizing, setIsAuthorizing] = useState(props.isAuthorizing)
+    const [title, setTitle] = useState('')
+    const [lyrics, setLyrics] = useState('')
+    const [ song, setSong] = useState('')
+    const [ isAuthorizing, setIsAuthorizing] = useState(false)
 
     const handleSongSubmit = async (event) => {
         event.preventDefault()
+        const updatedSong = {
+            title: title,
+            lyrics: lyrics,
+            song: song
+        }
+        console.log(updatedSong)
         try {
+            await props.updateSong(updatedSong)
             const authUrlResponse = await fetch('http://localhost:4000/auth', {
                 method: 'POST',
             })
@@ -20,8 +27,8 @@ function Submit(props) {
             const authUrl = authData.authUrl
             console.log('authData', authData)
             console.log('authurl: ', authUrl)
-            setIsAuthorizing(true)
-            window.location.href=authUrl
+           
+            window.open(authUrl, '_blank')
         } catch (error) {
             console.error('Error during song submission:', error);
         }

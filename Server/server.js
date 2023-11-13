@@ -12,8 +12,19 @@ import dotenv from 'dotenv'
 import pg from 'pg'
 import { Readable } from 'stream';
 import { start } from 'repl';
+import session from 'express-session';
 
 dotenv.config({ path: '../.env'});
+
+
+const oneDay = 1000 * 60 * 60 * 24;
+server.use(session({
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized:true,
+    cookie: { maxAge: oneDay },
+    //store: eventually will need one connect-pg-simple maybe...
+    resave: false 
+}));
 
 const client = new pg.Client({
   connectionString: process.env.ELEPHANTSQL_URL,
@@ -183,7 +194,7 @@ server.get('/auth-callback', async (req, res) => {
 
 server.post('/submit', upload.single('song_file'), async (req, res) => {
   const uploadedSong = req.file;
-  console.log(uploadedSong)
+  console.log('uploadedSong: ', uploadedSong)
   if (!uploadedSong) {
     return res.status(400).json({ error: 'No song provided' });
   }

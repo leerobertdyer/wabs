@@ -15,7 +15,7 @@ class App extends Component {
     super(props);
     this.state = {
       user: {
-        uer_id: '',
+        user_id: '',
         userName: '',
         email: '',
         isLoggedIn: false,
@@ -47,6 +47,22 @@ class App extends Component {
   // }
 
 
+updateSong = (newSong) => {
+  console.log('updating song: ')
+  console.log('title: ', newSong.title)
+  console.log('lyrics: ', newSong.lyrics)
+  console.log('song: ', newSong.song)
+  this.setState({
+    song: {
+      title: newSong.title,
+      lyrics: newSong.lyrics,
+      song_file: newSong.song
+    },
+    isAuthorizing: true
+  }, () => {
+    console.log('state set:', this.state.song)
+  })
+  } 
 
   loadUser = (data) => {
     console.log(data)
@@ -89,9 +105,6 @@ class App extends Component {
       <Router>
         <div className='App'>
           {
-            this.isAuthorizing ? 
-            <Access user={this.state.user} song={this.state.song}/> 
-            : 
             <div id='mainWrapper'>
                 <Nav user={this.state.user} unloadUser={this.unloadUser} />
                 <div className='spacing'></div>
@@ -101,7 +114,8 @@ class App extends Component {
                   <Route path="/login" element={<Login loadUser={this.loadUser} />} />
                   <Route path="/register" element={<Register loadUser={this.loadUser} />} />
                   <Route path="/profile" element={<Profile user={this.state.user} />} />
-                  <Route path="/submit" element={<Submit user={this.state.user} song={this.state.song} isAuthorizing={this.isAuthorizing} />} />
+                  <Route path="/submit" element={<Submit user={this.state.user} updateSong={this.updateSong} isAuthorizing={this.isAuthorizing} />} />
+                  <Route path='/access' element={<Access user={this.state.user} song={this.state.song}/>} />
                 </Routes>
 
                 <Footer />
