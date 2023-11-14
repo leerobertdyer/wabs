@@ -13,9 +13,7 @@ import pg from 'pg'
 import { Readable } from 'stream';
 import { start } from 'repl';
 import session from 'express-session';
-import connectPgSimple from 'connect-pg-simple';
-import pgPromise from 'pg-promise';
-
+import connectSessionKnex from 'connect-session-knex'
 
 dotenv.config({ path: '../.env' });
 
@@ -47,21 +45,6 @@ const db = knex({
   client: 'pg',
   connection: process.env.ELEPHANTSQL_URL,
 });
-
-// const pgSessionStore = connectPgSimple(session);
-// const sessionStore = new pgSessionStore({
-//   pgPromise: pgp, 
-//   tableName: 'session',
-//   createTableIfMissing: true
-// });
-// const oneDay = 1000 * 60 * 60 * 24;
-// server.use(session({
-//   secret: process.env.SESSION_KEY,
-//   saveUninitialized: true,
-//   cookie: { maxAge: oneDay },
-//   store: sessionStore,
-//   resave: false
-// }));
 
 server.use(express.json());
 
