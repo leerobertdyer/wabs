@@ -12,8 +12,9 @@ import dotenv from 'dotenv'
 import pg from 'pg'
 import { Readable } from 'stream';
 import { start } from 'repl';
-import session from 'express-session';
-import connectSessionKnex from 'connect-session-knex'
+import session from 'express-session'; 
+import cookieParser from 'cookie-parser';
+const KnexSessionStore = (await import('connect-session-knex')).default(session);
 
 dotenv.config({ path: '../.env' });
 
@@ -23,29 +24,40 @@ const client = new pg.Client({
 });
 
 client.connect()
-  .then(() => console.log('Connected to ElephantSQL', client.database))
-  .catch((err) => {
-    console.error('Error connecting to ElephantSQL:', err)
-  });
-
-const APP_KEY = process.env.DROPBOX_APP_KEY
-const APP_SECRET = process.env.DROPBOX_APP_SECRET
-const REDIRECT_URI = 'http://localhost:4000/auth-callback'
-const dbx = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, fetch });
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-// const pgp = pgPromise({});
+.then(() => console.log('Connected to ElephantSQL', client.database))
+.catch((err) => {
+  console.error('Error connecting to ElephantSQL:', err)
+});
 
 const db = knex({
   client: 'pg',
   connection: process.env.ELEPHANTSQL_URL,
 });
 
+const sessionStore = new KnexSessionStore({
+  knex: db, 
+  tablename: 'session', 
+  sidfieldname: 'sid',
+});
+
+server.use(cookieParser())
+
+server.use(
+  session({
+    name: 'Bobsession',
+    secret: process.env.SESSION_KEY,
+    saveUninitialized: false,
+    resave: false,
+    cookie: { maxAge: 1000 * 60 * 60, 
+      secure: false, //will need to change this for deploy
+      sameSite: 'None', 
+      resave: false,
+      httpOnly: true,
+    },
+    store: sessionStore,
+    
+  })
+);
 server.use(express.json());
 
 const corsOptions = {
@@ -58,20 +70,27 @@ server.use(cors(corsOptions));
 
 server.use('/uploads', express.static('uploads'));
 
+const APP_KEY = process.env.DROPBOX_APP_KEY
+const APP_SECRET = process.env.DROPBOX_APP_SECRET
+const REDIRECT_URI = 'http://localhost:4000/auth-callback'
+const dbx = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, fetch });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 server.get('/', (req, res) => { // home feed should display a variety of things: newest song submissions, collabs, and status updates
   //
 })
 
 server.get('/check-session', (req, res) => {
-  if (req.session.user) {
-    console.log(req.session.user)
-    res.json(req.session.user)
+  if (req.session){
+    console.log('session Id', req.sessionID)
+    console.log('session = ', req.session)
   }
-  else {
-    console.log('no user')
-    res.status(204).end();
-  }
-})
+});
 
 
 server.post('/register', (req, res) => {
@@ -136,8 +155,17 @@ server.post('/login', (req, res) => {
           }
           bcrypt.compare(password, loginData[0].hash, (err, result) => {
             if (result) {
-              req.session.user = userData[0];
-              res.json(userData[0]);
+              req.session.user = {user};
+              req.session.save((err) => {
+                if (err) {
+                  console.error('Error saving session:', err);
+                  res.status(500).json({ error: 'Internal Server Error' });
+                } else {
+                  console.log('Session data:', req.session);
+                  console.log('Session ID:', req.sessionID);
+                  res.json(userData[0]);
+                }
+              });
             } else {
               res.status(400).json('Very Much Wrong Creds Bro');
             }

@@ -44,15 +44,14 @@ class App extends Component {
           console.log('No user session stored...')
           return null
         } else{
-          console.log('Getting there?')
-          console.log(response)
+          console.log('Getting response: ', response)
           return response.json()
         }
       })
       .then((data) => {
         if (data) {
           console.log(data)
-          this.setState({ user: data });
+          // this.setState({ user: data });
         }
       })
       .catch((error) => {
@@ -140,7 +139,7 @@ updateSong = (newSong) => {
                   <Route path='/' element={<Songs />} />
                   <Route path="/login" element={<Login loadUser={this.loadUser} />} />
                   <Route path="/register" element={<Register loadUser={this.loadUser} />} />
-                  <Route path="/profile" element={<Profile user={this.state.user} />} />
+                  <Route path="/profile" element={<Profile user={this.state.user} checkAuthentication={this.checkAuthentication} />} />
                   <Route path="/submit" element={<Submit user={this.state.user} updateSong={this.updateSong} isAuthorizing={this.isAuthorizing} />} />
                   <Route path='/access' element={<Access user={this.state.user} song={this.state.song}/>} />
                 </Routes>

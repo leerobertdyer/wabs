@@ -119,7 +119,10 @@ function Profile(props) {
                                 </div>
                             </div>
                         </div>
+                        <div>
+                        <button onClick={props.checkAuthentication}>Check Session</button>
                         <Songs />
+                        </div>
                     </div>
                 </div>)
                 : <div>
