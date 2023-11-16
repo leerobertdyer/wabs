@@ -33,31 +33,31 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    this.checkAuthentication();
-  }
+  // componentDidMount() {
+  //   this.checkAuthentication();
+  // }
 
-  checkAuthentication = () => {
-    fetch('http://localhost:4000/check-session', { credentials: 'include' })
-      .then((response) => {
-        if (response.status === 204){
-          console.log('No user session stored...')
-          return null
-        } else{
-          console.log('Getting response: ', response)
-          return response.json()
-        }
-      })
-      .then((data) => {
-        if (data) {
-          console.log(data)
-          // this.setState({ user: data });
-        }
-      })
-      .catch((error) => {
-        console.error('Error checking authentication:', error);
-      });
-  };
+  // checkAuthentication = () => {
+  //   fetch('http://localhost:4000/check-session', { credentials: 'include' })
+  //     .then((response) => {
+  //       if (response.status === 204){
+  //         console.log('No user session stored...')
+  //         return null
+  //       } else{
+  //         console.log('Getting response: ', response)
+  //         return response.json()
+  //       }
+  //     })
+  //     .then((data) => {
+  //       if (data) {
+  //         console.log(data)
+  //         // this.setState({ user: data });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error checking authentication:', error);
+  //     });
+  // };
 
 
 

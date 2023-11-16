@@ -22,7 +22,7 @@ const [loginPassword, setLoginPassword] = useState('')
     if (!loginEmail.trim() || !loginPassword.trim()) {
       return;
     }
-    fetch('http://localhost:4000/login', {
+    fetch('http://localhost:4000/auth/login', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({

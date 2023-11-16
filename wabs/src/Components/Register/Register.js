@@ -10,7 +10,7 @@ function Register(props) {
 
     const onRegisterSubmit = (event) => {
         event.preventDefault()
-        fetch('http://localhost:4000/register', {
+        fetch('http://localhost:4000/auth/register', {
             method: "POST",
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({

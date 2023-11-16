@@ -21,7 +21,7 @@ function Profile(props) {
             const formData = new FormData();
             formData.append('user_id', user.user_id); 
             formData.append('photo', photo);
-            fetch('http://localhost:4000/upload-profile-pic', {
+            fetch('http://localhost:4000/profile/upload-profile-pic', {
                 method: "PUT",
                 body: formData,
             })
@@ -50,11 +50,11 @@ function Profile(props) {
     const handleStatusChange = (event) => {
         event.preventDefault();
         if (changedStatus.length > 0){
-        fetch('http://localhost:4000/update-status', {
+        fetch('http://localhost:4000/profile/update-status', {
             headers: { 'content-type': 'application/json' },
             method: 'PUT',
             body: JSON.stringify({
-                id: user.id,
+                id: user.user_id,
                 newStatus: changedStatus
             })
         })
