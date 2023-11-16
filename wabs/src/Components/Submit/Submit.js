@@ -4,11 +4,16 @@ import './Submit.css'
 function Submit(props) {
     const [title, setTitle] = useState('')
     const [lyrics, setLyrics] = useState('')
-    const [ song, setSong] = useState('')
-    const [ isAuthorizing, setIsAuthorizing] = useState(false)
+    const [ song, setSong] = useState(null)
+    // const [ isAuthorizing, setIsAuthorizing] = useState(false)
 
     const handleSongSubmit = async (event) => {
         event.preventDefault()
+        if (song === null) {
+            console.error('No song selected');
+            return;
+        }
+    
         const updatedSong = {
             title: title,
             lyrics: lyrics,
@@ -17,7 +22,7 @@ function Submit(props) {
         console.log(updatedSong)
         try {
             await props.updateSong(updatedSong)
-            const authUrlResponse = await fetch('http://localhost:4000/auth', {
+            const authUrlResponse = await fetch('http://localhost:4000/auth/dbx-auth', {
                 method: 'POST',
             })
             if (!authUrlResponse.ok) {

@@ -1,32 +1,15 @@
 import express from 'express';
 import cors from 'cors'
-import session from 'express-session'; 
 import profileRoutes from './routes/profileRoutes.js';
 import songRoutes from './routes/songRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import dbConfig from './database/db.js'
-const {client, db, sessionStore} = dbConfig
+import cookieSession from 'cookie-session';
+const {client, db} = dbConfig
 const server = express();
 const port = 4000;
 
 /////////// Middleware ////////////
-server.use(
-  session({
-    name: 'Bobsession',
-    secret: process.env.SESSION_KEY,
-    saveUninitialized: false,
-    resave: false,
-    cookie: { maxAge: 1000 * 60 * 60, 
-      secure: false, //will need to change this for deploy
-      sameSite: 'None', 
-      resave: false,
-      httpOnly: true,
-    },
-    store: sessionStore,
-    
-  })
-);
-
 server.use(express.json());
 
 const corsOptions = {
@@ -38,17 +21,26 @@ const corsOptions = {
 
 server.use(cors(corsOptions));
 
+server.use(
+  cookieSession({
+    name: 'Bob Cookie:',
+    secret: 'myfuckingsecret',
+    saveUninitialized: false,
+    resave: false,
+    cookie: { 
+      maxAge: 1000 * 60 * 5, //five minute session for testing. I want my cookies to expire 
+      secure: false, //will need to change this for deploy
+      sameSite: 'None', 
+      httpOnly: true,
+    },
+  })
+);
             //////ROUTES//////
 // home feed should display a variety of things: newest song submissions, collabs, and status updates
 server.use('/profile', profileRoutes)
 server.use('/', songRoutes)
 server.use('/auth', authRoutes)
-server.get('/check-session', (req, res) => {
-  if (req.session){
-    console.log('session Id', req.sessionID)
-    console.log('session = ', req.session)
-  }
-});
+
 
 
 

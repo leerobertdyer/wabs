@@ -1,10 +1,12 @@
 import knex from "knex";
-import dotenv from 'dotenv'
 import pg from 'pg'
-import session from 'express-session';
-const KnexSessionStore = (await import('connect-session-knex')).default(session);
+import path from 'path'
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv'
 
-dotenv.config({ path: '../.env' });
+const __dirname = dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const client = new pg.Client({
     connectionString: process.env.ELEPHANTSQL_URL,
@@ -22,10 +24,5 @@ const db = knex({
     connection: process.env.ELEPHANTSQL_URL,
   });
   
-  const sessionStore = new KnexSessionStore({
-    knex: db, 
-    tablename: 'session', 
-    sidfieldname: 'sid',
-  });
 
-  export default { client, db, sessionStore };
+  export default { client, db };

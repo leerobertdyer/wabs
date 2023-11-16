@@ -2,13 +2,25 @@ import bcrypt from 'bcrypt'
 import databaseConfig from '../database/db.js'
 import { Router } from 'express'
 import session from 'express-session'
+import dropboxConfig from '../services/dropbox.js'
+const { dbx, REDIRECT_URI } = dropboxConfig
 const { client, db, sessionStore } = databaseConfig
 
 const authRoutes = Router()
 
-////////////////    AUTH    ////////////////
+////////////////    Test    ////////////////
+authRoutes.get('/check-session', (req, res) => {
+  if (req.session){
+    console.log('session = ', req.session);
+    res.status(200).json({ session: req.session });
+  } else {
+    console.log('no session');
+    res.status(200).json({ session: null });
+  }
+});
+////////////////    DBX    ////////////////
 
-authRoutes.post('/auth', async (req, res) => {
+authRoutes.post('/dbx-auth', async (req, res) => {
   try {
     const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline');
     // console.log('Authorization URL:', authUrl);
@@ -21,7 +33,7 @@ authRoutes.post('/auth', async (req, res) => {
 
 let tempAuthToken = ''
 
-authRoutes.get('/auth-callback', async (req, res) => {
+authRoutes.get('/dbx-auth-callback', async (req, res) => {
   const { code } = req.query;
   try {
     // console.log('received auth code: ', code)
@@ -64,17 +76,9 @@ authRoutes.post('/login', (req, res) => {
             }
             bcrypt.compare(password, loginData[0].hash, (err, result) => {
               if (result) {
-                req.session.user = {user};
-                req.session.save((err) => {
-                  if (err) {
-                    console.error('Error saving session:', err);
-                    res.status(500).json({ error: 'Internal Server Error' });
-                  } else {
-                    // console.log('Session data:', req.session);
-                    // console.log('Session ID:', req.sessionID);
+                req.session.user = user;
+                    console.log('Session data:', req.session);
                     res.json(userData[0]);
-                  }
-                });
               } else {
                 res.status(400).json('Very Much Wrong Creds Bro');
               }
@@ -135,15 +139,9 @@ authRoutes.post('/login', (req, res) => {
 ////////////////    Signout    ////////////////
 
   authRoutes.post('/signout', (req, res) => {
-    req.session.destroy((err) => {
-      if (err) {
-        console.error('Error destroying session:', err);
-        res.status(500).send('Internal Server Error');
-      } else {
-        res.status(200).send('OK');
-      }
-    });
+    req.session = null
   });
   
 
   export default authRoutes 
+  
