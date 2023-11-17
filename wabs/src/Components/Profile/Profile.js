@@ -10,18 +10,19 @@ function Profile(props) {
     const [showStatus, setShowStatus] = useState(false)
 
     useEffect(() => {
-        setProfilePhoto(user.user_profile_pic);
+        // setProfilePhoto(user.user_profile_pic);
         setStatus(user.status);
     }, [user]);
 
 
     const handleSetProfilePhoto = (newPhoto) => {
-        console.log('newPhoto: ', newPhoto.user_profile_pic)
+        // console.log('newPhoto: ', newPhoto)
         setProfilePhoto(newPhoto) 
     }
 
     const handlePhotoSubmit = (event) => {
         const photo = event.target.files[0];
+        
         console.log('profilepic uploaded: ', photo)
         if (photo) {
             const formData = new FormData();
@@ -39,7 +40,7 @@ function Profile(props) {
                         throw new Error(`Failed to upload yer damn photo: ${response.status}`);
                     }
                 }).then(data => {
-                    console.log('handlephotosubmit data: ', data)
+                    // console.log('handlephotosubmit data: ', data)
                     handleSetProfilePhoto(data.newPhoto);
                 })
                 .catch(error => {
@@ -63,7 +64,8 @@ function Profile(props) {
             body: JSON.stringify({
                 id: user.user_id,
                 newStatus: changedStatus
-            })
+            }),
+            credentials: 'include'
         })
             .then(resp => {
                 if (resp.ok) {

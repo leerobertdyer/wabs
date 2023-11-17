@@ -55,6 +55,7 @@ authRoutes.get('/dbx-auth-callback', async (req, res) => {
         user_id: userId,
         token: tempAuthToken
       })
+      res.cookie('token', dbxToken, { maxAge: 300000, httpOnly: true, path: '/' });
       tempAuthToken = ''
       res.redirect('http://localhost:3000')
     }
@@ -97,7 +98,8 @@ authRoutes.post('/login', (req, res) => {
                   if (dbxToken) {
                     res.cookie('token', dbxToken, { maxAge: 300000, httpOnly: true, path: '/' });
                   }
-                  
+                  // console.log('user logged in: ', userData[0])
+                  // console.log('user token generated: ', dbxToken)
                   res.json(userData[0]);
                 })
               } else {

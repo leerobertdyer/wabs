@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { Readable } from 'stream';
 import multer from 'multer';
 import dbConfig from '../database/db.js'
 const { db } = dbConfig
@@ -35,7 +34,6 @@ profileRoutes.put('/update-status', (req, res) => {
       return res.status(400).json({ error: 'No profile photo provided' });
     }
 
-    // const photoFileStream = Readable.from(uploadedPhoto.buffer)
     const contents = uploadedPhoto.buffer;
 
     let databaseLink;
@@ -44,20 +42,28 @@ profileRoutes.put('/update-status', (req, res) => {
         path: `/uploads/photos/${uploadedPhoto.originalname}`,
         contents: contents
       });
-      console.log('dpx resp: ', dropboxResponse);
+      // console.log('dpx resp: ', dropboxResponse);
       const dropboxPath = dropboxResponse.result.id;
       // console.log('dpx path: ', dropboxPath)
       try {
-        const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
-          path: dropboxResponse.result.path_display,
-          settings: { requested_visibility: { '.tag': 'public' } },
+        const existingLinkResponse = await dbx.sharingListSharedLinks({
+          path: dropboxResponse.result.path_display
         });
-        const shareableLink = linkResponse.result.url;
-        databaseLink = shareableLink.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
-        // console.log('Shareable link:', shareableLink);
-        // console.log('Database link: ', databaseLink)
+      
+        if (existingLinkResponse.result.links.length > 0) {
+          databaseLink = existingLinkResponse.result.links[0].url.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
+          // console.log('Using existing shareable link:', databaseLink);
+        } else {
+          const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
+            path: dropboxResponse.result.path_display,
+            settings: { requested_visibility: { '.tag': 'public' } },
+          });
+      
+          databaseLink = linkResponse.result.url.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
+          // console.log('Shareable link:', databaseLink);
+        }
       } catch (error) {
-        console.error('Error creating shared link:', error);
+        console.error('Error creating/shared link:', error);
       }
   
       await db('users')

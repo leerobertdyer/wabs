@@ -144,7 +144,7 @@ updateSong = (newSong) => {
                   <Route path='/' element={<Songs />} />
                   <Route path="/login" element={<Login loadUser={this.loadUser} />} />
                   <Route path="/register" element={<Register loadUser={this.loadUser} />} />
-                  <Route path="/profile" element={<Profile user={this.state.user} checkAuthentication={this.checkAuthentication} />} />
+                  <Route path="/profile" element={<Profile user={this.state.user} checkAuthentication={this.checkAuthentication} unloadUser={this.unloadUser} />} />
                   <Route path="/submit" element={<Submit user={this.state.user} updateSong={this.updateSong} />} />
                   <Route path='/access' element={<Access user={this.state.user} song={this.state.song}/>} />
                 </Routes>

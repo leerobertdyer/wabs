@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Submit.css'
 
 function Submit(props) {
@@ -18,11 +19,37 @@ function Submit(props) {
             song: song
         }
         console.log('Uploaded Song: ', updatedSong)
+        console.log('user id: ', props.user.user_id)
+        const formData = new FormData()
+        formData.append('title', updatedSong.title)
+        formData.append('lyrics', updatedSong.lyrics)
+        formData.append('song', updatedSong.song)
+        formData.append('user_id', props.user.user_id)
+
+        fetch('http://localhost:4000/submit', {
+            method: "POST",
+            body: formData,
+            credentials: 'include'
+        }).then(resp => {
+            if (resp.ok){
+                return resp.json()
+            } 
+            else {
+                throw new Error(`Failed to upload yer damn song: ${resp.status}`);
+            }
+        }).then(songData => {
+            console.log('final response from submit: ', songData)
+        })
     };
 
+    const { isLoggedIn } = props.user;
+
     return (
+        <div>
+            {isLoggedIn ?(
+
         <div id="mainSubmitDiv"
-            className='black'>
+        className='black'>
             <form className='submitSongForm'
                 action="/submit"
                 method="post"
@@ -38,7 +65,7 @@ function Submit(props) {
                         required
                         placeholder='Song Title'
                         onChange={(event) => { setTitle(event.target.value) }}
-                    />
+                        />
                 </div><div></div>
                 <div className='formBlock'>
                     <label htmlFor="lyrics"
@@ -74,8 +101,14 @@ function Submit(props) {
 
             </div>
         </div>
-    )
-
+            )
+            : <div>
+                <div id="loginFromProfile">
+                    <h2>Please </h2><Link to="/login">Log In</Link>
+                </div>
+            </div>}
+    </div>
+)
 }
 
 
