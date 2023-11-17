@@ -53,7 +53,7 @@ class App extends Component {
         .then(data => {
           const currentUser = data.user
           // const token = data.token
-          // console.log('client side user cookie: ', currentUser)
+          console.log('client side user cookie: ', currentUser)
           // console.log('client side token cookie: ', token)
           this.loadUser(currentUser)
         })
