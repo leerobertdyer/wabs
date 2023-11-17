@@ -2,16 +2,22 @@ import bcrypt from 'bcrypt'
 import databaseConfig from '../database/db.js'
 import { Router } from 'express'
 import dropboxConfig from '../services/dropbox.js'
+import { randomBytes } from 'crypto';
 const { dbx, REDIRECT_URI } = dropboxConfig
 const { client, db, sessionStore } = databaseConfig
+
+const generateRandomState = () => {
+  const randomBytesBuffer = randomBytes(24);
+  return randomBytesBuffer.toString('hex');
+};
 
 const authRoutes = Router()
 
 ////////////////    Test    ////////////////
 authRoutes.get('/check-session', (req, res) => {
-  if (req.cookies.user){
-    console.log('check-session Cookie = ', req.cookies.user);
-    res.status(200).json({ user: req.cookies.user });
+  if (req.cookies){
+    // console.log('check-session Cookie = ', req.cookies.user);
+    res.status(200).json({ user: req.cookies.user, token: req.cookies.token  });
   } else {
     console.log('no cookie');
     res.status(204);
@@ -20,33 +26,38 @@ authRoutes.get('/check-session', (req, res) => {
 ////////////////    DBX    ////////////////
 
 authRoutes.post('/dbx-auth', async (req, res) => {
-  try {
-    const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline');
-    // console.log('Authorization URL:', authUrl);
-    res.json({ authUrl: authUrl })
-  } catch (error) {
-    console.error('Error generating authentication URL:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+    try {
+      const state = generateRandomState();
+      const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, state, 'code', 'offline');
+      // console.log('Authorization URL:', authUrl);
+      res.json({ authUrl: authUrl })
+    } catch (error) {
+      console.error('Error generating authentication URL:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
+
 
 let tempAuthToken = ''
 
 authRoutes.get('/dbx-auth-callback', async (req, res) => {
   const { code } = req.query;
+  console.log('auth callback cookie: ', req.cookies.user)
+  const userId = req.cookies.user.user_id
   try {
-    // console.log('received auth code: ', code)
+    console.log('received auth code: ', code)
     if (tempAuthToken === '') {
       const tokenResponse = await dbx.auth.getAccessTokenFromCode(REDIRECT_URI, code);
       // console.log('token response: ', tokenResponse)
       tempAuthToken = tokenResponse.result.access_token;
       // console.log('accessToken: ', (tempAuthToken));
-      res.redirect(`http://localhost:3000/access?accessToken=${tempAuthToken}`)
+      await db('dbx_tokens')
+      .insert({
+        user_id: userId,
+        token: tempAuthToken
+      })
       tempAuthToken = ''
-    }
-    else {
-      console.log("token obtained, mission partial success..")
-      res.redirect(`http://localhost:3000/access?accessToken=${token}`)
+      res.redirect('http://localhost:3000')
     }
   } catch (error) {
     console.error('Error obtaining access token:', error);
@@ -75,8 +86,21 @@ authRoutes.post('/login', (req, res) => {
             }
             bcrypt.compare(password, loginData[0].hash, (err, result) => {
               if (result) {
-                res.cookie('user', userData[0], { maxAge: 300000, httpOnly: true, path: '/' });
-                res.json(userData[0]);
+                db.select('token')
+                .from('dbx_tokens')
+                .where('user_id', user.user_id)
+                .then(dbxTokenData => {
+                  const dbxToken = dbxTokenData.length > 0 
+                  ? dbxTokenData[0].token
+                  : null
+
+                  res.cookie('user', userData[0], { maxAge: 300000, httpOnly: true, path: '/' });
+                  if (dbxToken) {
+                    res.cookie('token', dbxToken, { maxAge: 300000, httpOnly: true, path: '/' });
+                  }
+                  
+                  res.json(userData[0]);
+                })
               } else {
                 res.status(400).json('Very Much Wrong Creds Bro');
               }
@@ -96,6 +120,7 @@ authRoutes.post('/login', (req, res) => {
     if (!email || !username || !password) {
       return res.status(400).json('Missing email, username, or password...')
     }
+  
     bcrypt.hash(password, 10, (err, hash) => {
       if (err) {
         console.log('Error hashing password', err);
@@ -122,6 +147,7 @@ authRoutes.post('/login', (req, res) => {
               })
               .then((user) => {
                 trx.commit();
+                res.cookie('user', userData, { maxAge: 300000, httpOnly: true, path: '/' });
                 res.json(userData);
               });
           })

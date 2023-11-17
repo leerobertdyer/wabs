@@ -34,6 +34,7 @@ const [loginPassword, setLoginPassword] = useState('')
       .then(resp => resp.json())
       .then(user => {
         console.log('successful login...')
+        console.log('allcookies after login: ', document.cookie)
         if (user.user_id) {
           props.loadUser(user);
           navigate('/profile');

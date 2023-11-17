@@ -27,9 +27,7 @@ class App extends Component {
         title: '',
         lyrics: '',
         song_file: ''
-      },
-      isAuthorizing: false
-
+      }
     };
   }
 
@@ -54,7 +52,9 @@ class App extends Component {
       })
         .then(data => {
           const currentUser = data.user
-          console.log('client side cookie: ', currentUser)
+          const token = data.token
+          console.log('client side user cookie: ', currentUser)
+          console.log('client side token cookie: ', token)
           this.loadUser(currentUser)
         })
       .catch((error) => {
@@ -83,7 +83,7 @@ updateSong = (newSong) => {
   } 
 
   loadUser = (data) => {
-    console.log(data)
+    console.log('onLoadUser: ', data)
     this.setState({
       user: {
         user_id: data.user_id,
@@ -119,7 +119,8 @@ updateSong = (newSong) => {
             user_profile_pic: '',
             score: 0,
             datecreated: ''
-          }
+          },
+
         });
       }
     })
@@ -144,7 +145,7 @@ updateSong = (newSong) => {
                   <Route path="/login" element={<Login loadUser={this.loadUser} />} />
                   <Route path="/register" element={<Register loadUser={this.loadUser} />} />
                   <Route path="/profile" element={<Profile user={this.state.user} checkAuthentication={this.checkAuthentication} />} />
-                  <Route path="/submit" element={<Submit user={this.state.user} updateSong={this.updateSong} isAuthorizing={this.isAuthorizing} />} />
+                  <Route path="/submit" element={<Submit user={this.state.user} updateSong={this.updateSong} />} />
                   <Route path='/access' element={<Access user={this.state.user} song={this.state.song}/>} />
                 </Routes>
 

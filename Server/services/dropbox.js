@@ -4,6 +4,7 @@ import path from 'path'
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv'
+import 'isomorphic-fetch';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });

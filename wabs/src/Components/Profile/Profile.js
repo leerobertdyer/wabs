@@ -80,8 +80,8 @@ function Profile(props) {
 
 
     const { isLoggedIn } = props.user;
-    console.log('profile user: ', props.user)
-    console.log('is user logged in? ', isLoggedIn)
+    // console.log('profile user: ', props.user)
+    // console.log('is user logged in? ', isLoggedIn)
     return (
         <div>
             {isLoggedIn ? (
@@ -129,7 +129,6 @@ function Profile(props) {
                             </div>
                         </div>
                         <div>
-                        <button onClick={props.checkAuthentication}>Check Session</button>
                         <Songs />
                         </div>
                     </div>
