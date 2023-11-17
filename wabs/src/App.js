@@ -52,9 +52,9 @@ class App extends Component {
       })
         .then(data => {
           const currentUser = data.user
-          const token = data.token
-          console.log('client side user cookie: ', currentUser)
-          console.log('client side token cookie: ', token)
+          // const token = data.token
+          // console.log('client side user cookie: ', currentUser)
+          // console.log('client side token cookie: ', token)
           this.loadUser(currentUser)
         })
       .catch((error) => {
@@ -66,10 +66,10 @@ class App extends Component {
 
 
 updateSong = (newSong) => {
-  console.log('updating song: ')
-  console.log('title: ', newSong.title)
-  console.log('lyrics: ', newSong.lyrics)
-  console.log('song: ', newSong.song)
+  // console.log('updating song: ')
+  // console.log('title: ', newSong.title)
+  // console.log('lyrics: ', newSong.lyrics)
+  // console.log('song: ', newSong.song)
   this.setState({
     song: {
       title: newSong.title,
@@ -78,12 +78,12 @@ updateSong = (newSong) => {
     },
     isAuthorizing: true
   }, () => {
-    console.log('state set:', this.state.song)
+    // console.log('state set:', this.state.song)
   })
   } 
 
   loadUser = (data) => {
-    console.log('onLoadUser: ', data)
+    // console.log('onLoadUser: ', data)
     this.setState({
       user: {
         user_id: data.user_id,
@@ -97,7 +97,7 @@ updateSong = (newSong) => {
       }
     },
       () => {
-        console.log('loadUserState: ', this.state.user)
+        // console.log('loadUserState: ', this.state.user)
       }
     )
 

@@ -13,7 +13,7 @@ const generateRandomState = () => {
 
 const authRoutes = Router()
 
-////////////////    Test    ////////////////
+////////////////    session    ////////////////
 authRoutes.get('/check-session', (req, res) => {
   if (req.cookies){
     // console.log('check-session Cookie = ', req.cookies.user);
@@ -36,7 +36,6 @@ authRoutes.post('/dbx-auth', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 
 let tempAuthToken = ''
 

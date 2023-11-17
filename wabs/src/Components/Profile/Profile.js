@@ -22,7 +22,7 @@ function Profile(props) {
 
     const handlePhotoSubmit = (event) => {
         const photo = event.target.files[0];
-        console.log(photo)
+        console.log('profilepic uploaded: ', photo)
         if (photo) {
             const formData = new FormData();
             formData.append('user_id', user.user_id); 
@@ -39,7 +39,7 @@ function Profile(props) {
                         throw new Error(`Failed to upload yer damn photo: ${response.status}`);
                     }
                 }).then(data => {
-                    console.log(data)
+                    console.log('handlephotosubmit data: ', data)
                     handleSetProfilePhoto(data.newPhoto);
                 })
                 .catch(error => {

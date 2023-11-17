@@ -24,25 +24,33 @@ profileRoutes.put('/update-status', (req, res) => {
   });
 
   profileRoutes.put('/upload-profile-pic', upload.single('photo'), async (req, res) => {
+    const token = req.cookies.token
+    // console.log('user token in profile pic upload: ', token);
+    dbx.auth.setAccessToken(token);
+
     const user = req.body.user_id;
     const uploadedPhoto = req.file;
+
     if (!uploadedPhoto) {
       return res.status(400).json({ error: 'No profile photo provided' });
     }
-    const photoFileStream = Readable.from(uploadedPhoto.buffer)
+
+    // const photoFileStream = Readable.from(uploadedPhoto.buffer)
+    const contents = uploadedPhoto.buffer;
+
     let databaseLink;
     try {
       const dropboxResponse = await dbx.filesUpload({
         path: `/uploads/photos/${uploadedPhoto.originalname}`,
-        contents: photoFileStream
+        contents: contents
       });
-      console.log(dropboxResponse);
+      console.log('dpx resp: ', dropboxResponse);
       const dropboxPath = dropboxResponse.result.id;
-      console.log('dpx path: ', dropboxPath)
+      // console.log('dpx path: ', dropboxPath)
       try {
         const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
           path: dropboxResponse.result.path_display,
-          settings: { requested_visibility: { '.tag.tag': 'public' } },
+          settings: { requested_visibility: { '.tag': 'public' } },
         });
         const shareableLink = linkResponse.result.url;
         databaseLink = shareableLink.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
