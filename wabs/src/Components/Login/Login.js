@@ -28,7 +28,8 @@ const [loginPassword, setLoginPassword] = useState('')
       body: JSON.stringify({
         email: loginEmail,
         password: loginPassword
-      })
+      }),
+      credentials: 'include'
     })
       .then(resp => resp.json())
       .then(user => {

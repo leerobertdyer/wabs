@@ -16,20 +16,22 @@ class Nav extends Component {
                     <img src='../../Assets/logo.png' alt="logo" width="100px" />
                     <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : 'links')}>Home</NavLink>
 
-                    <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : 'links')}>Profile</NavLink>     
+                    <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : 'links')}>Profile</NavLink>
 
                     <NavLink to="/submit" className={({ isActive }) => (isActive ? 'active' : 'links')}>Submit</NavLink>
 
                     <NavLink to="/collaborate" className={({ isActive }) => (isActive ? 'active' : 'links')}>Collaborate</NavLink>
 
                     <div id="loginBox">
-                    <Link 
-                    to={user.isLoggedIn ? "/signout" : "/login"}
-                    onClick={user.isLoggedIn ? unloadUser : null}>
-                    {user.isLoggedIn ? 'Sign Out' : 'Login'}
-                    </Link>
-                    </div>                   
-                    
+                        {user.isLoggedIn ? (
+                            <Link to="/signout" onClick={unloadUser}>
+                                Sign Out
+                            </Link>
+                        ) : (
+                            <Link to="/login">Login</Link>
+                        )}
+                    </div>
+
                 </div>
 
             </div>

@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt'
 import databaseConfig from '../database/db.js'
 import { Router } from 'express'
-import session from 'express-session'
 import dropboxConfig from '../services/dropbox.js'
 const { dbx, REDIRECT_URI } = dropboxConfig
 const { client, db, sessionStore } = databaseConfig
@@ -10,12 +9,12 @@ const authRoutes = Router()
 
 ////////////////    Test    ////////////////
 authRoutes.get('/check-session', (req, res) => {
-  if (req.session){
-    console.log('session = ', req.session);
-    res.status(200).json({ session: req.session });
+  if (req.cookies.user){
+    console.log('check-session Cookie = ', req.cookies.user);
+    res.status(200).json({ user: req.cookies.user });
   } else {
-    console.log('no session');
-    res.status(200).json({ session: null });
+    console.log('no cookie');
+    res.status(204);
   }
 });
 ////////////////    DBX    ////////////////
@@ -76,9 +75,8 @@ authRoutes.post('/login', (req, res) => {
             }
             bcrypt.compare(password, loginData[0].hash, (err, result) => {
               if (result) {
-                req.session.user = user;
-                    console.log('Session data:', req.session);
-                    res.json(userData[0]);
+                res.cookie('user', userData[0], { maxAge: 300000, httpOnly: true, path: '/' });
+                res.json(userData[0]);
               } else {
                 res.status(400).json('Very Much Wrong Creds Bro');
               }
@@ -139,7 +137,8 @@ authRoutes.post('/login', (req, res) => {
 ////////////////    Signout    ////////////////
 
   authRoutes.post('/signout', (req, res) => {
-    req.session = null
+    res.clearCookie('user'); 
+    res.status(204).send(); 
   });
   
 

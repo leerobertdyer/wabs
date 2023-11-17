@@ -4,7 +4,7 @@ import profileRoutes from './routes/profileRoutes.js';
 import songRoutes from './routes/songRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import dbConfig from './database/db.js'
-import cookieSession from 'cookie-session';
+import cookieParser from 'cookie-parser';
 const {client, db} = dbConfig
 const server = express();
 const port = 4000;
@@ -20,37 +20,13 @@ const corsOptions = {
 };
 
 server.use(cors(corsOptions));
+server.use(cookieParser())
 
-server.use(
-  cookieSession({
-    name: 'Bob Cookie:',
-    secret: 'myfuckingsecret',
-    saveUninitialized: false,
-    resave: false,
-    cookie: { 
-      maxAge: 1000 * 60 * 5, //five minute session for testing. I want my cookies to expire 
-      secure: false, //will need to change this for deploy
-      sameSite: 'None', 
-      httpOnly: true,
-    },
-  })
-);
             //////ROUTES//////
 // home feed should display a variety of things: newest song submissions, collabs, and status updates
 server.use('/profile', profileRoutes)
 server.use('/', songRoutes)
 server.use('/auth', authRoutes)
-
-
-
-
-
-
-
-
-
-
-
 
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -38,26 +38,29 @@ class App extends Component {
   }
 
   checkAuthentication = () => {
-    console.log('checking session: ')
-    fetch('http://localhost:4000/auth/check-session', { credentials: 'include' })
+    fetch('http://localhost:4000/auth/check-session', { 
+      credentials: 'include' 
+    })
       .then((response) => {
         if (response.status === 204){
           console.log('No user session stored...')
-          return null
-        } else{
-          console.log('Getting response: ', response)
-          return response.json()
+          this.unloadUser()
+        } else if (response.ok){
+         return response.json()
+        } else {
+          console.error('Invalid response:', response);
+          throw new Error('Invalid response');
         }
       })
-      .then((data) => {
-        if (data) {
-          console.log(data)
-          // this.setState({ user: data });
-        }
-      })
+        .then(data => {
+          const currentUser = data.user
+          console.log('client side cookie: ', currentUser)
+          this.loadUser(currentUser)
+        })
       .catch((error) => {
         console.error('Error checking authentication:', error);
       });
+
   };
 
 
@@ -94,7 +97,7 @@ updateSong = (newSong) => {
       }
     },
       () => {
-        console.log(this.state.user)
+        console.log('loadUserState: ', this.state.user)
       }
     )
 

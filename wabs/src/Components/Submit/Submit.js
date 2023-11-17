@@ -24,6 +24,7 @@ function Submit(props) {
             await props.updateSong(updatedSong)
             const authUrlResponse = await fetch('http://localhost:4000/auth/dbx-auth', {
                 method: 'POST',
+                credentials: 'include'
             })
             if (!authUrlResponse.ok) {
                 throw new Error(`Failed to get auth URL: ${authUrlResponse.status}`);

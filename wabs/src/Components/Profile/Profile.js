@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Profile.css'
 import { Link } from 'react-router-dom';
 import Songs from '../Songs/Songs';
@@ -8,6 +8,12 @@ function Profile(props) {
     const [profilePhoto, setProfilePhoto] = useState(user.user_profile_pic);
     const [status, setStatus] = useState(props.user.status)
     const [showStatus, setShowStatus] = useState(false)
+
+    useEffect(() => {
+        setProfilePhoto(user.user_profile_pic);
+        setStatus(user.status);
+    }, [user]);
+
 
     const handleSetProfilePhoto = (newPhoto) => {
         console.log('newPhoto: ', newPhoto.user_profile_pic)
@@ -24,6 +30,7 @@ function Profile(props) {
             fetch('http://localhost:4000/profile/upload-profile-pic', {
                 method: "PUT",
                 body: formData,
+                credentials: 'include'
             })
                 .then(response => {
                     if (response.ok) {
@@ -73,6 +80,8 @@ function Profile(props) {
 
 
     const { isLoggedIn } = props.user;
+    console.log('profile user: ', props.user)
+    console.log('is user logged in? ', isLoggedIn)
     return (
         <div>
             {isLoggedIn ? (
