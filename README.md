@@ -3,11 +3,15 @@ A social Media website based around songwriting that encourages quantity over qu
 
 Still very much in development ;)
 
+# BUGS:
+-   in songRoutes.js I have completely bungled the submit handler..... working on authentication still of course...
+
+-   If you register, but decline to authorize dbx, then there is nothing in place to stop you from submitting, it will end up with an error
+        to solve it I'll need to implement a redirect to auth when a user without a token tries to submit
 
 # WORK LOG:
-PROGRESS!
--   After weeks, I've finally managed to implement extended dropbox tokens to each new user on registration. 
-        -I'll need to now use the links from the files to update the song player and feed the home page with a scrollable element.
+To Do:
+    -Use the links from the dbx files to update the song player and feed the home page with a scrollable element.
     -I need my homepage to be a feed that displays the most current "posts"
         -A 'post' can be a song, a status change, a lyrics looking for song, a song looking for lyrics, a new user signed up, a profile pic change.
             -I'll need a new bridge table that collects each new submission and ties it to user id.

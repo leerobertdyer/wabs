@@ -22,6 +22,10 @@ const client = new pg.Client({
 const db = knex({
     client: 'pg',
     connection: process.env.ELEPHANTSQL_URL,
+    pool: {
+      min: 2, 
+      max: 10, 
+    },
   });
   
 

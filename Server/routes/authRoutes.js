@@ -16,7 +16,7 @@ const authRoutes = Router()
 ////////////////    session    ////////////////
 authRoutes.get('/check-session', (req, res) => {
   if (req.cookies){
-    // console.log('check-session Cookie = ', req.cookies.user);
+    // console.log('check-session Cookie = ', req.cookies.user, req.cookies.token);
     res.status(200).json({ user: req.cookies.user, token: req.cookies.token  });
   } else {
     console.log('no cookie');
@@ -28,8 +28,8 @@ authRoutes.get('/check-session', (req, res) => {
 authRoutes.post('/dbx-auth', async (req, res) => {
     try {
       const state = generateRandomState();
-      const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, state, 'code', 'offline');
-      // console.log('Authorization URL:', authUrl);
+      const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline', ['files.content.write', 'files.content.read', 'files.metadata.write', 'files.metadata.read', 'sharing.write', 'sharing.read', 'file_requests.write'], 'none', false);
+      console.log('Authorization URL:', authUrl);
       res.json({ authUrl: authUrl })
     } catch (error) {
       console.error('Error generating authentication URL:', error);

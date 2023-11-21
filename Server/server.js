@@ -28,6 +28,10 @@ server.use('/profile', profileRoutes)
 server.use('/', songRoutes)
 server.use('/auth', authRoutes)
 
+process.on('exit', () => {
+  db.destroy();
+});
+
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

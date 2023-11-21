@@ -4,6 +4,8 @@ import path from 'path'
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv'
+import databaseConfig from '../database/db.js'
+const { db } = databaseConfig
 import 'isomorphic-fetch';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -34,8 +36,9 @@ const refreshToken = async (user_id) => {
         .select('refresh')
         .where('user_id', user_id)
         .first();
-    
-    const tokenResponse = await dbx.auth.refreshAccessToken(refresh);
+
+    const tokenResponse = await dbx.auth.refreshAccessToken();
+    console.log("tokenResponse: ", tokenResponse)
     const newAccessToken = tokenResponse.result.access_token;
 
     await db('dbx_tokens')

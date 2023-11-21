@@ -1,17 +1,13 @@
-import react, { useState } from 'react'
+import { useState } from 'react'
 import './Songs.css'
 
-function Songs () {
-    const [plays, setPlays] = useState(0)
+function Songs ({ songs, user }) {
     const [sortAudio, setSortAudio] = useState('Newest')
-    const [songTitle, setSongTitle] = useState('WABS Theme Song')
-    const [songwriter, setSongwriter] = useState('Tiny Sun')
 
 const handleSort = (event) => {
     setSortAudio(event.target.textContent)
 }
 
-// Need to replace this return with a function that fills the return with a given selection of Songs, and alternates colors
     return (
         <div className='songPlayer'>
             <div className='titleBox'>
@@ -24,45 +20,17 @@ const handleSort = (event) => {
             </div>
             </div>
             <div className='songBox'>
-                <div className='songCard'>
-                    <img className="thumbnail" src="../../Assets/logo.png" alt="userProfile"></img>
+                {songs.map((song, index) => (
+                <div className='songCard' key={index}>
+                    <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={null} alt="userProfile"></img>
                     <div className="songInfo">
-                        <h2 className="info">{songwriter}</h2>
-                        <p className="info">{songTitle}</p>
-                        <p className="info">{plays}</p>
+                        <h2 className="info">{user.userName}</h2>
+                        <p className="info">{song.title}</p>
+                        <p className="info">{song.plays}</p>
                     </div>
-                    <audio controls src="../../Assets/themeSong.mp3" type="audio/mp3"></audio>
+                    <audio className={index % 2 === 0 ? "" : "audio2"} controls src={song.song_file} type="audio/mp3"></audio>
                 </div>
-
-                <div className='songCard'>
-                    <img className="thumbnail2" src="../../Assets/logo.png" alt="userProfile"></img>
-                    <div className="songInfo">
-                        <h2 className="info">{songwriter}</h2>
-                        <p className="info">{songTitle}</p>
-                        <p className="info">{plays}</p>
-                    </div>
-                    <audio controls className="audio2" src="../../Assets/themeSong.mp3" type="audio/mp3"></audio>
-                </div>
-
-                <div className='songCard'>
-                    <img className="thumbnail" src="../../Assets/logo.png" alt="userProfile"></img>
-                    <div className="songInfo">
-                        <h2 className="info">{songwriter}</h2>
-                        <p className="info">{songTitle}</p>
-                        <p className="info">{plays}</p>
-                    </div>
-                    <audio controls src="../../Assets/themeSong.mp3" type="audio/mp3"></audio>
-                </div>
-
-                <div className='songCard'>
-                    <img className="thumbnail2" src="../../Assets/logo.png" alt="userProfile"></img>
-                    <div className="songInfo">
-                        <h2 className="info">{songwriter}</h2>
-                        <p className="info">{songTitle}</p>
-                        <p className="info">{plays}</p>
-                    </div>
-                    <audio controls className="audio2" src="../../Assets/themeSong.mp3" type="audio/mp3"></audio>
-                </div>
+                ))}
 
             </div>
 

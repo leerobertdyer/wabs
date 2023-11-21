@@ -23,16 +23,27 @@ class App extends Component {
         score: 0,
         datecreated: ''
       },
-      song: {
-        title: '',
-        lyrics: '',
-        song_file: ''
-      }
+      songs: []
     };
   }
 
   componentDidMount() {
     this.checkAuthentication();
+    this.loadSongs();
+  }
+
+  loadSongs = () => {
+    fetch(`http://localhost:4000/songs?home=home`)
+    .then(resp => {
+      if (resp.ok) {
+        return resp.json()
+      }
+    }).then(data => {
+      console.log(data.songs)
+      this.setState({songs: data.songs})
+    }).catch(error => {
+      console.error("error fetching songs at home: ", error)
+    })
   }
 
   checkAuthentication = () => {
@@ -63,27 +74,8 @@ class App extends Component {
 
   };
 
-
-
-updateSong = (newSong) => {
-  // console.log('updating song: ')
-  // console.log('title: ', newSong.title)
-  // console.log('lyrics: ', newSong.lyrics)
-  // console.log('song: ', newSong.song)
-  this.setState({
-    song: {
-      title: newSong.title,
-      lyrics: newSong.lyrics,
-      song_file: newSong.song
-    },
-    isAuthorizing: true
-  }, () => {
-    // console.log('state set:', this.state.song)
-  })
-  } 
-
   loadUser = (data) => {
-    // console.log('onLoadUser: ', data)
+    console.log('onLoadUser: ', data)
     this.setState({
       user: {
         user_id: data.user_id,
@@ -141,11 +133,11 @@ updateSong = (newSong) => {
                 <div className='spacing'></div>
                 
                 <Routes>
-                  <Route path='/' element={<Songs />} />
+                  <Route path='/' element={<Songs songs={this.state.songs} user={this.state.user}/>} />
                   <Route path="/login" element={<Login loadUser={this.loadUser} />} />
                   <Route path="/register" element={<Register loadUser={this.loadUser} />} />
-                  <Route path="/profile" element={<Profile user={this.state.user} checkAuthentication={this.checkAuthentication} unloadUser={this.unloadUser} />} />
-                  <Route path="/submit" element={<Submit user={this.state.user} updateSong={this.updateSong} />} />
+                  <Route path="/profile" element={<Profile user={this.state.user} unloadUser={this.unloadUser} />} />
+                  <Route path="/submit" element={<Submit user={this.state.user} />} />
                   <Route path='/access' element={<Access user={this.state.user} song={this.state.song}/>} />
                 </Routes>
 

@@ -32,13 +32,13 @@ function Register(props) {
                     headers: { 'content-type': 'application/json' },
                     credentials: 'include'
                 })
-
+                console.log('wtf')
                 if (!authUrlResponse.ok) {
                     throw new Error(`Failed to get auth URL: ${authUrlResponse.status}`);
                 }
 
                 const authData = await authUrlResponse.json();
-                const authUrl = authData.authUrl
+                const authUrl = authData.authUrl.replace(/\s/g, "%20")
 
                 console.log('authData', authData)
                 console.log('authurl: ', authUrl)
