@@ -49,7 +49,7 @@ function Register(props) {
 
         }
         catch (error) {
-            console.error('Error during song submission:', error);
+            console.error('Error during user Registration:', error);
         }
     }
 

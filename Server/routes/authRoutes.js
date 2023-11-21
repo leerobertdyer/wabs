@@ -3,7 +3,7 @@ import databaseConfig from '../database/db.js'
 import { Router } from 'express'
 import dropboxConfig from '../services/dropbox.js'
 import { randomBytes } from 'crypto';
-const { dbx, REDIRECT_URI } = dropboxConfig
+const { dbx, REDIRECT_URI, isAccessTokenValid, refreshToken } = dropboxConfig
 const { client, db, sessionStore } = databaseConfig
 
 const generateRandomState = () => {
@@ -41,21 +41,24 @@ let tempAuthToken = ''
 
 authRoutes.get('/dbx-auth-callback', async (req, res) => {
   const { code } = req.query;
-  console.log('auth callback cookie: ', req.cookies.user)
+  // console.log('auth callback cookie: ', req.cookies.user)
   const userId = req.cookies.user.user_id
   try {
-    console.log('received auth code: ', code)
+    // console.log('received auth code: ', code)
     if (tempAuthToken === '') {
       const tokenResponse = await dbx.auth.getAccessTokenFromCode(REDIRECT_URI, code);
       // console.log('token response: ', tokenResponse)
       tempAuthToken = tokenResponse.result.access_token;
-      // console.log('accessToken: ', (tempAuthToken));
+      const refreshToken = tokenResponse.result.refresh_token;
+      // console.log('accessToken: ', tempAuthToken);
+      // console.log('refreshToken: ', refreshToken);
       await db('dbx_tokens')
       .insert({
         user_id: userId,
-        token: tempAuthToken
+        token: tempAuthToken,
+        refresh: refreshToken
       })
-      res.cookie('token', dbxToken, { maxAge: 300000, httpOnly: true, path: '/' });
+      res.cookie('token', tempAuthToken, { maxAge: 3000000, httpOnly: true, path: '/' });
       tempAuthToken = ''
       res.redirect('http://localhost:3000')
     }
@@ -94,9 +97,9 @@ authRoutes.post('/login', (req, res) => {
                   ? dbxTokenData[0].token
                   : null
 
-                  res.cookie('user', userData[0], { maxAge: 300000, httpOnly: true, path: '/' });
+                  res.cookie('user', userData[0], { maxAge: 3000000, httpOnly: true, path: '/' });
                   if (dbxToken) {
-                    res.cookie('token', dbxToken, { maxAge: 300000, httpOnly: true, path: '/' });
+                    res.cookie('token', dbxToken, { maxAge: 3000000, httpOnly: true, path: '/' });
                   }
                   // console.log('user logged in: ', userData[0])
                   // console.log('user token generated: ', dbxToken)
@@ -148,7 +151,7 @@ authRoutes.post('/login', (req, res) => {
               })
               .then((user) => {
                 trx.commit();
-                res.cookie('user', userData, { maxAge: 300000, httpOnly: true, path: '/' });
+                res.cookie('user', userData, { maxAge: 3000000, httpOnly: true, path: '/' });
                 res.json(userData);
               });
           })
@@ -165,6 +168,7 @@ authRoutes.post('/login', (req, res) => {
 
   authRoutes.post('/signout', (req, res) => {
     res.clearCookie('user'); 
+    res.clearCookie('token')
     res.status(204).send(); 
   });
   
