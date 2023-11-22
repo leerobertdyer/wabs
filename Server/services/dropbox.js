@@ -22,11 +22,11 @@ const dbx = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, fetch });
 
 const isAccessTokenValid = async (accessToken) => {
     try {
-        const dbxClient = new Dropbox({ accessToken });
+        const dbxClient = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, accessToken: accessToken });
         const accountInfo = await dbxClient.usersGetCurrentAccount();
         return true;
     } catch (error) {
-        console.error(`Error validating access token: ${error}`);
+        console.error(`Error with validating access token: ${error}`);
         return false;
     }
 };
@@ -64,19 +64,21 @@ const refreshToken = async (user_id, token) => {
                 );
         
                 console.log('New Access Token:', response.data.access_token);
+                const newToken = response.data.access_token
+                return newToken
             } catch (error) {
                 console.error('Error refreshing token:', error.response.data);
             }
         }
         
-        getNewAccessToken();
-        
+        const newAccessToken = await getNewAccessToken();
 
-        // await db('dbx_tokens')
-        //     .where('user_id', user_id)
-        //     .update({ token: newAccessToken });
+        await db('dbx_tokens')
+            .where('user_id', user_id)
+            .update({ token: newAccessToken });
 
-        // return newAccessToken
+        return newAccessToken
+
     }
     catch (error) {
         console.error('Error updating dbx_tokens: ', error)
