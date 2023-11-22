@@ -9,21 +9,25 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 songRoutes.get('/songs', async (req, res) => {
-  const { userId, home } = req.query
   let songs
-  if (home) {
+  if (false) {
+    console.log('home achieved')
     try {
-      songs = await db('songs').select('*')
-      res.json({ songs })
+      songs = await db('songs')
+      .select('*')
+      //add a sort by query later
+      console.log(songs)
     } catch (error) {
       console.error("Error getting songs from database (homepage)", error)
     }
   }
-  else if (userId) {
+  else if (true) {
     try {
-      songs = await db('songs')
-        .where('user_id', Number(userId))
-      res.json({ songs })
+      const songData = await db('songs')
+      .join('users', 'songs.user_id', '=', 'users.user_id')
+      .select('songs.*', 'users.user_profile_pic');
+    
+      res.json({ songs, photos })
     } catch (error) {
       console.error(`Error obtaining songs from database (profile): ${error}`)
       res.status(500).json({ error: 'Internal Server Error' });

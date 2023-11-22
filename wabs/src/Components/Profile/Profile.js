@@ -150,7 +150,7 @@ function Profile(props) {
                             </div>
                         </div>
                         <div>
-                            <Songs user={user} songs={songs}/>
+                            <Songs user={user} songs={songs} />
                         </div>
                     </div>
                 </div>)

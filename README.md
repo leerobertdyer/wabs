@@ -4,7 +4,6 @@ A social Media website based around songwriting that encourages quantity over qu
 Still very much in development ;)
 
 # BUGS:
--   in songRoutes.js I have completely bungled the submit handler..... working on authentication still of course...
 
 -   If you register, but decline to authorize dbx, then there is nothing in place to stop you from submitting, it will end up with an error
         to solve it I'll need to implement a redirect to auth when a user without a token tries to submit
