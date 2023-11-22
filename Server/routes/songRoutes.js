@@ -10,33 +10,18 @@ const upload = multer({ storage: storage });
 
 songRoutes.get('/songs', async (req, res) => {
   let songs
-  if (false) {
-    console.log('home achieved')
-    try {
-      songs = await db('songs')
-      .select('*')
-      //add a sort by query later
-      console.log(songs)
-    } catch (error) {
-      console.error("Error getting songs from database (homepage)", error)
-    }
-  }
-  else if (true) {
     try {
       const songData = await db('songs')
       .join('users', 'songs.user_id', '=', 'users.user_id')
       .select('songs.*', 'users.user_profile_pic');
-    
-      res.json({ songs, photos })
+    console.log(songData)
+    console.log('------ console pass -----')
+      res.json({ songs: songData })
     } catch (error) {
       console.error(`Error obtaining songs from database (profile): ${error}`)
       res.status(500).json({ error: 'Internal Server Error' });
     }
-  } else {
-    console.log('songRoutes/song failed due to query not existing...')
-    res.status(500).json({ error: 'Internal service error (songRoutes.js)' })
-  }
-})
+  });
 
 songRoutes.post('/submit', upload.single('song'), async (req, res) => {
   let token = req.cookies.token
