@@ -1,4 +1,4 @@
-import { Dropbox } from "dropbox";
+import { Dropbox, DropboxAuth } from "dropbox";
 import multer from "multer";
 import path from 'path'
 import { dirname } from 'path';
@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 import databaseConfig from '../database/db.js'
 const { db } = databaseConfig
 import 'isomorphic-fetch';
+import axios from "axios";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
@@ -30,27 +31,69 @@ const isAccessTokenValid = async (accessToken) => {
     }
 };
 
-const refreshToken = async (user_id) => {
+const refreshToken = async (user_id, token) => {
     try {
         const { refresh } = await db('dbx_tokens')
-        .select('refresh')
-        .where('user_id', user_id)
-        .first();
+            .select('refresh')
+            .where('user_id', user_id)
+            .first();
 
-    const tokenResponse = await dbx.auth.refreshAccessToken();
-    console.log("tokenResponse: ", tokenResponse)
-    const newAccessToken = tokenResponse.result.access_token;
+        const dbx = new DropboxAuth({
+            accessToken: token,
+            clientId: process.env.DROPBOX_APP_KEY,
+            clientSecret: process.env.DROPBOX_APP_SECRET,
+            refreshToken: refresh
+        })
 
-    await db('dbx_tokens')
-    .where('user_id', user_id)
-    .update({ token: newAccessToken});
+        async function getNewAccessToken() {
+            try {
+                const params = new URLSearchParams();
+                params.append('grant_type', 'refresh_token');
+                params.append('refresh_token', refresh);
+                params.append('client_id', process.env.DROPBOX_APP_KEY);
+                params.append('client_secret', process.env.DROPBOX_APP_SECRET);
+        
+                const response = await axios.post(
+                    'https://api.dropboxapi.com/oauth2/token',
+                    params.toString(),
+                    {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }
+                );
+        
+                console.log('New Access Token:', response.data.access_token);
+            } catch (error) {
+                console.error('Error refreshing token:', error.response.data);
+            }
+        }
+        
+        getNewAccessToken();
+        
 
-    return newAccessToken
-}
+        // await db('dbx_tokens')
+        //     .where('user_id', user_id)
+        //     .update({ token: newAccessToken });
+
+        // return newAccessToken
+    }
     catch (error) {
-        console.error('Error refreshing access token: ', error)
+        console.error('Error updating dbx_tokens: ', error)
     }
 
 }
 
-export default {dbx, REDIRECT_URI, isAccessTokenValid, refreshToken}
+const timeoutExample = async () => {
+    const timeoutInSeconds = 5;
+
+    for (let i = 1; i <= timeoutInSeconds; i++) {
+        console.log(`${i} second(s) passed.`);
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+    }
+
+    console.log('Timeout finished!');
+};
+
+
+export default { dbx, REDIRECT_URI, isAccessTokenValid, refreshToken }

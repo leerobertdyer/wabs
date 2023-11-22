@@ -2,14 +2,8 @@ import bcrypt from 'bcrypt'
 import databaseConfig from '../database/db.js'
 import { Router } from 'express'
 import dropboxConfig from '../services/dropbox.js'
-import { randomBytes } from 'crypto';
 const { dbx, REDIRECT_URI, isAccessTokenValid, refreshToken } = dropboxConfig
-const { client, db, sessionStore } = databaseConfig
-
-const generateRandomState = () => {
-  const randomBytesBuffer = randomBytes(24);
-  return randomBytesBuffer.toString('hex');
-};
+const { db } = databaseConfig
 
 const authRoutes = Router()
 
@@ -27,8 +21,7 @@ authRoutes.get('/check-session', (req, res) => {
 
 authRoutes.post('/dbx-auth', async (req, res) => {
     try {
-      const state = generateRandomState();
-      const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline', ['files.content.write', 'files.content.read', 'files.metadata.write', 'files.metadata.read', 'sharing.write', 'sharing.read', 'file_requests.write'], 'none', false);
+      const authUrl = await dbx.auth.getAuthenticationUrl(REDIRECT_URI, null, 'code', 'offline', null, 'none', false);
       console.log('Authorization URL:', authUrl);
       res.json({ authUrl: authUrl })
     } catch (error) {

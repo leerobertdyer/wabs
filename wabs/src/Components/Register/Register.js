@@ -26,19 +26,20 @@ function Register(props) {
             console.log('Registered user: ', user)
             console.log('client side cookie: ', document.cookie);
             props.loadUser(user);
+
             if (user.user_id) {
                 const authUrlResponse = await fetch('http://localhost:4000/auth/dbx-auth', {
                     method: 'POST',
                     headers: { 'content-type': 'application/json' },
                     credentials: 'include'
                 })
-                console.log('wtf')
+
                 if (!authUrlResponse.ok) {
                     throw new Error(`Failed to get auth URL: ${authUrlResponse.status}`);
                 }
 
                 const authData = await authUrlResponse.json();
-                const authUrl = authData.authUrl.replace(/\s/g, "%20")
+                const authUrl = authData.authUrl
 
                 console.log('authData', authData)
                 console.log('authurl: ', authUrl)

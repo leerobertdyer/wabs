@@ -37,94 +37,72 @@ songRoutes.get('/songs', async (req, res) => {
 songRoutes.post('/submit', upload.single('song'), async (req, res) => {
   const token = req.cookies.token
   const user = req.cookies.user
-  // this is the logic for checking if the token... put this back after testing...
-  // if (!(await isAccessTokenValid(token))) {
-  //   console.log('token no longer valid...')
-  //   const userId = req.cookies.user.user_id;
-  //   console.log('user id: ', userId)
-  //   const newToken = await refreshToken(userId);
-  //   console.log('new token: ', newToken)
-  //   dbx.auth.setAccessToken(newToken);
-  // } else {
-  //   dbx.auth.setAccessToken(token);
-  //   console.log('current token allowed')
+  console.log('user cookie: ', user)
+  console.log('token cookie: ', token)
+
+
+  await refreshToken(user?.user_id, token);
+
+  console.log('fuuuuck: ')
+
+
+
+
+
+  // const uploadedSong = req.file;
+  // console.log('uploadedSong: ', uploadedSong)
+
+  // if (!uploadedSong) {
+  //   return res.status(400).json({ error: 'No song provided' });
   // }
-  
-    dbx.auth.setAccessToken(token); //setting the user for dbx
 
-    const { refresh } = await db('dbx_tokens')
-        .select('refresh')
-        .where('user_id', user.user_id)
-        .first();
+  // const content = uploadedSong.buffer;
 
-    const tokenResponse = await dbx.auth.refreshAccessToken();
-    console.log("tokenResponse: ", tokenResponse)
-    const newAccessToken = tokenResponse.result.access_token;
+  // let databaseLink;
+  // try {
+  //   const dropboxResponse = await dbx.filesUpload({
+  //     path: `/uploads/songs/${uploadedSong.originalname}`,
+  //     contents: content
+  //   });
+  //   console.log('dpx resp: ', dropboxResponse);
+  //   const dropboxPath = dropboxResponse.result.id;
+  //   // console.log('dpx path: ', dropboxPath)
 
-    await db('dbx_tokens')
-    .where('user_id', user.user_id)
-    .update({ token: newAccessToken});
+  //   try {
+  //     const existingLinkResponse = await dbx.sharingListSharedLinks({
+  //       path: dropboxResponse.result.path_display
+  //     });
 
-    console.log('new token: ', newToken)
-    dbx.auth.setAccessToken(newToken);
+  //     if (existingLinkResponse.result.links.length > 0) {
+  //       databaseLink = existingLinkResponse.result.links[0].url.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
+  //       console.log('Using existing shareable link:', databaseLink);
+  //     } else {
+  //       const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
+  //         path: dropboxResponse.result.path_display,
+  //         settings: { requested_visibility: { '.tag': 'public' } },
+  //       });
 
-
-
-
-  const uploadedSong = req.file;
-  console.log('uploadedSong: ', uploadedSong)
-
-  if (!uploadedSong) {
-    return res.status(400).json({ error: 'No song provided' });
-  }
-
-  const content = uploadedSong.buffer;
-
-  let databaseLink;
-  try {
-    const dropboxResponse = await dbx.filesUpload({
-      path: `/uploads/songs/${uploadedSong.originalname}`,
-      contents: content
-    });
-    console.log('dpx resp: ', dropboxResponse);
-    const dropboxPath = dropboxResponse.result.id;
-    // console.log('dpx path: ', dropboxPath)
-
-    try {
-      const existingLinkResponse = await dbx.sharingListSharedLinks({
-        path: dropboxResponse.result.path_display
-      });
-
-      if (existingLinkResponse.result.links.length > 0) {
-        databaseLink = existingLinkResponse.result.links[0].url.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
-        console.log('Using existing shareable link:', databaseLink);
-      } else {
-        const linkResponse = await dbx.sharingCreateSharedLinkWithSettings({
-          path: dropboxResponse.result.path_display,
-          settings: { requested_visibility: { '.tag': 'public' } },
-        });
-
-        databaseLink = linkResponse.result.url.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
-        console.log('Shareable link:', databaseLink);
-      }
-    } catch (error) {
-      console.error('Error creating/shared link:', error);
-    }
-    await db('songs')
-      .insert({
-        title: req.body.title,
-        lyrics: req.body.lyrics,
-        user_id: req.body.user_id,
-        song_file: databaseLink,
-        votes: 0,
-        song_date: new Date()
-      });
-    res.status(200).json({ song: uploadedSong.filename })
-  }
-  catch (error) {
-    console.error('Error submitting new song in Database', error);
-    res.status(500).json({ error: 'Server Status  Error' })
-  }
+  //       databaseLink = linkResponse.result.url.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
+  //       console.log('Shareable link:', databaseLink);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error creating/shared link:', error);
+  //   }
+  //   await db('songs')
+  //     .insert({
+  //       title: req.body.title,
+  //       lyrics: req.body.lyrics,
+  //       user_id: req.body.user_id,
+  //       song_file: databaseLink,
+  //       votes: 0,
+  //       song_date: new Date()
+  //     });
+  //   res.status(200).json({ song: uploadedSong.filename })
+  // }
+  // catch (error) {
+  //   console.error('Error submitting new song in Database', error);
+  //   res.status(500).json({ error: 'Server Status  Error' })
+  // }
 });
 
 
