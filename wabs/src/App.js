@@ -29,21 +29,21 @@ class App extends Component {
 
   componentDidMount() {
     this.checkAuthentication();
-    this.loadSongs();
+    if (window.location.pathname === '/') {
+      this.loadSongs();
+    }
+ 
   }
 
-  loadSongs = () => {
-    fetch(`http://localhost:4000/songs?home=home`)
-    .then(resp => {
-      if (resp.ok) {
-        return resp.json()
-      }
-    }).then(data => {
-      console.log(data.songs)
+  loadSongs = async () => {
+    try {
+    const response = await fetch(`http://localhost:4000/songs?home=home`)
+    const data = await response.json()
+      console.log('client side song fetch data: ', data.songs)
       this.setState({songs: data.songs})
-    }).catch(error => {
+    } catch(error) {
       console.error("error fetching songs at home: ", error)
-    })
+    }
   }
 
   checkAuthentication = () => {

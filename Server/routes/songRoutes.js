@@ -9,19 +9,37 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 songRoutes.get('/songs', async (req, res) => {
-  let songs
-    try {
+  const { userId, home } = req.query
+  console.log('types:', typeof home, typeof userId)
+  let songData
+        //home route song loader
+  try {
+    if (typeof home === 'string') {
+      console.log('home route!')
       const songData = await db('songs')
-      .join('users', 'songs.user_id', '=', 'users.user_id')
-      .select('songs.*', 'users.user_profile_pic');
-    console.log(songData)
-    console.log('------ console pass -----')
+        .join('users', 'songs.user_id', '=', 'users.user_id')
+        .select('songs.*', 'users.user_profile_pic')
+      console.log(songData)
+      console.log('------ console pass -----')
       res.json({ songs: songData })
-    } catch (error) {
-      console.error(`Error obtaining songs from database (profile): ${error}`)
-      res.status(500).json({ error: 'Internal Server Error' });
     }
-  });
+      //profile route song loader
+    else if (typeof userId === 'string') {
+      console.log('profile route!')
+      const songData = await db('songs')
+        .join('users', 'songs.user_id', '=', 'users.user_id')
+        .select('songs.*', 'users.user_profile_pic')
+        .where('songs.user_id', Number(userId))
+      console.log('------ console pass -----')
+      console.log(songData)
+      res.json({ songs: songData })
+    }
+  }
+  catch (error) {
+    console.error(`Error obtaining user songs from database: ${error}`)
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 songRoutes.post('/submit', upload.single('song'), async (req, res) => {
   let token = req.cookies.token
@@ -29,7 +47,7 @@ songRoutes.post('/submit', upload.single('song'), async (req, res) => {
   console.log('user cookie: ', user)
   console.log('token cookie: ', token)
 
-  if (!( await isAccessTokenValid(token))){
+  if (!(await isAccessTokenValid(token))) {
     console.log('expired, sending 4 new token')
     token = await refreshToken(user.user_id, token);
     console.log(token)
