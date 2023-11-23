@@ -69,10 +69,7 @@ function App(props) {
         isLoggedIn: true,
         user_profile_pic: data.user_profile_pic,
         status: data.user_status
-    },
-      () => {
-        // console.log('loadUserState: ', state.user)
-      });
+    })
   }
 
   const unloadUser = () => {

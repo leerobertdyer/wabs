@@ -26,7 +26,7 @@ const isAccessTokenValid = async (accessToken) => {
         const accountInfo = await dbxClient.usersGetCurrentAccount();
         return true;
     } catch (error) {
-        console.error(`Error with validating access token: ${error}`);
+        console.error(`Token has expired, getting new one... ${error}`);
         return false;
     }
 };

@@ -35,6 +35,7 @@ function Profile(props) {
     const handleSetProfilePhoto = (newPhoto) => {
         // console.log('newPhoto: ', newPhoto)
         setProfilePhoto(newPhoto)
+        
     }
 
     const handlePhotoSubmit = (event) => {

@@ -3,31 +3,35 @@ import multer from 'multer';
 import dbConfig from '../database/db.js'
 const { db } = dbConfig
 import dropboxConfig from '../services/dropbox.js'
-const { dbx, REDIRECT_URI } = dropboxConfig
+const { dbx, isAccessTokenValid, refreshToken } = dropboxConfig
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const profileRoutes = Router() 
 
-profileRoutes.put('/update-status', (req, res) => {
+profileRoutes.put('/update-status', async (req, res) => {
+  try {
     const { id, newStatus } = req.body
-    db('users')
+    req.cookies.user.status = newStatus
+    console.log(req.cookies.user)
+    const query = await db('users')
       .where('user_id', id)
       .update({ user_status: newStatus })
-      .then(() => {
         res.status(200).json({ status: newStatus })
-      }).catch((error) => {
+      } catch(error) {
         console.error('Error setting new status in Database', error);
         res.status(500).json({ error: 'Server Status Error' })
-      })
+      }
   });
 
   profileRoutes.put('/upload-profile-pic', upload.single('photo'), async (req, res) => {
-    const token = req.cookies.token
-    // console.log('user token in profile pic upload: ', token);
-    dbx.auth.setAccessToken(token);
-
+    let token = req.cookies.token
     const user = req.body.user_id;
+  if (!(await isAccessTokenValid(token))) {
+    console.log('expired, sending 4 new token')
+    token = await refreshToken(user, token);
+  }
+    await dbx.auth.setAccessToken(token);
     const uploadedPhoto = req.file;
 
     if (!uploadedPhoto) {
@@ -35,7 +39,6 @@ profileRoutes.put('/update-status', (req, res) => {
     }
 
     const contents = uploadedPhoto.buffer;
-
     let databaseLink;
     try {
       const dropboxResponse = await dbx.filesUpload({
@@ -49,7 +52,6 @@ profileRoutes.put('/update-status', (req, res) => {
         const existingLinkResponse = await dbx.sharingListSharedLinks({
           path: dropboxResponse.result.path_display
         });
-      
         if (existingLinkResponse.result.links.length > 0) {
           databaseLink = existingLinkResponse.result.links[0].url.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
           // console.log('Using existing shareable link:', databaseLink);
@@ -58,7 +60,6 @@ profileRoutes.put('/update-status', (req, res) => {
             path: dropboxResponse.result.path_display,
             settings: { requested_visibility: { '.tag': 'public' } },
           });
-      
           databaseLink = linkResponse.result.url.replace('https://www.dropbox.com', 'https://dl.dropboxusercontent.com');
           // console.log('Shareable link:', databaseLink);
         }
