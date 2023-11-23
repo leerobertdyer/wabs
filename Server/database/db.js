@@ -24,7 +24,8 @@ const db = knex({
     connection: process.env.ELEPHANTSQL_URL,
     pool: {
       min: 2, 
-      max: 10, 
+      max: 5, 
+      idleTimeoutMillis: 60000, 
     },
   });
   

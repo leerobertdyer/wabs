@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './Songs.css'
 
-function Songs ({ songs, user }) {
+function Songs ({ songs }) {
     const [sortAudio, setSortAudio] = useState('Newest')
 
 const handleSort = (event) => {
@@ -24,7 +24,7 @@ const handleSort = (event) => {
                 <div className='songCard' key={index}>
                     <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={song.user_profile_pic} alt="userProfile"></img>
                     <div className="songInfo">
-                        <h2 className="info">{user.userName}</h2>
+                        <h2 className="info">{song.username}</h2>
                         <p className="info">{song.title}</p>
                         <p className="info">{song.plays}</p>
                     </div>

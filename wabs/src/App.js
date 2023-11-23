@@ -75,13 +75,12 @@ function App(props) {
       });
   }
 
-  const unloadUser = async () => {
+  const unloadUser = () => {
     try {
-    const response = await fetch('http://localhost:4000/auth/signout', {
+     fetch('http://localhost:4000/auth/signout', {
       method: 'POST',
       credentials: 'include',
     })
-    const data = await response.json()
      setUser({
               user_id: '',
               userName: '',
@@ -107,7 +106,7 @@ function App(props) {
               <div className='spacing'></div>
 
               <Routes>
-                <Route path='/' element={<Songs songs={songs} user={user} />} />
+                <Route path='/' element={<Songs songs={songs} />} />
                 <Route path="/login" element={<Login loadUser={loadUser} />} />
                 <Route path="/register" element={<Register loadUser={loadUser} />} />
                 <Route path="/profile" element={<Profile user={user} unloadUser={unloadUser} />} />
