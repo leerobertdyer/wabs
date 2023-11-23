@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Login from './Components/Login/Login';
@@ -10,74 +10,57 @@ import Songs from './Components/Songs/Songs';
 import Submit from './Components/Submit/Submit';
 import Access from './Components/Access/Access';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: {
-        user_id: '',
-        userName: '',
-        email: '',
-        isLoggedIn: false,
-        user_profile_pic: '',
-        score: 0,
-        datecreated: ''
-      },
-      songs: []
-    };
-  }
+function App(props) {
+  const [user, setUser] = useState({
+    user_id: '',
+    userName: '',
+    email: '',
+    isLoggedIn: false,
+    user_profile_pic: '',
+    score: 0,
+    datecreated: ''
+  })
+  const [songs, setSongs] = useState([])
 
-  componentDidMount() {
-    this.checkAuthentication();
+  useEffect(() => {
+    checkAuthentication();
     if (window.location.pathname === '/') {
-      this.loadSongs();
+    loadSongs();
     }
- 
-  }
+  }, []);
 
-  loadSongs = async () => {
+
+  const loadSongs = async () => {
     try {
-    const response = await fetch(`http://localhost:4000/songs?home=home`)
-    const data = await response.json()
+      const response = await fetch(`http://localhost:4000/songs?home=home`)
+      const data = await response.json()
       console.log('client side song fetch data: ', data.songs)
-      this.setState({songs: data.songs})
-    } catch(error) {
+      setSongs(data.songs)
+    } catch (error) {
       console.error("error fetching songs at home: ", error)
     }
   }
 
-  checkAuthentication = () => {
-    fetch('http://localhost:4000/auth/check-session', { 
-      credentials: 'include' 
-    })
-      .then((response) => {
-        if (response.status === 204){
-          console.log('No user session stored...')
-          this.unloadUser()
-        } else if (response.ok){
-         return response.json()
-        } else {
-          console.error('Invalid response:', response);
-          throw new Error('Invalid response');
-        }
-      })
-        .then(data => {
-          const currentUser = data.user
-          // const token = data.token
-          console.log('client side user cookie: ', currentUser)
-          // console.log('client side token cookie: ', token)
-          this.loadUser(currentUser)
-        })
-      .catch((error) => {
+  const checkAuthentication = async () => {
+    try{
+      const response = await fetch('http://localhost:4000/auth/check-session', {
+         credentials: 'include'
+       })
+       const data = await response.json()
+       const currentUser = data.user
+       // const token = data.token
+       console.log('client side user cookie: ', currentUser)
+       // console.log('client side token cookie: ', token)
+       loadUser(currentUser)
+    }
+    catch(error) {
         console.error('Error checking authentication:', error);
-      });
-
+      };
   };
 
-  loadUser = (data) => {
+ const loadUser = (data) => {
     console.log('onLoadUser: ', data)
-    this.setState({
-      user: {
+    setUser({
         user_id: data.user_id,
         userName: data.username,
         email: data.user_email,
@@ -86,68 +69,58 @@ class App extends Component {
         isLoggedIn: true,
         user_profile_pic: data.user_profile_pic,
         status: data.user_status
-      }
     },
       () => {
-        // console.log('loadUserState: ', this.state.user)
-      }
-    )
-
+        // console.log('loadUserState: ', state.user)
+      });
   }
 
-  unloadUser = () => {
-    fetch('http://localhost:4000/auth/signout', {
-      method: 'POST', 
+  const unloadUser = async () => {
+    try {
+    const response = await fetch('http://localhost:4000/auth/signout', {
+      method: 'POST',
       credentials: 'include',
     })
-    .then(response => {
-      if (response.ok) {
-        this.setState({
-          user: {
-            user_id: '',
-            userName: '',
-            email: '',
-            isLoggedIn: false,
-            user_profile_pic: '',
-            score: 0,
-            datecreated: ''
-          },
-
-        });
+    const data = await response.json()
+     setUser({
+              user_id: '',
+              userName: '',
+              email: '',
+              isLoggedIn: false,
+              user_profile_pic: '',
+              score: 0,
+              datecreated: ''
+            })    
+        }
+      catch(error) {
+        console.error('Logout failed:', error);
       }
-    })
-    .catch(error => {
-      console.error('Logout failed:', error);
-    });
   };
-  
 
-  render() {
 
     return (
       <Router>
         <div className='App'>
           {
             <div id='mainWrapper'>
-                <Nav user={this.state.user} unloadUser={this.unloadUser} />
-                <div className='spacing'></div>
-                
-                <Routes>
-                  <Route path='/' element={<Songs songs={this.state.songs} user={this.state.user}/>} />
-                  <Route path="/login" element={<Login loadUser={this.loadUser} />} />
-                  <Route path="/register" element={<Register loadUser={this.loadUser} />} />
-                  <Route path="/profile" element={<Profile user={this.state.user} unloadUser={this.unloadUser} />} />
-                  <Route path="/submit" element={<Submit user={this.state.user} />} />
-                  <Route path='/access' element={<Access user={this.state.user} song={this.state.song}/>} />
-                </Routes>
+              <Nav user={user} unloadUser={unloadUser} />
+              <div className='spacing'></div>
 
-                <Footer />
-              </div>
+              <Routes>
+                <Route path='/' element={<Songs songs={songs} user={user} />} />
+                <Route path="/login" element={<Login loadUser={loadUser} />} />
+                <Route path="/register" element={<Register loadUser={loadUser} />} />
+                <Route path="/profile" element={<Profile user={user} unloadUser={unloadUser} />} />
+                <Route path="/submit" element={<Submit user={user} />} />
+                <Route path='/access' element={<Access user={user} songs={songs} />} />
+              </Routes>
+
+              <Footer />
+            </div>
           }
         </div>
       </Router>
     );
   }
-}
 
 export default App;
