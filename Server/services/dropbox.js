@@ -63,7 +63,7 @@ const refreshToken = async (user_id, token) => {
                     }
                 );
         
-                console.log('New Access Token:', response.data.access_token);
+                // console.log('New Access Token:', response.data.access_token);
                 const newToken = response.data.access_token
                 return newToken
             } catch (error) {
@@ -85,17 +85,5 @@ const refreshToken = async (user_id, token) => {
     }
 
 }
-
-const timeoutExample = async () => {
-    const timeoutInSeconds = 5;
-
-    for (let i = 1; i <= timeoutInSeconds; i++) {
-        console.log(`${i} second(s) passed.`);
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
-    }
-
-    console.log('Timeout finished!');
-};
-
 
 export default { dbx, REDIRECT_URI, isAccessTokenValid, refreshToken }

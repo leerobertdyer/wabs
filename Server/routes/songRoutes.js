@@ -10,28 +10,28 @@ const upload = multer({ storage: storage });
 
 songRoutes.get('/songs', async (req, res) => {
   const { userId, home } = req.query
-  console.log('types:', typeof home, typeof userId)
+  // console.log('types:', typeof home, typeof userId)
   let songData
         //home route song loader
   try {
     if (typeof home === 'string') {
-      console.log('home route!')
+      // console.log('home route!')
       const songData = await db('songs')
         .join('users', 'songs.user_id', '=', 'users.user_id')
         .select('songs.*', 'users.user_profile_pic', 'users.username')
-      console.log(songData)
-      console.log('------ console pass -----')
+      // console.log(songData)
+      // console.log('------ console pass -----')
       res.json({ songs: songData })
     }
       //profile route song loader
     else if (typeof userId === 'string') {
-      console.log('profile route!')
+      // console.log('profile route!')
       const songData = await db('songs')
         .join('users', 'songs.user_id', '=', 'users.user_id')
         .select('songs.*', 'users.user_profile_pic', 'users.username')
         .where('songs.user_id', Number(userId))
-      console.log('------ console pass -----')
-      console.log(songData)
+      // console.log('------ console pass -----')
+      // console.log(songData)
       res.json({ songs: songData })
     }
   }

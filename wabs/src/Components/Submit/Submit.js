@@ -18,8 +18,10 @@ function Submit(props) {
             lyrics: lyrics,
             song: song
         }
-        console.log('Uploaded Song: ', updatedSong)
-        console.log('user id: ', props.user.user_id)
+        const temp = URL.createObjectURL(song)
+        // console.log('Uploaded Song: ', updatedSong)
+        // console.log('user id: ', props.user.user_id)
+        
         const formData = new FormData()
         formData.append('title', updatedSong.title)
         formData.append('lyrics', updatedSong.lyrics)

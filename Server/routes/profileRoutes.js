@@ -12,11 +12,11 @@ const profileRoutes = Router()
 profileRoutes.put('/update-status', async (req, res) => {
   try {
     const { id, newStatus } = req.body
-    req.cookies.user.status = newStatus
-    console.log(req.cookies.user)
+    req.cookies.user.user_status = newStatus
     const query = await db('users')
       .where('user_id', id)
       .update({ user_status: newStatus })
+      res.cookie('user', req.cookies.user, { maxAge: 3000000, httpOnly: true, path: '/' });
         res.status(200).json({ status: newStatus })
       } catch(error) {
         console.error('Error setting new status in Database', error);
@@ -28,9 +28,10 @@ profileRoutes.put('/update-status', async (req, res) => {
     let token = req.cookies.token
     const user = req.body.user_id;
   if (!(await isAccessTokenValid(token))) {
-    console.log('expired, sending 4 new token')
+    // console.log('expired, sending 4 new token')
     token = await refreshToken(user, token);
   }
+
     await dbx.auth.setAccessToken(token);
     const uploadedPhoto = req.file;
 
@@ -70,7 +71,8 @@ profileRoutes.put('/update-status', async (req, res) => {
       await db('users')
         .where('user_id', user)
         .update({ user_profile_pic: databaseLink })
-  
+      req.cookies.user.user_profile_pic = databaseLink
+      res.cookie('user', req.cookies.user, { maxAge: 3000000, httpOnly: true, path: '/' });
       res.status(200).json({ newPhoto: databaseLink })
     } catch (error) {
       console.error('Error updating Database: ', error);

@@ -17,20 +17,37 @@ function App(props) {
     email: '',
     isLoggedIn: false,
     user_profile_pic: '',
+    status: '',
     score: 0,
     datecreated: ''
   })
+
   const [songs, setSongs] = useState([])
 
   useEffect(() => {
+
+    const checkAuthentication = async () => {
+      try{
+        const response = await fetch('http://localhost:4000/auth/check-session', {
+           credentials: 'include'
+         })
+         const data = await response.json()
+         const currentUser = data.user
+         // const token = data.token
+         console.log('client side user cookie: ', currentUser)
+         // console.log('client side token cookie: ', token)
+         loadUser(currentUser)
+      }
+      catch(error) {
+          console.error('Error checking authentication:', error);
+        };
+    };
+
     checkAuthentication();
-    if (window.location.pathname === '/') {
-    loadSongs();
-    }
+    loadHomeSongs();
   }, []);
 
-
-  const loadSongs = async () => {
+  const loadHomeSongs = async () => {
     try {
       const response = await fetch(`http://localhost:4000/songs?home=home`)
       const data = await response.json()
@@ -41,22 +58,20 @@ function App(props) {
     }
   }
 
-  const checkAuthentication = async () => {
-    try{
-      const response = await fetch('http://localhost:4000/auth/check-session', {
-         credentials: 'include'
-       })
-       const data = await response.json()
-       const currentUser = data.user
-       // const token = data.token
-       console.log('client side user cookie: ', currentUser)
-       // console.log('client side token cookie: ', token)
-       loadUser(currentUser)
-    }
-    catch(error) {
-        console.error('Error checking authentication:', error);
-      };
-  };
+
+  const changeUserPic = (newPic) => {
+    const nextUser = {...user, user_profile_pic: newPic};
+    setUser(nextUser);
+  }
+
+  const changeUserStatus = (newStatus) => {
+    const nextUser = {...user, status: newStatus};
+    setUser(nextUser);
+  }
+  
+  
+
+  
 
  const loadUser = (data) => {
     console.log('onLoadUser: ', data)
@@ -101,12 +116,11 @@ function App(props) {
             <div id='mainWrapper'>
               <Nav user={user} unloadUser={unloadUser} />
               <div className='spacing'></div>
-
               <Routes>
                 <Route path='/' element={<Songs songs={songs} />} />
                 <Route path="/login" element={<Login loadUser={loadUser} />} />
                 <Route path="/register" element={<Register loadUser={loadUser} />} />
-                <Route path="/profile" element={<Profile user={user} unloadUser={unloadUser} />} />
+                <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} unloadUser={unloadUser} />} />
                 <Route path="/submit" element={<Submit user={user} />} />
                 <Route path='/access' element={<Access user={user} songs={songs} />} />
               </Routes>
