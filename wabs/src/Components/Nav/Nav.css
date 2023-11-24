@@ -31,13 +31,35 @@
     padding: 10px;
   }
   
-  #loginBox {
+  .loginBox {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
+    padding: 5px;
     background-color: white;
-    width: 150px;
-    height: 50px;
-    border-radius: 22px;
+    width: 130px;
+    height: 25%;
+    border-radius: 28px;
+  }
+
+  .loginBox:hover {
+    background-color: gray;
+  }
+
+  .endOfNavBar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .aboveLogout {
+    margin: 0;
+  }
+
+  .loginAndOutLink {
+    color: blue;
   }

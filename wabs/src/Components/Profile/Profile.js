@@ -6,28 +6,16 @@ import Songs from '../Songs/Songs';
 function Profile(props) {
     const user = props.user
     const [showStatus, setShowStatus] = useState(false);
-    const [songs, setSongs] = useState([]);
 
-    useEffect(() => {
-        fetchUserSongs(user.user_id)
-    }, [user]);
-
-
-    const fetchUserSongs = async (userId) => {
-        try {
-            const response = await fetch(`http://localhost:4000/songs/?userId=${userId}`)
-            if (response.ok) {
-                const data = await response.json();
-                setSongs(data.songs)
-            } else { throw new Error(`Failed to upload user ${userId}'s songs: ${response.status}`) }
-        } catch (error) {
-            console.error('Error fetching user songs:', error);
+    const userSongs = []
+    for (const song of props.songs) {
+        if (song.user_id === user.user_id) {
+            userSongs.push(song)
         }
     }
 
-    const handleSetProfilePhoto = (newPhoto) => {
-        props.changeUserPic(newPhoto)
-    }
+
+    const handleSetProfilePhoto = (newPhoto) => props.changeUserPic(newPhoto)
 
     const handlePhotoSubmit = async (event) => {
         const ogPhoto = user.user_profile_pic
@@ -48,6 +36,7 @@ function Profile(props) {
                 if (response.ok) {
                     const data = await response.json()
                     handleSetProfilePhoto(data.newPhoto)
+                    props.loadSongs()
                     // console.log('photo saved in dbx: ', data.newPhoto);
                 }
                 else {
@@ -60,100 +49,99 @@ function Profile(props) {
         };
     }
 
-        let changedStatus = ''
-        const showHiddenStatus = () => {
-            if (!showStatus) {
-                setShowStatus(true);
-            }
-            else { setShowStatus(false) }
+    let changedStatus = ''
+    const showHiddenStatus = () => {
+        if (!showStatus) {
+            setShowStatus(true);
         }
-        const handleStatusChange = async (event) => {
-            event.preventDefault();
-            if (changedStatus.length > 0) {
-                const response = await fetch('http://localhost:4000/profile/update-status', {
-                    headers: { 'content-type': 'application/json' },
-                    method: 'PUT',
-                    body: JSON.stringify({
-                        id: user.user_id,
-                        newStatus: changedStatus
-                    }),
-                    credentials: 'include'
-                })
-                if (response.ok) {
-                    const data = await response.json();
-                    props.changeUserStatus(data.status);
-                    setShowStatus(false)
-                } else {
-                    throw new Error(`Failed to upload yer new statatus: ${response.status}`)
-                }
-            } else {
-                setShowStatus(false)
-                return null;
-            }
-        }
-
-
-        const { isLoggedIn } = props.user;
-        // console.log('profile user: ', props.user)
-        // console.log('is user logged in? ', isLoggedIn)
-        return (
-            <div>
-                {isLoggedIn ? (
-                    <div>
-                        <div id="Profile">
-                            <div id="topBar">
-                                <div id="picInputStatus">
-                                    <div id="picAndInput">
-                                        <div className="profilePicContainer">
-                                            <img src={user.user_profile_pic} alt="Profile" className='profilePic' />
-                                        </div>
-                                        <form encType="multipart/form-data">
-                                            <label className="picInputLabel clickMe"
-                                                htmlFor="filePicker">+pic</label>
-                                            <input
-                                                type="file"
-                                                id="filePicker"
-                                                name="photo"
-                                                accept="image/png, image/jpeg"
-                                                style={{ display: 'none' }}
-                                                onChange={handlePhotoSubmit}
-                                            />
-                                        </form></div>
-                                    <div id="statusAndInput">
-                                        <h3 className="status">"{user.status}"</h3>
-                                        <form className='formRow'>
-                                            {/* <label htmlFor="statusInput">
-                                            +status
-                                        </label> */}
-                                            <label htmlFor="statusChanger"
-                                                className='labelInline clickMe'
-                                                onClick={showHiddenStatus}>+status</label>
-                                            {showStatus ? (
-                                                <div className='formRow'>
-                                                    <input type="text"
-                                                        id="statusChanger"
-                                                        name="statusInput"
-                                                        onChange={(event) => changedStatus = event.target.value} />
-                                                    <input type="submit"
-                                                        className='clickMe smallFormButton'
-                                                        onClick={handleStatusChange} />
-                                                </div>) : null}
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <Songs user={user} songs={songs} />
-                            </div>
-                        </div>
-                    </div>)
-                    : <div>
-                        <div id="loginFromProfile">
-                            <h2>Please </h2><Link to="/login">Log In</Link>
-                        </div>
-                    </div>}
-            </div>
-        )
+        else { setShowStatus(false) }
     }
 
-    export default Profile
+    const handleStatusChange = async (event) => {
+        event.preventDefault();
+        if (changedStatus.length > 0) {
+            const response = await fetch('http://localhost:4000/profile/update-status', {
+                headers: { 'content-type': 'application/json' },
+                method: 'PUT',
+                body: JSON.stringify({
+                    id: user.user_id,
+                    newStatus: changedStatus
+                }),
+                credentials: 'include'
+            })
+            if (response.ok) {
+                const data = await response.json();
+                props.changeUserStatus(data.status);
+                setShowStatus(false)
+            } else {
+                throw new Error(`Failed to upload yer new statatus: ${response.status}`)
+            }
+        } else {
+            setShowStatus(false)
+            return null;
+        }
+    }
+
+    const { isLoggedIn } = props.user;
+
+    return (
+        <div>
+            {isLoggedIn ? (
+                <div>
+                    <div id="Profile">
+                        <div id="topBar">
+                            <div id="picInputStatus">
+                                <div id="picAndInput">
+                                    <div className="profilePicContainer">
+                                        <img src={user.user_profile_pic} alt="Profile" className='profilePic' />
+                                    </div>
+                                    <form encType="multipart/form-data">
+                                        <label className="picInputLabel clickMe"
+                                            htmlFor="filePicker">+pic</label>
+                                        <input
+                                            type="file"
+                                            id="filePicker"
+                                            name="photo"
+                                            accept="image/png, image/jpeg"
+                                            style={{ display: 'none' }}
+                                            onChange={handlePhotoSubmit}
+                                        />
+                                    </form></div>
+                                <div id="statusAndInput">
+                                    <h3 className="status">"{user.status}"</h3>
+                                    <form className='formRow'>
+                                        {/* <label htmlFor="statusInput">
+                                        +status
+                                    </label> */}
+                                        <label htmlFor="statusChanger"
+                                            className='labelInline clickMe'
+                                            onClick={showHiddenStatus}>+status</label>
+                                        {showStatus ? (
+                                            <div className='formRow'>
+                                                <input type="text"
+                                                    id="statusChanger"
+                                                    name="statusInput"
+                                                    onChange={(event) => changedStatus = event.target.value} />
+                                                <input type="submit"
+                                                    className='clickMe smallFormButton'
+                                                    onClick={handleStatusChange} />
+                                            </div>) : null}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <Songs user={user} songs={userSongs} />
+                        </div>
+                    </div>
+                </div>)
+                : <div>
+                    <div id="loginFromProfile">
+                        <h2>Please </h2><Link to="/login">Log In</Link>
+                    </div>
+                </div>}
+        </div>
+    )
+}
+
+export default Profile

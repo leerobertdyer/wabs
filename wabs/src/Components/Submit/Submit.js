@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Submit.css'
 
 function Submit(props) {
     const [title, setTitle] = useState('')
     const [lyrics, setLyrics] = useState('')
     const [ song, setSong] = useState(null)
+
+    const navigate = useNavigate();
 
     const handleSongSubmit = async (event) => {
         event.preventDefault()
@@ -18,30 +20,27 @@ function Submit(props) {
             lyrics: lyrics,
             song: song
         }
-        const temp = URL.createObjectURL(song)
         // console.log('Uploaded Song: ', updatedSong)
         // console.log('user id: ', props.user.user_id)
-        
         const formData = new FormData()
         formData.append('title', updatedSong.title)
         formData.append('lyrics', updatedSong.lyrics)
         formData.append('song', updatedSong.song)
         formData.append('user_id', props.user.user_id)
 
-        fetch('http://localhost:4000/submit', {
+        const resp = await fetch('http://localhost:4000/submit', {
             method: "POST",
             body: formData,
             credentials: 'include'
-        }).then(resp => {
-            if (resp.ok){
-                return resp.json()
-            } 
-            else {
-                throw new Error(`Failed to upload yer damn song: ${resp.status}`);
-            }
-        }).then(songData => {
-            console.log('final response from submit: ', songData)
         })
+        
+        if (resp.ok) {
+            navigate('/profile')
+            props.loadSongs()
+        }else {
+                throw new Error(`Failed to upload yer damn song: ${resp.status}`);
+        }
+    
     };
 
     const { isLoggedIn } = props.user;
@@ -73,7 +72,7 @@ function Submit(props) {
                     <label htmlFor="lyrics"
                         className='clickMe black'>Lyrics</label>
                     <textarea name="lyrics" id="lyrics"
-                        cols="30" rows="10"
+                        cols="80" rows="10"
                         placeholder='I wrote me a song.... it had some words.... and now it exits...'
                         required
                         onChange={(event) => { setLyrics(event.target.value) }} />

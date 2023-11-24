@@ -22,13 +22,20 @@ class Nav extends Component {
 
                     <NavLink to="/collaborate" className={({ isActive }) => (isActive ? 'active' : 'links')}>Collaborate</NavLink>
 
-                    <div id="loginBox">
+                    <div className="endOfNavBar">
                         {user.isLoggedIn ? (
-                            <Link to="/signout" onClick={unloadUser}>
-                                Sign Out
-                            </Link>
+                            <>
+                                <h3 className="aboveLogout">{user.userName}</h3>
+                                <div className="loginBox" >
+                                    <Link className="loginAndOutLink" to="/signout" onClick={unloadUser}>
+                                        Sign Out
+                                    </Link>
+                                </div>
+                            </>
                         ) : (
-                            <Link to="/login">Login</Link>
+                            <div className="loginBox" >
+                            <Link className="loginAndOutLink" to="/login">Login</Link>
+                            </div>
                         )}
                     </div>
 

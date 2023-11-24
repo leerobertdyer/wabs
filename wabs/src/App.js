@@ -31,11 +31,9 @@ function App(props) {
         const response = await fetch('http://localhost:4000/auth/check-session', {
            credentials: 'include'
          })
+         console.log('client side cookie: ', document.cookie)
          const data = await response.json()
          const currentUser = data.user
-         // const token = data.token
-         console.log('client side user cookie: ', currentUser)
-         // console.log('client side token cookie: ', token)
          loadUser(currentUser)
       }
       catch(error) {
@@ -44,20 +42,18 @@ function App(props) {
     };
 
     checkAuthentication();
-    loadHomeSongs();
+    loadSongs();
   }, []);
 
-  const loadHomeSongs = async () => {
+  const loadSongs = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/songs?home=home`)
+      const response = await fetch(`http://localhost:4000/songs`)
       const data = await response.json()
-      console.log('client side song fetch data: ', data.songs)
       setSongs(data.songs)
     } catch (error) {
       console.error("error fetching songs at home: ", error)
     }
   }
-
 
   const changeUserPic = (newPic) => {
     const nextUser = {...user, user_profile_pic: newPic};
@@ -69,12 +65,7 @@ function App(props) {
     setUser(nextUser);
   }
   
-  
-
-  
-
  const loadUser = (data) => {
-    console.log('onLoadUser: ', data)
     setUser({
         user_id: data.user_id,
         userName: data.username,
@@ -120,8 +111,8 @@ function App(props) {
                 <Route path='/' element={<Songs songs={songs} />} />
                 <Route path="/login" element={<Login loadUser={loadUser} />} />
                 <Route path="/register" element={<Register loadUser={loadUser} />} />
-                <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} unloadUser={unloadUser} />} />
-                <Route path="/submit" element={<Submit user={user} />} />
+                <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} loadSongs={loadSongs} songs={songs} unloadUser={unloadUser} />} />
+                <Route path="/submit" element={<Submit user={user} loadSongs={loadSongs} />} />
                 <Route path='/access' element={<Access user={user} songs={songs} />} />
               </Routes>
 
