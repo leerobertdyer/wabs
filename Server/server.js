@@ -5,6 +5,8 @@ import songRoutes from './routes/songRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import dbConfig from './database/db.js'
 import cookieParser from 'cookie-parser';
+import feedRoutes from './routes/feedRoutes.js';
+
 const {client, db} = dbConfig
 const server = express();
 const port = 4000;
@@ -27,6 +29,7 @@ server.use(cookieParser())
 server.use('/profile', profileRoutes)
 server.use('/', songRoutes)
 server.use('/auth', authRoutes)
+server.use('/', feedRoutes)
 
 process.on('exit', () => {
   db.destroy();

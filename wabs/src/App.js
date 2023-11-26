@@ -6,9 +6,8 @@ import Nav from './Components/Nav/Nav';
 import Footer from './Components/Footer/Footer';
 import Register from './Components/Register/Register';
 import Profile from './Components/Profile/Profile';
-import Songs from './Components/Songs/Songs';
+import Feed from './Components/Feed/Feed';
 import Submit from './Components/Submit/Submit';
-import Access from './Components/Access/Access';
 
 function App(props) {
   const [user, setUser] = useState({
@@ -23,6 +22,7 @@ function App(props) {
   })
 
   const [songs, setSongs] = useState([])
+  const [feed, setFeed] = useState([])
 
   useEffect(() => {
 
@@ -31,7 +31,7 @@ function App(props) {
         const response = await fetch('http://localhost:4000/auth/check-session', {
            credentials: 'include'
          })
-         console.log('client side cookie: ', document.cookie)
+        //  console.log('client side cookie: ', document.cookie)
          const data = await response.json()
          const currentUser = data.user
          loadUser(currentUser)
@@ -43,8 +43,16 @@ function App(props) {
 
     checkAuthentication();
     loadSongs();
+    loadFeed();
   }, []);
 
+  const loadFeed = async() => {
+    const resp = await fetch('http://localhost:4000/feed')
+    const data = await resp.json();
+    console.log('feed data: ', data.newFeed)
+    setFeed(data.newFeed)
+  }
+  
   const loadSongs = async () => {
     try {
       const response = await fetch(`http://localhost:4000/songs`)
@@ -108,12 +116,11 @@ function App(props) {
               <Nav user={user} unloadUser={unloadUser} />
               <div className='spacing'></div>
               <Routes>
-                <Route path='/' element={<Songs songs={songs} />} />
+                <Route path='/' element={<Feed feed={feed}/>} />
                 <Route path="/login" element={<Login loadUser={loadUser} />} />
                 <Route path="/register" element={<Register loadUser={loadUser} />} />
-                <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} loadSongs={loadSongs} songs={songs} unloadUser={unloadUser} />} />
-                <Route path="/submit" element={<Submit user={user} loadSongs={loadSongs} />} />
-                <Route path='/access' element={<Access user={user} songs={songs} />} />
+                <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} loadSongs={loadSongs} loadFeed={loadFeed} songs={songs} unloadUser={unloadUser} />} />
+                <Route path="/submit" element={<Submit user={user} loadSongs={loadSongs} loadFeed={loadFeed}/>} />
               </Routes>
 
               <Footer />

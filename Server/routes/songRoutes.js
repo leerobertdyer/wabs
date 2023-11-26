@@ -71,15 +71,20 @@ songRoutes.post('/submit', upload.single('song'), async (req, res) => {
     } catch (error) {
       console.error('Error creating/shared link:', error);
     }
-    await db('songs')
+    const [newSongId] = await db('songs')
       .insert({
         title: req.body.title,
         lyrics: req.body.lyrics,
         user_id: req.body.user_id,
         song_file: databaseLink,
-        votes: 0,
-        song_date: new Date()
-      });
+        votes: 0})
+      .returning('song_id');
+    await db('feed')
+    .insert({
+      type: 'song',
+      user_id: req.body.user_id,
+      song_id: newSongId.song_id
+    })
     res.status(200).json({ newSong: databaseLink })
   }
   catch (error) {

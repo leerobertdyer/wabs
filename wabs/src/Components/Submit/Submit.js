@@ -11,6 +11,7 @@ function Submit(props) {
 
     const handleSongSubmit = async (event) => {
         event.preventDefault()
+        alert('Working on uploading, hang tight...')
         if (song === null) {
             console.error('No song selected');
             return;
@@ -35,8 +36,9 @@ function Submit(props) {
         })
         
         if (resp.ok) {
-            navigate('/profile')
-            props.loadSongs()
+            navigate('/profile');
+            props.loadSongs();
+            props.loadFeed();
         }else {
                 throw new Error(`Failed to upload yer damn song: ${resp.status}`);
         }

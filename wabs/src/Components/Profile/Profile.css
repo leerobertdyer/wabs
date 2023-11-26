@@ -96,8 +96,8 @@ audio {
     background-color: goldenrod;
     border-radius: 50%;
     padding: 20px;
-    width: 12vmax;
-    height: 12vmax;
+    width: 70%;
+    height: 70%;
 }
 
 .thumbnail2 {
@@ -105,8 +105,8 @@ audio {
     background-color: teal;
     border-radius: 50%;
     padding: 20px;
-    width: 12vmax;
-    height: 12vmax;
+    width: 70%;
+    height: 70%;
 }
 
 #statusAndInput {

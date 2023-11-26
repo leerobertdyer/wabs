@@ -13,9 +13,14 @@ profileRoutes.put('/update-status', async (req, res) => {
   try {
     const { id, newStatus } = req.body
     req.cookies.user.user_status = newStatus
-    const query = await db('users')
+    await db('users')
       .where('user_id', id)
       .update({ user_status: newStatus })
+    await db('feed')
+    .insert(
+      {type: 'status',
+      user_id: id
+    })
       res.cookie('user', req.cookies.user, { maxAge: 3000000, httpOnly: true, path: '/' });
         res.status(200).json({ status: newStatus })
       } catch(error) {
@@ -71,6 +76,11 @@ profileRoutes.put('/update-status', async (req, res) => {
       await db('users')
         .where('user_id', user)
         .update({ user_profile_pic: databaseLink })
+      await db('feed')
+      .insert({
+        type: 'profile_pic',
+        user_id: user
+      })
       req.cookies.user.user_profile_pic = databaseLink
       res.cookie('user', req.cookies.user, { maxAge: 3000000, httpOnly: true, path: '/' });
       res.status(200).json({ newPhoto: databaseLink })

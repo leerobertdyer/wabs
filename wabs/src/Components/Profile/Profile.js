@@ -7,13 +7,9 @@ function Profile(props) {
     const user = props.user
     const [showStatus, setShowStatus] = useState(false);
 
-    const userSongs = []
-    for (const song of props.songs) {
-        if (song.user_id === user.user_id) {
-            userSongs.push(song)
-        }
-    }
-
+    const userSongs = props.songs
+    .filter((song) => song.user_id === user.user_id)
+    .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
 
     const handleSetProfilePhoto = (newPhoto) => props.changeUserPic(newPhoto)
 
@@ -72,6 +68,7 @@ function Profile(props) {
             if (response.ok) {
                 const data = await response.json();
                 props.changeUserStatus(data.status);
+                props.loadFeed();
                 setShowStatus(false)
             } else {
                 throw new Error(`Failed to upload yer new statatus: ${response.status}`)

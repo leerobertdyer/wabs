@@ -1,5 +1,5 @@
 .songPlayer {
-    width: 60vw;
+    width: 80vw;
     height: fit-content;
     background-color: rgb(69, 40, 0);
     margin: 20px auto 20px auto;
@@ -59,7 +59,7 @@
 
 .songCard {
     background-color: rgb(15, 14, 13);
-    width: 100%;
+
     padding: 20px;
     display: flex;
     flex-flow: row nowrap;
@@ -78,6 +78,7 @@
 
 .info {
     margin: 3px;
+    color: antiquewhite;
 }
 
 .audio2 {
