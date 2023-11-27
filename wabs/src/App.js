@@ -116,7 +116,7 @@ function App(props) {
               <Nav user={user} unloadUser={unloadUser} />
               <div className='spacing'></div>
               <Routes>
-                <Route path='/' element={<Feed feed={feed}/>} />
+                <Route path='/' element={<Feed feed={feed} user={user} />} />
                 <Route path="/login" element={<Login loadUser={loadUser} />} />
                 <Route path="/register" element={<Register loadUser={loadUser} />} />
                 <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} loadSongs={loadSongs} loadFeed={loadFeed} songs={songs} unloadUser={unloadUser} />} />

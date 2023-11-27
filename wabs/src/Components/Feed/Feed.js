@@ -1,15 +1,53 @@
 import { useState, useEffect } from "react";
 import './Feed.css'
 
-function Feed({ feed }) {
+function Feed({ feed, user }) {
     const [sortBy, setSortBy] = useState('Latest')
+    const [stars, setStars] = useState([])
 
-    let starImage = '../../../Assets/star.png'
+    useEffect(() => {
+        if (user.user_id > 0) {
+            userStars(user.user_id);
+        }
+    }, [])
+
+    const starHollow = '../../../Assets/star.png'
+    const starFilled = '../../../Assets/starFilled.png'
+
+    const userStars = async (id) => {
+        const resp = await fetch(`http://localhost:4000/user-stars?id=${id}`, {
+            credentials: 'include'
+        })
+        const data = await resp.json();
+        const stars2Add = data.userStars.map(star => star.post_id)
+        const nextStars = [...stars, ...stars2Add];
+        setStars(nextStars)
+        console.log(stars)
+    }
+    const starChecker = async (user_id, post_id) => {
+        try {
+            const resp = await fetch(`http://localhost:4000/stars?userId=${user_id}&postId=${post_id}`,
+                {
+                    method: "put",
+                    credentials: 'include'
+                })
+            const data = await resp.json();
+            console.log('star checker: ', data);
+            if (data.message === 'starred') {
+                const nextStars = [...stars, data.post]
+                setStars(nextStars)
+            } else if (data.message === 'un-starred') {
+                const nextStars = stars.filter(star => star.feed_id !== data.post)
+                setStars(nextStars)
+            }
+        } catch (err) {
+            console.error(`There b errors in ye star fetch... ${err}`)
+        }
+    }
+
     const handleSort = (event) => {
         setSortBy(event.target.textContent)
     }
-
-
     return (
         <>
             <div className="outerFeedDiv">
@@ -26,14 +64,17 @@ function Feed({ feed }) {
                     {feed.map((post, index) => (
                         <div className='songCard' key={index}>
                             <div className="imgAndStars">
-                            <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={post.user_profile_pic} alt="userProfile"></img>
-                            <div className="stars">
-                            <p>Stars: </p>
-                            <img src={'../../../Assets/star.png'} 
-                            alt="star" 
-                            className="starImg"></img>
-                            <p>{post.stars || 0}</p>
-                            </div>
+                                <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={post.user_profile_pic} alt="userProfile"></img>
+                                <div className="stars">
+                                    <p>Stars: </p>
+                                    <img src={(stars.includes(post.feed_id.toString()) || stars.includes(post.feed_id))
+                                        ? starFilled
+                                        : starHollow}
+                                        alt="star"
+                                        className="starImg"
+                                        onClick={() => starChecker(user.user_id, post.feed_id)}></img>
+                                    <p>{post.stars || 0}</p>
+                                </div>
                             </div>
                             {post.type === "profile_pic"
                                 ? (<>
@@ -41,7 +82,7 @@ function Feed({ feed }) {
                                     <div></div>
                                 </>)
                                 : null}
-                            
+
                             {post.song_file
                                 ? (<>
                                     <div className="songInfo">
