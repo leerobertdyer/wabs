@@ -9,7 +9,18 @@
     font-family: 'Amatic SC', sans-serif;
 }
 
-.imgAndStars {
+.postCard {
+    border: antiquewhite solid 4px;
+    padding: 20px;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 44px;
+    gap: 5px;
+}
+
+.feedWrap {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -24,7 +35,7 @@
     color: antiquewhite;
     display: flex;
     width: 95%;
-    justify-content: space-between;
+    justify-content: space-around;
     font-size: 1.5rem;
 }
 
@@ -32,11 +43,69 @@
     width: 25px;
     height: 25px;
     align-self: center;
-    margin-left: -25px;
 }
 
 .starImg:hover {
     transition: 1s;
     transform: scale(140%);
     border-radius: 20px;
+}
+
+.post {
+    color: black;
+    font-size: 2em;
+    text-align: center;
+    flex-shrink: 4;
+}
+
+.profilePicFeed {
+display: flex;
+background-size: cover;
+flex-grow: 1;
+align-self: stretch;
+border-radius: 12px;
+}
+
+.postPicInfo {
+    background-color: antiquewhite;
+    padding: 10px;
+    border-radius: 12px;
+    width: fit-content;
+    height: fit-content;
+    align-self: center;
+    margin: 0 auto;
+    font-size: 1.5em;
+}
+
+.songFeedCard {
+    background-color: lightblue;
+}
+
+.statusFeedCard {
+    background-color: goldenrod;
+    gap: 60px;
+}
+.feedStatusContainer {
+    flex-grow: 1;
+}
+
+.feedStatus {
+    font-size: 3rem;
+}
+
+.picFeedCard {
+    background-color: gray;
+}
+
+.gray {
+    background-color: gray;
+}
+
+.feedSongInfo {
+    width: fit-content;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import './Feed.css'
 
-function Feed({ feed, user }) {
+function Feed({ feed, user, loadFeed, sortFeed }) {
     const [sortBy, setSortBy] = useState('Latest')
     const [stars, setStars] = useState([])
 
@@ -38,6 +38,7 @@ function Feed({ feed, user }) {
                 const nextStars = stars.filter(star => star.feed_id !== data.post)
                 setStars(nextStars)
             }
+            loadFeed();
             getStars(user_id);
         } catch (err) {
             console.error(`There b errors in ye star fetch... ${err}`)
@@ -45,8 +46,23 @@ function Feed({ feed, user }) {
     }
 
     const handleSort = (event) => {
+        sortFeed(event.target.textContent)
         setSortBy(event.target.textContent)
     }
+
+    const cardColors = {
+        song: 'songFeedCard',
+        status: 'statusFeedCard',
+        profile_pic: 'picFeedCard',
+        default: 'gray'
+    };
+    const textColors = {
+        song: 'black',
+        status: 'goldenrod',
+        pic: 'black',
+        default: 'antiquewhite'
+    }
+
     return (
         <>
             <div className="outerFeedDiv">
@@ -60,40 +76,55 @@ function Feed({ feed, user }) {
                     </div>
                 </div>
                 <div className='songBox'>
-                    {feed.map((post, index) => (
-                        <div className='songCard' key={index}>
-                            <div className="imgAndStars">
-                                <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={post.user_profile_pic} alt="userProfile"></img>
+                    {feed.map((post, index) => {
+                        const cardColor = cardColors[post.type] || cardColors['default']
+                        const textColor = textColors[post.type] || textColors['default']
+                        return (
+                            <div className={`postCard ${cardColor}`} key={index}>
+                                <div className="feedWrap">
+                                    <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={post.user_profile_pic} alt="userProfile"></img>
+                                </div>
+                                {post.type === "profile_pic"
+                                    ? (<>
+                                        <div className="profilePicFeed" style={{ backgroundImage: `url(${user.user_profile_pic})` }}>
+                                            <p className="postPicInfo">{post.username} updated their profile pic...</p>
+                                        </div>
+                                    </>)
+                                    : null}
+
+                                {post.song_file
+                                    ? (<>
+                                        <div className="feedSongInfo">
+                                            <p className={`${textColor}`}>{`New song from ${post.username}!`}</p>
+                                        <audio className={index % 2 === 0 ? "" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
+                                            <h3 className={`${textColor}`}>"{post.title}"</h3>
+                                        </div>
+                                    </>)
+                                    : null}
+                                {post.type === "status"
+                                    ? (<>
+                                        <div className="feedStatusContainer">
+                                            <h2 className={`${textColor}`}>{`${post.username} says:`}</h2>
+                                            <h3 className={`${textColor} feedStatus`}>{`"${post.user_status}"`}</h3>
+                                        </div>
+                                    </>)
+                                    : null}
+                                    <div className="feedWrap">
                                 <div className="stars">
-                                    <p>Stars: </p>
-                                    <img src={(stars.includes(post.feed_id))
-                                        ? starFilled
-                                        : starHollow}
-                                        alt="star"
-                                        className="starImg"
-                                        onClick={() => updateStars(user.user_id, post.feed_id)}></img>
-                                    <p>{post.stars || 0}</p>
+                                        <img src={(stars.includes(post.feed_id))
+                                            ? starFilled
+                                            : starHollow}
+                                            alt="star"
+                                            className="starImg"
+                                            onClick={() => updateStars(user.user_id, post.feed_id)}></img>
+                                        <p>Stars: </p>
+                                        <p>{post.stars}</p>
+                                    </div>
                                 </div>
                             </div>
-                            {post.type === "profile_pic"
-                                ? (<>
-                                    <p className="info">{post.username} updated their profile pic...</p>
-                                    <div></div>
-                                </>)
-                                : null}
-
-                            {post.song_file
-                                ? (<>
-                                    <div className="songInfo">
-                                        <h2 className="info">{post.username}</h2>
-                                        <p className="info">{post.title}</p>
-                                        <p className="info">New Song!</p>
-                                    </div>
-                                    <audio className={index % 2 === 0 ? "" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
-                                </>)
-                                : null}
-                        </div>
-                    ))}
+                        )
+                    }
+                    )}
 
                 </div>
             </div>

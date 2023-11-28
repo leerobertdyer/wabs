@@ -52,6 +52,24 @@ function App(props) {
     console.log('feed data: ', data.newFeed)
     setFeed(data.newFeed)
   }
+
+  const sortFeed = (method) => {
+    let nextFeed
+    if (method === "Oldest"){
+      nextFeed = [...feed].sort((a, b) => a.feed_id - b.feed_id)
+    }
+    else if (method === "Latest"){
+      nextFeed = [...feed].sort((a, b) => b.feed_id - a.feed_id)
+    }
+    else if (method === "Most Popular"){
+      nextFeed = [...feed].sort((a, b) => b.stars - a.stars)
+    }
+    else {
+      console.log('nothing changed...')
+      nextFeed = [...feed]
+    }
+    setFeed(nextFeed)
+  }
   
   const loadSongs = async () => {
     try {
@@ -116,7 +134,7 @@ function App(props) {
               <Nav user={user} unloadUser={unloadUser} />
               <div className='spacing'></div>
               <Routes>
-                <Route path='/' element={<Feed feed={feed} user={user} />} />
+                <Route path='/' element={<Feed feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed}/>} />
                 <Route path="/login" element={<Login loadUser={loadUser} />} />
                 <Route path="/register" element={<Register loadUser={loadUser} />} />
                 <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} loadSongs={loadSongs} loadFeed={loadFeed} songs={songs} unloadUser={unloadUser} />} />

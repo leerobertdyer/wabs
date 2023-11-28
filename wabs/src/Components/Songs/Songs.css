@@ -59,7 +59,6 @@
 
 .songCard {
     background-color: rgb(15, 14, 13);
-
     padding: 20px;
     display: flex;
     flex-flow: row nowrap;

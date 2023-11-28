@@ -26,16 +26,18 @@ feedRoutes.get('/get-stars', async (req, res) => {
 feedRoutes.put('/update-stars', async (req, res) => {
     const postId = req.query.postId
     const userId = req.query.userId
-    
+
     const existingStar = await db('stars')
         .where({ post_id: postId, user_id: userId })
         .first();
 
     if (existingStar) {
         await db('stars').where({ post_id: postId, user_id: userId }).del();
+        await db('feed').where('feed_id', postId).decrement('stars', 1)
         res.status(200).json({ message: 'un-starred', post: postId })
     } else {
         await db('stars').insert({ post_id: postId, user_id: userId })
+        await db('feed').where('feed_id', postId).increment('stars', 1)
         res.status(200).json({ message: 'starred', post: postId });
     }
 })
