@@ -9,12 +9,12 @@ const authRoutes = Router()
 
 ////////////////    session    ////////////////
 authRoutes.get('/check-session', (req, res) => {
-  if (req.cookies){
-    // console.log('check-session Cookie = ', req.cookies.user, req.cookies.token);
+  if (req.cookies.user){
+    console.log('check-session Cookie = ', req.cookies.user, req.cookies.token);
     res.status(200).json({ user: req.cookies.user, token: req.cookies.token  });
   } else {
     console.log('no cookie');
-    res.status(204);
+    res.status(204); //need to respond better so there is no error on a guest load
   }
 });
 ////////////////    DBX    ////////////////

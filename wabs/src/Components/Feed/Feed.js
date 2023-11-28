@@ -6,40 +6,39 @@ function Feed({ feed, user }) {
     const [stars, setStars] = useState([])
 
     useEffect(() => {
-        if (user.user_id > 0) {
-            userStars(user.user_id);
+        if (user.user_id) {
+            getStars(user.user_id);
         }
-    }, [])
+    }, [user])
 
     const starHollow = '../../../Assets/star.png'
     const starFilled = '../../../Assets/starFilled.png'
 
-    const userStars = async (id) => {
-        const resp = await fetch(`http://localhost:4000/user-stars?id=${id}`, {
+    const getStars = async (id) => {
+        const resp = await fetch(`http://localhost:4000/get-stars?id=${id}`, {
             credentials: 'include'
         })
         const data = await resp.json();
-        const stars2Add = data.userStars.map(star => star.post_id)
-        const nextStars = [...stars, ...stars2Add];
+        const nextStars = data.userStars.map(star => Number(star.post_id))
         setStars(nextStars)
-        console.log(stars)
     }
-    const starChecker = async (user_id, post_id) => {
+    const updateStars = async (user_id, post_id) => {
         try {
-            const resp = await fetch(`http://localhost:4000/stars?userId=${user_id}&postId=${post_id}`,
+            const resp = await fetch(`http://localhost:4000/update-stars?userId=${user_id}&postId=${post_id}`,
                 {
                     method: "put",
                     credentials: 'include'
                 })
             const data = await resp.json();
-            console.log('star checker: ', data);
+            // console.log('star checker: ', data);
             if (data.message === 'starred') {
                 const nextStars = [...stars, data.post]
-                setStars(nextStars)
+                setStars(nextStars);
             } else if (data.message === 'un-starred') {
                 const nextStars = stars.filter(star => star.feed_id !== data.post)
                 setStars(nextStars)
             }
+            getStars(user_id);
         } catch (err) {
             console.error(`There b errors in ye star fetch... ${err}`)
         }
@@ -67,12 +66,12 @@ function Feed({ feed, user }) {
                                 <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={post.user_profile_pic} alt="userProfile"></img>
                                 <div className="stars">
                                     <p>Stars: </p>
-                                    <img src={(stars.includes(post.feed_id.toString()) || stars.includes(post.feed_id))
+                                    <img src={(stars.includes(post.feed_id))
                                         ? starFilled
                                         : starHollow}
                                         alt="star"
                                         className="starImg"
-                                        onClick={() => starChecker(user.user_id, post.feed_id)}></img>
+                                        onClick={() => updateStars(user.user_id, post.feed_id)}></img>
                                     <p>{post.stars || 0}</p>
                                 </div>
                             </div>

@@ -17,30 +17,30 @@ feedRoutes.get('/feed', async (req, res) => {
     }
 })
 
-feedRoutes.put('/stars', async (req, res) => {
-    const postId = req.query.postId
-    const userId = req.query.userId
-    const cookie = req.cookies.stars
-    
-    const existingStar = await db('stars')
-    .where({post_id: postId, user_id: userId})
-    .first();
-    
-    if (existingStar) {
-      await db('stars').where({post_id: postId, user_id: userId}).del();
-      res.status(200).json({message: 'un-starred', post: postId})
-    } else {
-      await db('stars').insert({post_id: postId, user_id: userId})
-      res.status(200).json({ message: 'starred', post: postId });
-    }
-  })
-
-  feedRoutes.get('/user-stars', async (req, res) => {
+feedRoutes.get('/get-stars', async (req, res) => {
     const id = req.query.id;
     const stars = await db('stars').select('post_id').where('user_id', id)
-    res.cookie('stars', stars, { maxAge: 30000000, httpOnly: true, path: '/' });
-    res.status(200).json({userStars: stars})
-  })
-  
+    res.status(200).json({ userStars: stars })
+})
+
+feedRoutes.put('/update-stars', async (req, res) => {
+    const postId = req.query.postId
+    const userId = req.query.userId
+    
+    const existingStar = await db('stars')
+        .where({ post_id: postId, user_id: userId })
+        .first();
+
+    if (existingStar) {
+        await db('stars').where({ post_id: postId, user_id: userId }).del();
+        res.status(200).json({ message: 'un-starred', post: postId })
+    } else {
+        await db('stars').insert({ post_id: postId, user_id: userId })
+        res.status(200).json({ message: 'starred', post: postId });
+    }
+})
+
+
+
 
 export default feedRoutes
