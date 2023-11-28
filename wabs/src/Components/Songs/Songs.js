@@ -22,7 +22,7 @@ const handleSort = (event) => {
             <div className='songBox'>
                 {songs.map((song, index) => (
                 <div className='songCard' key={index}>
-                    <div className='imgAndStars'>
+                    <div className='profileSongPicContainer'>
                     <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={song.user_profile_pic} alt="userProfile"></img>
                     </div>
                     <div className="songInfo">

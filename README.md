@@ -4,18 +4,25 @@ A social Media website based around songwriting that encourages quantity over qu
 Still very much in development ;)
 
 # BUGS:
-
+-   Sort function not working on star click. It reverts to newest, but doesn't change the title of filter...
 -   If you register, but decline to authorize dbx, then there is nothing in place to stop you from submitting, it will end up with an error
         to solve it I'll need to implement a redirect to auth when a user without a token tries to submit
 
 # WORK LOG:
 To Do:
-    -Use the links from the dbx files to update the song player and feed the home page with a scrollable element.
-    -I need my homepage to be a feed that displays the most current "posts"
-        -A 'post' can be a song, a status change, a lyrics looking for song, a song looking for lyrics, a new user signed up, a profile pic change.
-            -I'll need a new bridge table that collects each new submission and ties it to user id.
-            -Not sure how I deal with a new registration, maybe add the username to the bridge table
-            -Display bridge table on home feed...
+-   Work on 'collab' section. To start can just be a feed like profile and main pages.
+-   The feed will only display songs that 'opted in' for collab
+
+-   Once I have that functional, I could add an option for song critiques/feedback
+
+-   I need to start implementing a points system, and pages to display the current monthly winner...
+-   Badges for collaboraters/monthly winners/most active
+
+-   messaging on posts
+-   DM messaging capability
+
+-   notifications via email and/or text
+
 
 
 # Main features:

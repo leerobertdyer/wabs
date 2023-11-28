@@ -83,14 +83,16 @@ border-radius: 12px;
 
 .statusFeedCard {
     background-color: goldenrod;
-    gap: 60px;
+
 }
 .feedStatusContainer {
-    flex-grow: 1;
+flex-grow: 1;
+text-align: center;
 }
 
 .feedStatus {
-    font-size: 3rem;
+    flex: 1;
+    font-size: 3.5vw;
 }
 
 .picFeedCard {
@@ -108,4 +110,20 @@ border-radius: 12px;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    gap: 8px;
+
+}
+
+.songUserName {
+    display: inline;
+    font-size: 1.3em;
+    font-weight: 800;
+    padding: 10px;
+}
+
+.blackSong {
+    color: black;
+    display: inline;
+    padding: 0;
+    margin: 0;
 }

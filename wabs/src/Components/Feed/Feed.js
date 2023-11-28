@@ -57,7 +57,7 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
         default: 'gray'
     };
     const textColors = {
-        song: 'black',
+        song: 'blackSong',
         status: 'goldenrod',
         pic: 'black',
         default: 'antiquewhite'
@@ -70,7 +70,7 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                     <h1>{sortBy} Posts:</h1>
                     <div className='sortSongs'>
                         <h3>Sort by: </h3>
-                        <p className='sort' onClick={handleSort}>Latest </p>
+                        <p className='sort' onClick={handleSort}>Latest</p>
                         <p className='sort' onClick={handleSort}>Oldest</p>
                         <p className='sort' onClick={handleSort}>Most Popular</p>
                     </div>
@@ -86,7 +86,7 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                 </div>
                                 {post.type === "profile_pic"
                                     ? (<>
-                                        <div className="profilePicFeed" style={{ backgroundImage: `url(${user.user_profile_pic})` }}>
+                                        <div className="profilePicFeed" style={{ backgroundImage: `url(${post.feed_pic})` }}>
                                             <p className="postPicInfo">{post.username} updated their profile pic...</p>
                                         </div>
                                     </>)
@@ -95,8 +95,10 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                 {post.song_file
                                     ? (<>
                                         <div className="feedSongInfo">
-                                            <p className={`${textColor}`}>{`New song from ${post.username}!`}</p>
-                                        <audio className={index % 2 === 0 ? "" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
+                                            <div>
+                                                <p className={`${textColor}`}>New song from</p><p className="songUserName">{` ${post.username}!`}</p>
+                                            </div>
+                                            <audio className={index % 2 === 0 ? "" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
                                             <h3 className={`${textColor}`}>"{post.title}"</h3>
                                         </div>
                                     </>)
@@ -109,8 +111,8 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                         </div>
                                     </>)
                                     : null}
-                                    <div className="feedWrap">
-                                <div className="stars">
+                                <div className="feedWrap">
+                                    <div className="stars">
                                         <img src={(stars.includes(post.feed_id))
                                             ? starFilled
                                             : starHollow}

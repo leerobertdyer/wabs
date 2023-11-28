@@ -10,6 +10,7 @@
     top: 0;
     position:fixed;
     border-bottom: solid white 3px;
+    font-size: 2vw;
 }
 
 #nav .links {
@@ -38,7 +39,7 @@
     align-items: center;
     padding: 5px;
     background-color: white;
-    width: 130px;
+    width: 15vw;
     height: 25%;
     border-radius: 28px;
   }
