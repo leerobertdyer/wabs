@@ -23,6 +23,8 @@ To Do:
 
 -   notifications via email and/or text
 
+-   in submit, I need to clarify whether they are submitting a full song, or just words and give them the appropriate form depending...
+
 
 
 # Main features:

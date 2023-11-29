@@ -23,26 +23,28 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
         setStars(nextStars)
     }
     const updateStars = async (user_id, post_id) => {
-        try {
-            const resp = await fetch(`http://localhost:4000/update-stars?userId=${user_id}&postId=${post_id}`,
-                {
-                    method: "put",
-                    credentials: 'include'
-                })
-            const data = await resp.json();
-            // console.log('star checker: ', data);
-            if (data.message === 'starred') {
-                const nextStars = [...stars, data.post]
-                setStars(nextStars);
-            } else if (data.message === 'un-starred') {
-                const nextStars = stars.filter(star => star.feed_id !== data.post)
-                setStars(nextStars)
+        if (user.user_id > 0){
+            try {
+                const resp = await fetch(`http://localhost:4000/update-stars?userId=${user_id}&postId=${post_id}`,
+                    {
+                        method: "put",
+                        credentials: 'include'
+                    })
+                const data = await resp.json();
+                // console.log('star checker: ', data);
+                if (data.message === 'starred') {
+                    const nextStars = [...stars, data.post]
+                    setStars(nextStars);
+                } else if (data.message === 'un-starred') {
+                    const nextStars = stars.filter(star => star.feed_id !== data.post)
+                    setStars(nextStars)
+                }
+                loadFeed();
+                getStars(user_id);
+            } catch (err) {
+                console.error(`There b errors in ye star fetch... ${err}`)
             }
-            loadFeed();
-            getStars(user_id);
-        } catch (err) {
-            console.error(`There b errors in ye star fetch... ${err}`)
-        }
+        } else { return }
     }
 
     const handleSort = (event) => {

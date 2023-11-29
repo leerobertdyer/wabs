@@ -15,16 +15,28 @@ margin-top: 40px;
     text-align: center;
 }
 
+
+.firstPopup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(218, 165, 32, .8);
+    padding: 30px;
+}
+
+
 .submitSongForm {
     border-radius: 22px;
     padding: 5px 35px 25px 35px;
     margin: 0 45px;
-    background-color: goldenrod;
+    background: linear-gradient(to bottom, goldenrod, orange);
     width: 80vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    display: none;
 }
 
 .submitSongLegend {

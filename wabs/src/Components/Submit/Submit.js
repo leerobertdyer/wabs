@@ -53,6 +53,29 @@ function Submit(props) {
 
         <div id="mainSubmitDiv"
         className='black'>
+        <div className='firstPopup'>
+            <form className='firstPopup'>
+                <h1>What are we submitting today?</h1>
+                <label for="fullSong">A Full Song</label>
+                <input type="radio"
+                name='submitType'
+                value="fullSong"
+                id='fullSong'
+                ></input>
+                  <label for="justLyrics">Just Lyrics</label>
+                <input type="radio"
+                name='submitType'
+                value="justLyrics"
+                id='justLyrics'
+                ></input>
+                  <label for="justMusic">Just Music</label>
+                <input type="radio"
+                name='submitType'
+                value="justMusic"
+                id='justMusic'
+                ></input>
+            </form>
+            </div>
             <form className='submitSongForm'
                 action="/submit"
                 method="post"
