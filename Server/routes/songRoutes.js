@@ -22,7 +22,7 @@ songRoutes.get('/songs', async (req, res) => {
   }
 });
 
-songRoutes.post('/submit', upload.single('song'), async (req, res) => {
+songRoutes.post('/submit-song', upload.single('song'), async (req, res) => {
   let token = req.cookies.token
   const user = req.cookies.user
   // console.log('server user cookie: ', user)
@@ -95,5 +95,6 @@ songRoutes.post('/submit', upload.single('song'), async (req, res) => {
   }
 });
 
+songRoutes.post('/submit-music')
 
 export default songRoutes
