@@ -80,13 +80,24 @@
     color: antiquewhite;
 }
 
+.audio1 {
+    color: goldenrod;
+    background-color: rgb(15, 14, 13);
+    padding: 2vw;
+    border-radius: 44px;
+    border: goldenrod solid 3px;
+    width: 80%;
+    height: 5vw;
+}
+
 .audio2 {
     color: goldenrod;
     background-color: rgb(15, 14, 13);
-    padding: 20px;
+    padding: 2vw;
     border-radius: 44px;
     border: teal solid 3px;
-    width: 40%;
+    width: 80%;
+    height: 5vw;
 }
 
 

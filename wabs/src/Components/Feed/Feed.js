@@ -23,7 +23,7 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
         setStars(nextStars)
     }
     const updateStars = async (user_id, post_id) => {
-        if (user.user_id > 0){
+        if (user.user_id > 0) {
             try {
                 const resp = await fetch(`http://localhost:4000/update-stars?userId=${user_id}&postId=${post_id}`,
                     {
@@ -56,6 +56,8 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
         song: 'songFeedCard',
         status: 'statusFeedCard',
         profile_pic: 'picFeedCard',
+        music: 'musicFeedCard',
+        lyrics: 'lyricFeedCard',
         default: 'gray'
     };
     const textColors = {
@@ -86,6 +88,24 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                 <div className="feedWrap">
                                     <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={post.user_profile_pic} alt="userProfile"></img>
                                 </div>
+                                {post.type === 'music'
+                                    ? (<>
+                                       <div className="musicFeedDiv">
+                                            <h3 className="lyricTitleFeed">{post.title}</h3>
+                                            <p className="lyricsFeed">by {post.username} needs lyrics...</p>
+                                        <audio className={index % 2 === 0 ? "audio1" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
+                                        </div>
+                                    </>) : null}
+
+                                {post.type === "lyrics"
+                                    ? (<>
+                                        <div className="lyricFeedDiv">
+                                            <h3 className="lyricTitleFeed">{post.title}</h3>
+                                            <p className="lyricsFeed">by {post.username} needs music...</p>
+                                            <pre className="lyricsFeed">{post.lyrics.substring(0, 105)}...</pre>
+                                        </div>
+                                    </>) : null}
+
                                 {post.type === "profile_pic"
                                     ? (<>
                                         <div className="profilePicFeed" style={{ backgroundImage: `url(${post.feed_pic})` }}>
@@ -94,17 +114,18 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                     </>)
                                     : null}
 
-                                {post.song_file
+                                {post.type === "song"
                                     ? (<>
                                         <div className="feedSongInfo">
                                             <div>
                                                 <p className={`${textColor}`}>New song from</p><p className="songUserName">{` ${post.username}!`}</p>
                                             </div>
-                                            <audio className={index % 2 === 0 ? "" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
+                                            <audio className={index % 2 === 0 ? "audio1" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
                                             <h3 className={`${textColor}`}>"{post.title}"</h3>
                                         </div>
                                     </>)
                                     : null}
+
                                 {post.type === "status"
                                     ? (<>
                                         <div className="feedStatusContainer">
@@ -113,7 +134,8 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                         </div>
                                     </>)
                                     : null}
-                                <div className="feedWrap">
+
+                                <div className="starsWrap">
                                     <div className="stars">
                                         <img src={(stars.includes(post.feed_id))
                                             ? starFilled

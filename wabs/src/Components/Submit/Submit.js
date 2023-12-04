@@ -16,10 +16,9 @@ function Submit(props) {
     const handleSongSubmit = async (event) => {
         event.preventDefault()
         let resp
-        const formData = new FormData()
-
-        const songToForm = () => {
-            alert('Working on uploading, hang tight...')
+        if (showMusic && showLyrics) {
+            const formData = new FormData()
+            alert('Working on uploading song, hang tight...')
             if (song === null) {
                 console.error('No song selected');
                 return;
@@ -28,30 +27,42 @@ function Submit(props) {
             formData.append('lyrics', lyrics)
             formData.append('song', song)
             formData.append('user_id', props.user.user_id)
-        }
-
-        if (showMusic && showLyrics) {
-            songToForm();
             resp = await fetch('http://localhost:4000/submit-song', {
                 method: "POST",
                 body: formData,
                 credentials: 'include'
             })
         } else if (showMusic && !showLyrics) {
-            songToForm();
+            const formData2 = new FormData()
+            alert('Working on uploading music, hang tight...')
+            if (song === null) {
+                console.error('No song selected');
+                return;
+            }
+            formData2.append('title', title)
+            formData2.append('song', song)
+            formData2.append('user_id', props.user.user_id)
             resp = await fetch('http://localhost:4000/submit-music', {
                 method: "POST",
-                body: formData,
+                body: formData2,
                 credentials: 'include'
             })
         } else if (!showMusic && showLyrics) {
-            songToForm();
+            const data = {
+                title: title,
+                lyrics: lyrics,
+                user_id: props.user.user_id
+            }
             resp = await fetch('http://localhost:4000/submit-lyrics', {
-                method: "POST",
-                body: formData,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
                 credentials: 'include'
-            })
+            });
         }
+
         if (resp.ok) {
             navigate('/profile');
             props.loadSongs();

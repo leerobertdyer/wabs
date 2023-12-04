@@ -9,6 +9,8 @@ feedRoutes.get('/feed', async (req, res) => {
         const newFeed = await db('feed')
             .leftJoin('users', 'feed.user_id', '=', 'users.user_id')
             .leftJoin('songs', 'feed.song_id', '=', 'songs.song_id')
+            .leftJoin('music', 'feed.music_id', '=', 'music.music_id')
+            .leftJoin('lyrics', 'feed.lyric_id', '=', 'lyrics.lyric_id')
             .select('*')
             .orderBy('time', 'desc')
         res.status(200).json({ newFeed: newFeed })

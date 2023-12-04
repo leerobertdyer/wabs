@@ -25,10 +25,18 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: black;
     border-radius: 22px;
     width: 17%;
-    padding: 20px;
+    padding: 10px;
+}
+
+.starsWrap {
+width: 8vw;
+background-color: black;
+border-radius: 22px;
+padding: 10px;
+
+
 }
 
 .stars {
@@ -36,12 +44,12 @@
     display: flex;
     width: 95%;
     justify-content: space-around;
-    font-size: 1.5rem;
+    font-size: 2.5vw;
 }
 
 .starImg {
-    width: 25px;
-    height: 25px;
+    width: 2vw;
+    height: 2vw;
     align-self: center;
 }
 
@@ -97,6 +105,37 @@ text-align: center;
 
 .picFeedCard {
     background-color: gray;
+}
+
+.musicFeedCard {
+    background-color: royalblue;
+}
+
+.lyricFeedCard {
+    background-color: wheat;
+}
+
+.lyricFeedDiv {
+text-align: center;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.lyricTitleFeed {
+    margin: 0;
+    font-weight: 900;
+}
+
+.lyricsFeed {
+    margin: 0;
+}
+
+.musicFeedDiv {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .gray {

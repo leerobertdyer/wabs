@@ -23,7 +23,11 @@ const dbx = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, fetch });
 const isAccessTokenValid = async (accessToken) => {
     try {
         const dbxClient = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, accessToken: accessToken });
-        const accountInfo = await dbxClient.usersGetCurrentAccount();
+        const accountInfo = await axios.post('https://api.dropboxapi.com/2/check/user', headers={
+            "Authorization": `Bearer ${accessToken}`,
+            "Content-Type": 'application/json'
+        })
+        console.log(accountInfo)
         return true;
     } catch (error) {
         console.error(`Token has expired, getting new one... ${error}`);

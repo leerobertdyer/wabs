@@ -67,14 +67,7 @@
     justify-content: center;
 }
 
-audio {
-    color: goldenrod;
-    background-color: rgb(15, 14, 13);
-    padding: 20px;
-    border-radius: 44px;
-    border: goldenrod solid 3px;
-    width: 40%;
-}
+
 
 #loginFromProfile {
     margin-top: 250px;
@@ -95,7 +88,7 @@ audio {
     border: solid silver 2px;
     background-color: goldenrod;
     border-radius: 50%;
-    padding: 20px;
+    padding: 10px;
     width: 70%;
     height: 70%;
 }
@@ -104,7 +97,7 @@ audio {
     border: solid goldenrod 2px;
     background-color: teal;
     border-radius: 50%;
-    padding: 20px;
+    padding: 10px;
     width: 70%;
     height: 70%;
 }
