@@ -1,19 +1,27 @@
-import React, { Component } from 'react';
+import { useEffect, useState  } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import './Nav.css';
 
+function Nav({ user, unloadUser }) {
+    const [isShrunken, setIsShrunken] = useState(false);
 
-// Using P elements right now. 
-// Will need to update using react's built in link component
-// and route handling...
+    useEffect(() => {
+      const handleScroll = () => {
+        const scrollThreshold = 200; 
+        const shouldShrink = window.scrollY > scrollThreshold;
+        console.log(window.scrollY)
+        setIsShrunken(shouldShrink);
+      };
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };}, []); 
 
-class Nav extends Component {
-    render() {
-        const { user, unloadUser } = this.props
+
         return (
             <div>
-                <div id="nav">
-                    <img src='../../Assets/logo.png' alt="logo" width="100px" />
+                <div  className={isShrunken ? "shrunken nav" : "notShrunken nav"}>
+                    <img src='../../Assets/logo.png' alt="logo" height={isShrunken && "40px"} width={isShrunken ? "75px" : "100px"} />
                     <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : 'links')}>Home</NavLink>
 
                     <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : 'links')}>Profile</NavLink>
@@ -25,7 +33,8 @@ class Nav extends Component {
                     <div className="endOfNavBar">
                         {user.isLoggedIn ? (
                             <>
-                                <h3 className="aboveLogout">{user.userName}</h3>
+                                {!isShrunken &&
+                                <h3 className="aboveLogout">{user.userName}</h3>}
                                 <div className="loginBox" >
                                     <Link className="loginAndOutLink" to="/signout" onClick={unloadUser}>
                                         Sign Out
@@ -45,6 +54,5 @@ class Nav extends Component {
         )
     }
 
-}
 
 export default Nav;
