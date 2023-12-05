@@ -4,6 +4,12 @@ import './Feed.css'
 function Feed({ feed, user, loadFeed, sortFeed }) {
     const [sortBy, setSortBy] = useState('Latest')
     const [stars, setStars] = useState([])
+    const page = window.location.href
+
+    useEffect(() => {
+        setSortBy('Latest')
+        handleSort('Latest')
+    }, [page])
 
     useEffect(() => {
         if (user.user_id) {
@@ -48,8 +54,23 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
     }
 
     const handleSort = (event) => {
-        sortFeed(event.target.textContent)
-        setSortBy(event.target.textContent)
+        if (page === 'http://localhost:3000/') {
+            if (event === 'Latest') {
+                sortFeed(event, feed, 'home')
+                setSortBy(event)
+            } else {
+                sortFeed(event.target.textContent, feed, 'home')
+                setSortBy(event.target.textContent)
+            }
+        } else if (page === 'http://localhost:3000/collaborate') {
+            if (event === 'Latest') {
+                sortFeed(event, feed, 'collab')
+                setSortBy(event)
+            } else {
+                sortFeed(event.target.textContent, feed, 'collab')
+                setSortBy(event.target.textContent)
+            }
+        }
     }
 
     const cardColors = {
@@ -86,36 +107,36 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                         return (
                             <div className={`postCard ${cardColor}`} key={index}>
                                 <div className="feedWrap">
+                                <button className={post.user_id === user.user_id ? "delete" : "hide" }>Delete</button>
                                     <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={post.user_profile_pic} alt="userProfile"></img>
                                 </div>
                                 {post.type === 'music'
-                                    ? (<>
-                                       <div className="musicFeedDiv">
+                                    && (<>
+                                        <div className="musicFeedDiv">
                                             <h3 className="lyricTitleFeed">{post.title}</h3>
                                             <p className="lyricsFeed">by {post.username} needs lyrics...</p>
-                                        <audio className={index % 2 === 0 ? "audio1" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
+                                            <audio className={index % 2 === 0 ? "audio1" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
                                         </div>
-                                    </>) : null}
+                                    </>)}
 
                                 {post.type === "lyrics"
-                                    ? (<>
+                                    && (<>
                                         <div className="lyricFeedDiv">
                                             <h3 className="lyricTitleFeed">{post.title}</h3>
                                             <p className="lyricsFeed">by {post.username} needs music...</p>
                                             <pre className="lyricsFeed">{post.lyrics.substring(0, 105)}...</pre>
                                         </div>
-                                    </>) : null}
+                                    </>)}
 
                                 {post.type === "profile_pic"
-                                    ? (<>
+                                    && (<>
                                         <div className="profilePicFeed" style={{ backgroundImage: `url(${post.feed_pic})` }}>
                                             <p className="postPicInfo">{post.username} updated their profile pic...</p>
                                         </div>
-                                    </>)
-                                    : null}
+                                    </>)}
 
                                 {post.type === "song"
-                                    ? (<>
+                                    && (<>
                                         <div className="feedSongInfo">
                                             <div>
                                                 <p className={`${textColor}`}>New song from</p><p className="songUserName">{` ${post.username}!`}</p>
@@ -123,17 +144,15 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                             <audio className={index % 2 === 0 ? "audio1" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
                                             <h3 className={`${textColor}`}>"{post.title}"</h3>
                                         </div>
-                                    </>)
-                                    : null}
+                                    </>)}
 
                                 {post.type === "status"
-                                    ? (<>
+                                    && (<>
                                         <div className="feedStatusContainer">
                                             <h2 className={`${textColor}`}>{`${post.username} says:`}</h2>
                                             <h3 className={`${textColor} feedStatus`}>{`"${post.user_status}"`}</h3>
                                         </div>
-                                    </>)
-                                    : null}
+                                    </>)}
 
                                 <div className="starsWrap">
                                     <div className="stars">

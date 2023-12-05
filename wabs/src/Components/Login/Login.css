@@ -34,7 +34,7 @@ fieldset {
 }
 
 
-button:hover {
+.formSubmitButton:hover {
     transform: scale(110%);
     background-color: rgba(50, 203, 162, 0.766);
     border: rgb(40, 2, 35) solid 2px;

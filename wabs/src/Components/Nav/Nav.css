@@ -11,6 +11,7 @@
     position:fixed;
     border-bottom: solid white 3px;
     font-size: 2vw;
+    z-index: 9999;
 }
 
 #nav .links {

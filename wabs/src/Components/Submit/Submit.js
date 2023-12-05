@@ -98,7 +98,7 @@ function Submit(props) {
                                 <form className='firstPopup'>
                                     <h1>What are we submitting today?</h1>
 
-                                    <label for="fullSong">A Full Song</label>
+                                    <label htmlFor="fullSong">A Full Song</label>
                                     <input type="radio"
                                         name='submitType'
                                         value="fullSong"
@@ -106,7 +106,7 @@ function Submit(props) {
                                         onClick={showFormOnClick}
                                     ></input>
 
-                                    <label for="justLyrics">Just Lyrics</label>
+                                    <label htmlFor="justLyrics">Just Lyrics</label>
                                     <input type="radio"
                                         name='submitType'
                                         value="justLyrics"
@@ -114,7 +114,7 @@ function Submit(props) {
                                         onClick={showFormOnClick}
                                     ></input>
 
-                                    <label for="justMusic">Just Music</label>
+                                    <label htmlFor="justMusic">Just Music</label>
                                     <input type="radio"
                                         name='submitType'
                                         value="justMusic"

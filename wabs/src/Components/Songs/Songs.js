@@ -28,9 +28,8 @@ const handleSort = (event) => {
                     <div className="songInfo">
                         <h2 className="info">{song.username}</h2>
                         <p className="info">{song.title}</p>
-                        <p className="info">{song.plays}</p>
                     </div>
-                    <audio className={index % 2 === 0 ? "" : "audio2"} controls src={song.song_file} type="audio/mp3"></audio>
+                    <audio controls src={song.song_file} type="audio/mp3"></audio>
                 </div>
                 ))}
 

@@ -9,7 +9,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 songRoutes.get('/songs', async (req, res) => {
-  let songData
   try {
       const songData = await db('songs')
         .join('users', 'songs.user_id', '=', 'users.user_id')
