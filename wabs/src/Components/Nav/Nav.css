@@ -15,7 +15,7 @@
 }
 .notShrunken { 
   transition: height 1s;
-  height: 23vh;
+  height: 100px
 }
 
 .shrunken {
