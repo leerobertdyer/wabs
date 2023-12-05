@@ -92,9 +92,8 @@ function Submit(props) {
                 <div id="mainSubmitDiv"
                     className='black'>
 
-                    {showPopup ? (
+                    {showPopup && (
                         <>
-                            <div className='firstPopup'>
                                 <form className='firstPopup'>
                                     <h1>What are we submitting today?</h1>
 
@@ -123,11 +122,9 @@ function Submit(props) {
                                     ></input>
 
                                 </form>
-                            </div>
-                        </>)
-                        : null}
+                        </>)}
 
-                    {showForm ? (
+                    {showForm && (
                         <>
                             <form className='submitSongForm'
                                 action="/submit"
@@ -148,7 +145,7 @@ function Submit(props) {
                                         onChange={(event) => { setTitle(event.target.value) }} />
                                 </div>
 
-                                {showLyrics ? (
+                                {showLyrics && (
                                     <div className='formBlock'>
                                         <label htmlFor="lyrics"
                                             className='clickMe black'>Lyrics</label>
@@ -158,9 +155,9 @@ function Submit(props) {
                                             required
                                             onChange={(event) => { setLyrics(event.target.value) }} />
                                     </div>
-                                ) : null}
+                                )}
 
-                                {showMusic ? (
+                                {showMusic && (
                                     <>
                                         <label htmlFor="songFile"
                                             className='clickMe black smallFormButton center'>Song+</label>
@@ -172,7 +169,7 @@ function Submit(props) {
                                             style={{ display: 'none' }}
                                             onChange={(event) => { setSong(event.target.files[0]) }} />
                                     </>
-                                ) : null}
+                                )}
 
                                 <input type="submit"
                                     value="Submit"
@@ -188,8 +185,7 @@ function Submit(props) {
                                         {line}
                                     </div>))}
                             </div>
-                        </>)
-                        : null}
+                        </>)}
                 </div>
 
             ) : <div>

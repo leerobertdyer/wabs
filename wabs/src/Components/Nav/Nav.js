@@ -21,7 +21,9 @@ function Nav({ user, unloadUser }) {
         return (
             <div>
                 <div  className={isShrunken ? "shrunken nav" : "notShrunken nav"}>
-                    <img src='../../Assets/logo.png' alt="logo" height={isShrunken && "40px"} width={isShrunken ? "75px" : "100px"} />
+                    <div className='logoContainer'>
+                    <img src='../../Assets/logo.png' alt="logo" className={isShrunken ? "shrunkenLogo" : "logo"} />
+                    </div>
                     <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : 'links')}>Home</NavLink>
 
                     <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : 'links')}>Profile</NavLink>
@@ -33,8 +35,7 @@ function Nav({ user, unloadUser }) {
                     <div className="endOfNavBar">
                         {user.isLoggedIn ? (
                             <>
-                                {!isShrunken &&
-                                <h3 className="aboveLogout">{user.userName}</h3>}
+                                <h3 className={isShrunken ? "shrunkenAboveLogout": "aboveLogout"}>{user.userName}</h3>
                                 <div className="loginBox" >
                                     <Link className="loginAndOutLink" to="/signout" onClick={unloadUser}>
                                         Sign Out

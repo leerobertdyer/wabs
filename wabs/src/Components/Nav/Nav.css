@@ -11,30 +11,30 @@
     border-bottom: solid white 3px;
     font-size: 2vw;
     z-index: 9999;
-    transition: height .3s;
+    transition: height 1s;
 }
 .notShrunken { 
-  transition: height .3s;
+  transition: height 1s;
   height: 23vh;
 }
 
 .shrunken {
-  transition: height .3s;
+  transition: height 1s;
   height: 50px;
 }
 
-#nav .links {
+.nav .links {
     color: purple;
 }
 
-#nav .links:hover {
+.nav .links:hover {
     transition: .3s;
     transform: scale(125%);
     color: orange;
     cursor: pointer;
 }
 
-#nav a.active {
+.nav a.active {
     color: antiquewhite;
     border: antiquewhite solid 1px;
     border-radius: 4px;
@@ -81,8 +81,34 @@
     font-size: 2vw;
   }
 
+  .shrunkenAboveLogout {
+    transition: 1s;
+    font-size: 0vw;
+  }
+
   .loginAndOutLink {
     color: blue;
     text-decoration: none;
     font-size: 1.25vw;
+  }
+
+  .logoContainer {
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .logo {
+    height: 100px;
+    width: 90px;
+    transition: height 1s, width 1s;
+
+
+  }
+  
+  .shrunkenLogo {
+    height: 40px;
+    width: 36px;
+    transition: height 1s, width 1s;
   }
