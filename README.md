@@ -10,10 +10,12 @@ Still very much in development ;)
 
 # WORK LOG:
 To Do:
--   Work on 'collab' section. To start can just be a feed like profile and main pages.
--   The feed will only display songs that 'opted in' for collab
-
--   Once I have that functional, I could add an option for song critiques/feedback
+-   Work on delete routes:
+        Make sure feed state updates after delete.
+        Finish rest of routes...
+-   Work on 'collab' section. 
+-   1: add a button to collab with each post. opens link to submit a collab...
+-   2: I could add an option for song critiques/feedback
 
 -   I need to start implementing a points system, and pages to display the current monthly winner...
 -   Badges for collaboraters/monthly winners/most active
