@@ -38,7 +38,7 @@ feedRoutes.get('/feed-collab', async (req, res) => {
         }
         collabFeed.sort((a, b) => a.time - b.time)
 
-    console.log(collabFeed);
+    // console.log(collabFeed);
     res.status(200).json({ collabFeed: collabFeed })
     } catch (err) {
         console.error(`Trouble fetching collab feed ${err}`);
@@ -70,7 +70,36 @@ feedRoutes.put('/update-stars', async (req, res) => {
     }
 });
 
-
+feedRoutes.delete('/delete-post', async (req, res) => {
+    const feed_id = req.query.feed_id;
+    const feed_type = req.query.feed_type
+    const user_id = req.query.user_id;
+    console.log("user: ", user_id);
+    console.log("type: ", feed_type)
+    console.log("post: ", feed_id);
+    try {
+        if (feed_type === "song"){
+            console.log('deleting your song...');
+            //handle delete from tables: STARS FEED SONGS 
+            //handle DROPBOX DELETE song file
+        } else if (feed_type === "status"){
+            console.log('deleting your status...');
+            //handle delete from tables: STARS FEED USERS
+        } else if (feed_type === "profile_pic") {
+            console.log('deleting your profile_pic');
+            //handle delete from tables: STARS FEED (leaving profile pic in users, will have to update in profile)
+        } else if (feed_type === "music") {
+            console.log('deleting your audio file...');
+            //handle delete from tables: STARS FEED MUSIC
+            //handle DROPBOX DELETE song file
+        } else if (feed_type === "lyrics") {
+            console.log('deleting your lyrics...');
+            //handle delete from tables: STARS FEED LYRICS
+        }
+    } catch (err) {
+        console.error(`Error deleting post: ${err}`)
+    }
+})
 
 
 export default feedRoutes

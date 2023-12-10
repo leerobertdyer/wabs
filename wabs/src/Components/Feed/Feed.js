@@ -73,6 +73,16 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
         }
     }
 
+    const deletePost = async(feed_id, feed_type, user_id) => {
+        console.log('Deleting Post ', feed_id)
+        const resp = await fetch(`http://localhost:4000/delete-post?feed_id=${feed_id}&feed_type=${feed_type}&user_id=${user_id}`,{
+            method: "DELETE",
+            credentials: 'include'
+        })
+        const data = await resp.json();
+        console.log(data);
+    }
+
     const cardColors = {
         song: 'songFeedCard',
         status: 'statusFeedCard',
@@ -107,7 +117,10 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                         return (
                             <div className={`postCard ${cardColor}`} key={index}>
                                 <div className="feedWrap">
-                                <button className={post.user_id === user.user_id ? "delete" : "hide" }>Delete</button>
+                                <button 
+                                className={post.user_id === user.user_id ? "delete" : "hide" }
+                                onClick={() => deletePost(post.feed_id, post.type, user.user_id)}
+                                >Delete Me</button>
                                     <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={post.user_profile_pic} alt="userProfile"></img>
                                 </div>
                                 {post.type === 'music'

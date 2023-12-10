@@ -9,7 +9,6 @@ function Nav({ user, unloadUser }) {
       const handleScroll = () => {
         const scrollThreshold = 200; 
         const shouldShrink = window.scrollY > scrollThreshold;
-        console.log(window.scrollY)
         setIsShrunken(shouldShrink);
       };
       window.addEventListener('scroll', handleScroll);
