@@ -4,8 +4,12 @@
     background-color: rgb(69, 40, 0);
     margin: 20px auto 20px auto;
     border: solid goldenrod 1px;
-    border-radius: 22px;
+    border-radius: 4px;
     font-family: 'Amatic SC', sans-serif;
+}
+
+.sortByTitle {
+    margin: 0;
 }
 
 .postCard {
@@ -15,9 +19,10 @@
     flex-flow: row;
     justify-content: space-between;
     align-items: center;
-    border-radius: 44px;
+    border-radius: 4px;
     gap: 10px;
     width: 80%;
+    height: 45vh;
 }
 
 .feedWrap {
@@ -33,10 +38,8 @@
 .starsWrap {
     width: 8vw;
     background-color: black;
-    border-radius: 22px;
+    border-radius: 4px;
     padding: 10px;
-
-
 }
 
 .stars {
@@ -86,11 +89,26 @@
 }
 
 .songFeedCard {
-    background-color: lightblue;
+    background-image: url('../../../public/Assets/musicNotes.jpg');
+    background-size: cover;
+    border: black solid 4px;
+}
+
+.songInfo {
+    background-color: rgb(24, 24, 24);
+    border-radius: 4px;
+    padding: 20px;
+    display: inline;
+}
+
+.songUserName {
+    display: inline;
 }
 
 .statusFeedCard {
-    background-color: goldenrod;
+    background-color: rgb(24, 24, 24);
+    color: antiquewhite;
+    border: solid antiquewhite 4px;
 
 }
 
@@ -105,15 +123,23 @@
 }
 
 .picFeedCard {
-    background-color: gray;
+    background-color: rgb(24, 24, 24);
+    border: solid 4px aqua;
 }
 
 .musicFeedCard {
-    background-color: royalblue;
+    background-color: rgb(24, 24, 24);
+    color: antiquewhite;
+    border: solid 4px lightblue;
 }
 
 .lyricFeedCard {
-    background-color: wheat;
+    background-color: #fff;
+    background-image:
+        linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+        linear-gradient(#eee .1em, transparent .1em);
+    background-size: 100% 1.2em;
+    border: gold solid 4px;
 }
 
 .lyricFeedDiv {
@@ -121,6 +147,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
 }
 
 .lyricTitleFeed {
@@ -168,20 +195,25 @@
     margin: 0;
 }
 
-.delete {
-    padding: 5px;
-    margin-bottom: 10px;
-    background-color: black;
-    color: white;
-    border-radius: 2px;
+
+
+.iconDiv {
+    position: absolute;
+    margin-left: -28px;
+    margin-top: 42vh;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    width: 65vw;
 }
 
-.delete:hover {
-    transition: 1s;
-    color: rgb(182, 0, 0);
-    transform: scale(115%);
-}
-
-.hide {
-    display: none;
-}
+.trash {
+    font-size: 6vw;
+    max-width: 50px;
+    }
+    .trash:hover {
+        transition: 1s;
+        color: rgb(182, 0, 0);
+        transform: scale(115%);
+        cursor: pointer;
+    }

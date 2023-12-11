@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { LiaTrashAlt } from "react-icons/lia";
+
 import './Feed.css'
 
 function Feed({ feed, user, loadFeed, sortFeed }) {
@@ -92,18 +94,12 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
         lyrics: 'lyricFeedCard',
         default: 'gray'
     };
-    const textColors = {
-        song: 'blackSong',
-        status: 'goldenrod',
-        pic: 'black',
-        default: 'antiquewhite'
-    }
 
     return (
         <>
             <div className="outerFeedDiv">
                 <div className="titleBox">
-                    <h1>{sortBy} Posts:</h1>
+                    <h1 className="sortByTitle">{sortBy} Posts:</h1>
                     <div className='sortSongs'>
                         <h3>Sort by: </h3>
                         <p className='sort' onClick={handleSort}>Latest</p>
@@ -114,14 +110,9 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                 <div className='songBox'>
                     {feed.map((post, index) => {
                         const cardColor = cardColors[post.type] || cardColors['default']
-                        const textColor = textColors[post.type] || textColors['default']
                         return (
                             <div className={`postCard ${cardColor}`} key={index}>
                                 <div className="feedWrap">
-                                <button 
-                                className={post.user_id === user.user_id ? "delete" : "hide" }
-                                onClick={() => deletePost(post.feed_id, post.type, user.user_id)}
-                                >Delete Me</button>
                                     <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={post.user_profile_pic} alt="userProfile"></img>
                                 </div>
                                 {post.type === 'music'
@@ -153,18 +144,18 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                     && (<>
                                         <div className="feedSongInfo">
                                             <div>
-                                                <p className={`${textColor}`}>New song from</p><p className="songUserName">{` ${post.username}!`}</p>
+                                                <p className="songInfo">New song from<a href="#profile" className="songUserName">{` ${post.username}!`}</a></p>
                                             </div>
-                                            <audio className={index % 2 === 0 ? "audio1" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
-                                            <h3 className={`${textColor}`}>"{post.title}"</h3>
+                                            <audio title={post.title} className={index % 2 === 0 ? "audio1" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
+                                            <h3 >"{post.title}"</h3>
                                         </div>
                                     </>)}
 
                                 {post.type === "status"
                                     && (<>
                                         <div className="feedStatusContainer">
-                                            <h2 className={`${textColor}`}>{`${post.username} says:`}</h2>
-                                            <h3 className={`${textColor} feedStatus`}>{`"${post.user_status}"`}</h3>
+                                            <h2 >{`${post.username} says:`}</h2>
+                                            <h3 className='feedStatus'>{`"${post.user_status}"`}</h3>
                                         </div>
                                     </>)}
 
@@ -180,11 +171,15 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                         <p>{post.stars}</p>
                                     </div>
                                 </div>
+                                <div className="iconDiv">
+                                {user.user_id === post.user_id &&
+                                <LiaTrashAlt className="trash"
+                                onClick={() => deletePost(post.feed_id, post.type, user.user_id)}/>
+                                }</div>
                             </div>
                         )
                     }
                     )}
-
                 </div>
             </div>
         </>

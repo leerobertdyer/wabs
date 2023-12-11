@@ -4,22 +4,20 @@
     background-color: rgb(69, 40, 0);
     margin: 20px auto 20px auto;
     border: solid goldenrod 1px;
-    border-radius: 22px;
+    border-radius: 4px;
     font-family: 'Amatic SC', sans-serif;
 }
 
 .titleBox {
     padding: 2px;
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: column wrap;
     justify-content: space-around;
     align-items: center;
     background-color: rgb(15, 14, 13);
     color: goldenrod;
     border-top: solid goldenrod 1px;
     border-bottom: solid 4px teal;
-    border-top-left-radius: 22px;
-    border-top-right-radius: 22px;
 }
 
 .sortSongs {
@@ -27,12 +25,9 @@
     flex-flow: row wrap;
     align-items: center;
     justify-content: space-around;
-    margin-left: 6vw;
     color: white;
     gap: 1em;
     padding: 4px;
-    border: solid white 2px;
-    border-radius: 22px;
     width: 45%;
 }
 
@@ -82,19 +77,20 @@
 
 .audio1 {
     color: goldenrod;
-    background-color: rgb(15, 14, 13);
+    background-color: rgb(242, 242, 242);
     padding: 2vw;
-    border-radius: 44px;
+    border-radius: 4px;
     border: goldenrod solid 3px;
     width: 80%;
     height: 5vw;
+    
 }
 
 .audio2 {
     color: goldenrod;
-    background-color: rgb(15, 14, 13);
+    background-color: rgb(242, 242, 242);
     padding: 2vw;
-    border-radius: 44px;
+    border-radius: 4px;
     border: teal solid 3px;
     width: 80%;
     height: 5vw;
