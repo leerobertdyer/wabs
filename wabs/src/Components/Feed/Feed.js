@@ -80,7 +80,8 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
             credentials: 'include'
         })
         const data = await resp.json();
-        console.log(data);
+        console.log(data.message);
+        loadFeed();
     }
 
     const cardColors = {

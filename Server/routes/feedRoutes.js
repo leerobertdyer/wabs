@@ -22,13 +22,13 @@ feedRoutes.get('/feed', async (req, res) => {
 feedRoutes.get('/feed-collab', async (req, res) => {
     try {
         const allMusic = await db('feed')
-        .innerJoin('music', 'feed.music_id', '=', 'music.music_id')
-        .innerJoin('users', 'feed.user_id', '=', 'users.user_id')
-        .select('*')
+            .innerJoin('music', 'feed.music_id', '=', 'music.music_id')
+            .innerJoin('users', 'feed.user_id', '=', 'users.user_id')
+            .select('*')
         const allLyrics = await db('feed')
-        .innerJoin('lyrics', 'feed.lyric_id', '=', 'lyrics.lyric_id')
-        .innerJoin('users', 'feed.user_id', '=', 'users.user_id')
-        .select('*')
+            .innerJoin('lyrics', 'feed.lyric_id', '=', 'lyrics.lyric_id')
+            .innerJoin('users', 'feed.user_id', '=', 'users.user_id')
+            .select('*')
         const collabFeed = []
         for (const item of allMusic) {
             collabFeed.push(item)
@@ -38,8 +38,8 @@ feedRoutes.get('/feed-collab', async (req, res) => {
         }
         collabFeed.sort((a, b) => a.time - b.time)
 
-    // console.log(collabFeed);
-    res.status(200).json({ collabFeed: collabFeed })
+        // console.log(collabFeed);
+        res.status(200).json({ collabFeed: collabFeed })
     } catch (err) {
         console.error(`Trouble fetching collab feed ${err}`);
     }
@@ -74,62 +74,78 @@ feedRoutes.delete('/delete-post', async (req, res) => {
     const feed_id = req.query.feed_id;
     const feed_type = req.query.feed_type;
     const user_id = req.query.user_id;
-    console.log("user: ", user_id);
-    console.log("type: ", feed_type)
-    console.log("post: ", feed_id);
     const authorized = await db('feed')
-    .where('user_id', user_id).andWhere('feed_id', feed_id)
-    .select('*')
-    if (authorized.length > 0){
+        .where('user_id', user_id).andWhere('feed_id', feed_id)
+        .select('*')
+    if (authorized.length > 0) {
         try {
-            if (feed_type === "song"){
-                console.log('deleting your song...');
-                try {
-                    const deletedRows = await db('stars')
+            try {
+                await db('stars')
                     .where('post_id', feed_id)
                     .del();
-                } catch(err) {
-                    console.error(`Either no stars in db, or error deleting ${err.message}`)
-                }
+            } catch (err) {
+                console.error(`Either no stars in db, or error deleting ${err.message}`)
+            }
+            if (feed_type === "song") {
                 try {
                     const songIdData = await db('feed')
-                    .where('feed_id', feed_id)
-                    .returning('song_id')
-                    .del()
-                    
-                    const songId = songIdData[0].song_id
-
-                    if (songId){
-                        const dbx_url = await db('songs')
-                        .where('song_id', songId)
-                        .returning('song_file')
+                        .where('feed_id', feed_id)
+                        .returning('song_id')
                         .del()
 
+                    const songId = songIdData[0].song_id
+
+                    if (songId) {
+                        const dbx_url = await db('songs')
+                            .where('song_id', songId)
+                            .returning('song_file')
+                            .del()
                         //*********** *********** *********** ***********//
                         //*********** Handle DBX DELETE HERE ***********//
                         //*********** *********** *********** ***********//
                     }
-
                 } catch (err) {
                     console.error(`Error deleting from feed or songs table, ${err.message}`)
-                } 
-
-                //handle delete from tables: STARS FEED SONGS 
-                //handle DROPBOX DELETE song file
-            } else if (feed_type === "status"){
-                console.log('deleting your status...');
-                //handle delete from tables: STARS FEED USERS
-            } else if (feed_type === "profile_pic") {
-                console.log('deleting your profile_pic');
-                //handle delete from tables: STARS FEED (leaving profile pic in users, will have to update in profile)
+                }
+            } else if (feed_type === "status" || feed_type === "profile_pic") {
+                try {
+                    await db('feed')
+                        .where('feed_id', feed_id)
+                        .del()
+                } catch (err) {
+                    console.error(`Error deleting status from feed table: ${err}`)
+                }
             } else if (feed_type === "music") {
-                console.log('deleting your audio file...');
-                //handle delete from tables: STARS FEED MUSIC
-                //handle DROPBOX DELETE song file
+                try {
+                    const musicIdData = await db('feed')
+                        .where('feed_id', feed_id)
+                        .returning('music_id')
+                        .del()
+
+                    const musicId = musicIdData[0].song_id
+
+                    if (musicId) {
+                        const dbx_url = await db('music')
+                            .where('music_id', musicId)
+                            .returning('song_file')
+                            .del()
+                        //*********** *********** *********** ***********//
+                        //*********** Handle DBX DELETE HERE ***********//
+                        //*********** *********** *********** ***********//
+                    }
+                } catch (err) {
+                    console.error(`Error deleting from feed or music table, ${err.message}`)
+                }
             } else if (feed_type === "lyrics") {
-                console.log('deleting your lyrics...');
-                //handle delete from tables: STARS FEED LYRICS
+                const lyricId = await db('feed')
+                .where('feed_id', feed_id)
+                .returning('lyric_id')
+                .del()
+                await db('lyrics')
+                .where('lyric_id', lyricId)
+                .delete()
             }
+            res.status(200).json({ message: `Post ${feed_id} deleted.` });
         } catch (err) {
             console.error(`Error deleting post: ${err}`)
         }
