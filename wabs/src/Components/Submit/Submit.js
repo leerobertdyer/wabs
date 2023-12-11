@@ -65,7 +65,6 @@ function Submit(props) {
 
         if (resp.ok) {
             navigate('/profile');
-            props.loadSongs();
             props.loadFeed();
         } else { throw new Error(`Failed to upload yer damn song: ${resp.status}`); }
     }

@@ -84,24 +84,6 @@
     gap: 20px;
 }
 
-.thumbnail {
-    border: solid silver 2px;
-    background-color: goldenrod;
-    border-radius: 5px;
-    padding: 10px;
-    width: 70%;
-    height: 70%;
-}
-
-.thumbnail2 {
-    border: solid goldenrod 2px;
-    background-color: teal;
-    border-radius: 5px;
-    padding: 10px;
-    width: 70%;
-    height: 70%;
-}
-
 #statusAndInput {
     display: flex;
     align-items: center;

@@ -9,7 +9,7 @@ import Profile from './Components/Profile/Profile';
 import Feed from './Components/Feed/Feed';
 import Submit from './Components/Submit/Submit';
 
-function App(props) {
+function App() {
   const [user, setUser] = useState({
     user_id: '',
     userName: '',
@@ -21,9 +21,9 @@ function App(props) {
     datecreated: ''
   })
 
-  const [songs, setSongs] = useState([])
   const [feed, setFeed] = useState([])
   const [collabFeed, setCollabFeed] = useState([])
+
 
   useEffect(() => {
 
@@ -43,7 +43,6 @@ function App(props) {
     };
 
     checkAuthentication();
-    loadSongs();
     loadFeed();
     getCollabFeed();
   }, []);
@@ -81,17 +80,6 @@ function App(props) {
   const resp = await fetch('http://localhost:4000/feed-collab')
   const data = await resp.json();
   setCollabFeed(data.collabFeed)
-  }
-  
-  
-  const loadSongs = async () => {
-    try {
-      const response = await fetch(`http://localhost:4000/songs`)
-      const data = await response.json()
-      setSongs(data.songs)
-    } catch (error) {
-      console.error("error fetching songs at home: ", error)
-    }
   }
 
   const changeUserPic = (newPic) => {
@@ -147,12 +135,12 @@ function App(props) {
               <Nav user={user} unloadUser={unloadUser} />
               <div className='spacing'></div>
               <Routes>
-                <Route path='/' element={<Feed feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed}/>} />
+                <Route path='/' element={<Feed showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed}/>} />
                 <Route path="/login" element={<Login loadUser={loadUser} />} />
                 <Route path="/register" element={<Register loadUser={loadUser} />} />
-                <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} loadSongs={loadSongs} loadFeed={loadFeed} songs={songs} unloadUser={unloadUser} />} />
-                <Route path="/submit" element={<Submit user={user} loadSongs={loadSongs} loadFeed={loadFeed}/>} />
-                <Route path="/collaborate" element={<Feed feed={collabFeed} user={user} loadFeed={getCollabFeed} sortFeed={sortFeed}/>} />
+                <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+                <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed}/>} />
+                <Route path="/collaborate" element={<Feed showSort={true} feed={collabFeed} user={user} loadFeed={getCollabFeed} sortFeed={sortFeed}/>} />
               </Routes>
 
               <Footer />

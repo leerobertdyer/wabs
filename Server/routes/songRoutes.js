@@ -8,19 +8,6 @@ const songRoutes = Router()
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-songRoutes.get('/songs', async (req, res) => {
-  try {
-      const songData = await db('songs')
-        .join('users', 'songs.user_id', '=', 'users.user_id')
-        .select('songs.*', 'users.user_profile_pic', 'users.username')
-      res.json({ songs: songData })
-    }
-  catch (error) {
-    console.error(`Error obtaining user songs from database: ${error}`)
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
 const createSharedLink = async(req) => {
   let token = req.cookies.token
   const user = req.cookies.user

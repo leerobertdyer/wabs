@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { LiaTrashAlt } from "react-icons/lia";
+import Audio from "../Audio/Audio";
 
 import './Feed.css'
 
-function Feed({ feed, user, loadFeed, sortFeed }) {
+function Feed({ feed, user, loadFeed, sortFeed, showSort }) {
     const [sortBy, setSortBy] = useState('Latest')
     const [stars, setStars] = useState([])
     const page = window.location.href
@@ -98,6 +99,7 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
     return (
         <>
             <div className="outerFeedDiv">
+                {showSort && 
                 <div className="titleBox">
                     <h1 className="sortByTitle">{sortBy} Posts:</h1>
                     <div className='sortSongs'>
@@ -107,20 +109,22 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                         <p className='sort' onClick={handleSort}>Most Popular</p>
                     </div>
                 </div>
+                }
+
                 <div className='songBox'>
                     {feed.map((post, index) => {
                         const cardColor = cardColors[post.type] || cardColors['default']
                         return (
                             <div className={`postCard ${cardColor}`} key={index}>
-                                <div className="feedWrap">
+
                                     <img className={index % 2 === 0 ? "thumbnail" : 'thumbnail2'} src={post.user_profile_pic} alt="userProfile"></img>
-                                </div>
+
                                 {post.type === 'music'
                                     && (<>
                                         <div className="musicFeedDiv">
                                             <h3 className="lyricTitleFeed">{post.title}</h3>
                                             <p className="lyricsFeed">by {post.username} needs lyrics...</p>
-                                            <audio className={index % 2 === 0 ? "audio1" : "audio2"} controls src={post.song_file} type="audio/mp3"></audio>
+                                            <Audio source={post.song_file}/>
                                         </div>
                                     </>)}
 
@@ -128,7 +132,7 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                     && (<>
                                         <div className="lyricFeedDiv">
                                             <h3 className="lyricTitleFeed">{post.title}</h3>
-                                            <p className="lyricsFeed">by {post.username} needs music...</p>
+                                            <p className="lyricsFeed">by <a href="#fix" className="songUserName">{post.username}</a></p>
                                             <pre className="lyricsFeed">{post.lyrics.substring(0, 105)}...</pre>
                                         </div>
                                     </>)}
@@ -159,8 +163,9 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                         </div>
                                     </>)}
 
+                            <div className="trashAndStars">
                                 <div className="starsWrap">
-                                    <div className="stars">
+                                    <div className="starsPicAndDigit">
                                         <img src={(stars.includes(post.feed_id))
                                             ? starFilled
                                             : starHollow}
@@ -171,11 +176,12 @@ function Feed({ feed, user, loadFeed, sortFeed }) {
                                         <p>{post.stars}</p>
                                     </div>
                                 </div>
-                                <div className="iconDiv">
                                 {user.user_id === post.user_id &&
                                 <LiaTrashAlt className="trash"
                                 onClick={() => deletePost(post.feed_id, post.type, user.user_id)}/>
-                                }</div>
+                                }
+                                </div>
+
                             </div>
                         )
                     }

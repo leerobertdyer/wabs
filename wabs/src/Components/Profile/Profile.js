@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Profile.css'
 import { Link } from 'react-router-dom';
-import Songs from '../Songs/Songs';
+import Feed from '../Feed/Feed';
 
-function Profile(props) {
-    const user = props.user
+function Profile({ feed, user, changeUserPic, loadSongs, loadFeed, sortFeed, changeUserStatus }) {
+
     const [showStatus, setShowStatus] = useState(false);
 
-    const userSongs = props.songs
-    .filter((song) => song.user_id === user.user_id)
+    const userSongs = feed
+    .filter((post) => post.user_id === user.user_id && post.type === "song")
     .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
 
-    const handleSetProfilePhoto = (newPhoto) => props.changeUserPic(newPhoto)
+    const handleSetProfilePhoto = (newPhoto) => changeUserPic(newPhoto)
 
     const handlePhotoSubmit = async (event) => {
         const ogPhoto = user.user_profile_pic
@@ -32,7 +32,7 @@ function Profile(props) {
                 if (response.ok) {
                     const data = await response.json()
                     handleSetProfilePhoto(data.newPhoto)
-                    props.loadSongs()
+                    loadSongs()
                     // console.log('photo saved in dbx: ', data.newPhoto);
                 }
                 else {
@@ -67,8 +67,8 @@ function Profile(props) {
             })
             if (response.ok) {
                 const data = await response.json();
-                props.changeUserStatus(data.status);
-                props.loadFeed();
+                changeUserStatus(data.status);
+                loadFeed();
                 setShowStatus(false)
             } else {
                 throw new Error(`Failed to upload yer new statatus: ${response.status}`)
@@ -79,7 +79,7 @@ function Profile(props) {
         }
     }
 
-    const { isLoggedIn } = props.user;
+    const { isLoggedIn } = user;
 
     return (
         <div>
@@ -128,7 +128,7 @@ function Profile(props) {
                             </div>
                         </div>
                         <div>
-                            <Songs user={user} songs={userSongs} />
+                            <Feed user={user} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
                         </div>
                     </div>
                 </div>)
