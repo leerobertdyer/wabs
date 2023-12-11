@@ -1,7 +1,10 @@
 .audioContainer {
-    width: 90%;
     overflow: hidden;
     --plyr-audio-controls-background: rgb(24, 24, 24);
     --plyr-audio-control-color: blue;
     --plyr-audio-control-color-hover: goldenrod;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -7,14 +7,15 @@ const Audio = ({ source }) => {
     const player = useRef(null);
   
     useEffect(() => {
-        console.log(source)
-      player.current = new Plyr('.js-plyr', { controls: ['play', 'progress', 'current-time', 'mute', 'volume'] });
-    }, []);
+      if (player.current) {
+           new Plyr(player.current, { controls: ['play', 'progress', 'current-time', 'mute', 'volume'] });
+      }
+    }, [source]);
   
     return (
         <>
       <div className='audioContainer'>
-        <audio className="js-plyr" controls>
+        <audio className="js-plyr mine" controls ref={(el) => (player.current = el)}>
           <source src={source} type="audio/mp3" />
         </audio>
       </div>

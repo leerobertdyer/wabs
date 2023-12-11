@@ -1,5 +1,5 @@
 .outerFeedDiv {
-    width: 80vw;
+    width: 90vw;
     height: fit-content;
     background-color: gray;
     margin: 20px auto 20px auto;
@@ -43,7 +43,7 @@
     cursor: pointer;
 }
 
-.songBox {
+.allPosts {
     display: flex;
     flex-flow: wrap column;
     justify-content: center;
@@ -55,21 +55,26 @@
 .postCard {
     border: antiquewhite solid 4px;
     display: flex;
-    flex-flow: row;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     border-radius: 4px;
     gap: 10px;
-    width: 80%;
+    width: 95%;
     height: 250px;
 }
 
-.trashAndStars {
-    height: 100%;
+.topPostDiv {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}.thumbnailDiv {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+}.postTitle {
+    margin-top: 20px;
+    font-weight: 900;
 }.starsWrap {
     height: 100px;
     width: 100px;
@@ -94,12 +99,7 @@
     border-radius: 20px;
 }
 
-.post {
-    color: black;
-    font-size: 2em;
-    text-align: center;
-    flex-shrink: 4;
-}
+
 
 .profilePicFeed {
     display: flex;
@@ -152,6 +152,12 @@
     background-color: rgb(24, 24, 24);
     color: antiquewhite;
     border: solid 4px lightblue;
+}.musicFeedDiv {
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .lyricFeedCard {
@@ -168,21 +174,13 @@
     align-items: center;
     justify-content: space-between;
     flex-grow: 1;
-}.lyricTitleFeed {
-    margin: 0;
-    font-weight: 900;
 }.lyricsFeed {
     margin: 0;
+    text-align: center;
     width: 100%;
     font-size: 18px;
 }
 
-.musicFeedDiv {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
 .gray {
     background-color: gray;
@@ -215,7 +213,9 @@
 
 .trash {
     font-size: 6vw;
-    max-width: 50px;
+    align-self: end;
+    margin-right: 5px;
+    margin-bottom: 5px;
 }.trash:hover {
     transition: 1s;
     color: rgb(182, 0, 0);
