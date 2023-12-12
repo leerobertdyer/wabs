@@ -10,7 +10,7 @@ const authRoutes = Router()
 ////////////////    session    ////////////////
 authRoutes.get('/check-session', (req, res) => {
   if (req.cookies.user){
-    // console.log('check-session Cookie = ', req.cookies.user, req.cookies.token);
+    console.log('check-session Cookie = ', req.cookies.user, req.cookies.token);
     res.status(200).json({ user: req.cookies.user, token: req.cookies.token  });
   } else {
     console.log('no cookie');

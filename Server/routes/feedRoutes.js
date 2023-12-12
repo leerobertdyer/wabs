@@ -22,32 +22,6 @@ feedRoutes.get('/feed', async (req, res) => {
     }
 });
 
-feedRoutes.get('/feed-collab', async (req, res) => {
-    try {
-        const allMusic = await db('feed')
-            .innerJoin('music', 'feed.music_id', '=', 'music.music_id')
-            .innerJoin('users', 'feed.user_id', '=', 'users.user_id')
-            .select('*')
-        const allLyrics = await db('feed')
-            .innerJoin('lyrics', 'feed.lyric_id', '=', 'lyrics.lyric_id')
-            .innerJoin('users', 'feed.user_id', '=', 'users.user_id')
-            .select('*')
-        const collabFeed = []
-        for (const item of allMusic) {
-            collabFeed.push(item)
-        }
-        for (const item of allLyrics) {
-            collabFeed.push(item)
-        }
-        collabFeed.sort((a, b) => a.time - b.time)
-
-        // console.log(collabFeed);
-        res.status(200).json({ collabFeed: collabFeed })
-    } catch (err) {
-        console.error(`Trouble fetching collab feed ${err}`);
-    }
-});
-
 feedRoutes.get('/get-stars', async (req, res) => {
     const id = req.query.id;
     const stars = await db('stars').select('post_id').where('user_id', id)

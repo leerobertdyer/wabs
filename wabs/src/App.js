@@ -8,6 +8,7 @@ import Register from './Views/Register/Register';
 import Profile from './Views/Profile/Profile';
 import Feed from './Components/Feed/Feed';
 import Submit from './Views/Submit/Submit';
+import { setup } from 'plyr';
 
 function App() {
   const [user, setUser] = useState({
@@ -18,7 +19,8 @@ function App() {
     user_profile_pic: '',
     status: '',
     score: 0,
-    datecreated: ''
+    datecreated: '',
+    collab: 'false'
   })
 
   const [feed, setFeed] = useState([])
@@ -43,7 +45,7 @@ function App() {
 
     checkAuthentication();
     loadFeed();
- 
+
   }, []);
 
   const loadFeed = async () => {
@@ -76,9 +78,6 @@ function App() {
     }
   }
 
-
-
-
   const changeUserPic = (newPic) => {
     const nextUser = { ...user, user_profile_pic: newPic };
     setUser(nextUser);
@@ -89,6 +88,7 @@ function App() {
     setUser(nextUser);
   }
 
+
   const loadUser = (data) => {
     setUser({
       user_id: data.user_id,
@@ -98,7 +98,8 @@ function App() {
       score: data.score,
       isLoggedIn: true,
       user_profile_pic: data.user_profile_pic,
-      status: data.user_status
+      status: data.user_status,
+      collab: data.collab
     })
   }
 
@@ -115,7 +116,8 @@ function App() {
         isLoggedIn: false,
         user_profile_pic: '',
         score: 0,
-        datecreated: ''
+        datecreated: '',
+        collab: false
       })
     }
     catch (error) {
@@ -135,7 +137,7 @@ function App() {
               <Route path='/' element={<Feed showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
-              <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} />} />
               <Route path="/collaborate" element={<Feed showSort={true} feed={collabFeed} user={user} sortFeed={sortFeed} />} />
             </Routes>

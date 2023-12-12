@@ -3,13 +3,13 @@ import './Profile.css'
 import { Link } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed';
 
-function Profile({ feed, user, changeUserPic, loadSongs, loadFeed, sortFeed, changeUserStatus }) {
+function Profile({ feed, user, changeUserPic, loadUser, loadSongs, loadFeed, sortFeed, changeUserStatus }) {
 
     const [showStatus, setShowStatus] = useState(false);
 
     const userSongs = feed
-    .filter((post) => post.user_id === user.user_id && post.type === "song")
-    .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
+        .filter((post) => post.user_id === user.user_id && post.type === "song")
+        .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
 
     const handleSetProfilePhoto = (newPhoto) => changeUserPic(newPhoto)
 
@@ -79,6 +79,23 @@ function Profile({ feed, user, changeUserPic, loadSongs, loadFeed, sortFeed, cha
         }
     }
 
+    const handleCollabSwitch = async () => {
+        await fetch('http://localhost:4000/profile/update-collab', {
+            headers: { 'content-type': 'application/json' },
+            method: 'PUT',
+            body: JSON.stringify({
+                id: user.user_id,
+            }),
+            credentials: 'include'
+        })
+        if (user.collab === "true") {
+            loadUser({ ...user, collab: "false" })
+        } else {
+            loadUser({ ...user, collab: "true" })
+
+        }
+    }
+
     const { isLoggedIn } = user;
 
     return (
@@ -104,32 +121,44 @@ function Profile({ feed, user, changeUserPic, loadSongs, loadFeed, sortFeed, cha
                                             onChange={handlePhotoSubmit}
                                         />
                                     </form></div>
-                                <div id="statusAndInput">
-                                    <h3 className="status">"{user.status}"</h3>
-                                    <form className='formRow'>
-                                        {/* <label htmlFor="statusInput">
-                                        +status
-                                    </label> */}
-                                        <label htmlFor="statusChanger"
-                                            className='labelInline clickMe'
-                                            onClick={showHiddenStatus}>+status</label>
-                                        {showStatus ? (
-                                            <div className='formRow'>
-                                                <input type="text"
-                                                    id="statusChanger"
-                                                    name="statusInput"
-                                                    maxLength={55}
-                                                    onChange={(event) => changedStatus = event.target.value} />
-                                                <input type="submit"
-                                                    className='clickMe smallFormButton'
-                                                    onClick={handleStatusChange} />
-                                            </div>) : null}
-                                    </form>
+                                <div className='switchAndStatusDiv'>
+                                    <div className='switchDiv'>
+                                        <label className="switch">
+                                            <input type="checkbox"
+                                                onClick={() => handleCollabSwitch()} />
+                                            <span className="slider"></span>
+                                        </label>
+                                        {user.collab === "true"
+                                            ? <p className='setUserCollab'>Collab On</p>
+                                            : <p className='setUserCollab'>Collab Off</p>}
+                                    </div>
+
+                                    <div id="statusAndInput">
+                                        <h3 className="status">"{user.status}"</h3>
+                                        <form className='formRow'>
+                                            <label htmlFor="statusChanger"
+                                                className='labelInline clickMe'
+                                                onClick={showHiddenStatus}>+status</label>
+                                            {showStatus ? (
+                                                <div className='formRow'>
+                                                    <input type="text"
+                                                        id="statusChanger"
+                                                        name="statusInput"
+                                                        maxLength={55}
+                                                        onChange={(event) => changedStatus = event.target.value} />
+                                                    <input type="submit"
+                                                        className='clickMe smallFormButton'
+                                                        onClick={handleStatusChange} />
+                                                </div>) : null}
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <Feed user={user} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
+                            {userSongs.length === 0 ? <h2 className='noProfileSongs'>You have no songs! <Link className='profileLink' to="/submit">Submit one here</Link></h2>
+                                : <Feed user={user} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
+                            }
                         </div>
                     </div>
                 </div>)

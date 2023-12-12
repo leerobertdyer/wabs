@@ -27,7 +27,7 @@ const db = knex({
     pool: {
       min: 2, 
       max: 5, 
-      idleTimeoutMillis: 6000, 
+      idleTimeoutMillis: 12000, 
     },
   });
   
