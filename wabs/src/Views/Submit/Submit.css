@@ -22,8 +22,8 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    background: linear-gradient(to bottom right, rgb(150, 25, 25), orange);
-    border: solid antiquewhite 2px;
+    background-color: gray;
+    border: solid goldenrod 2px;
     border-radius: 5px;
     padding: 30px;
     margin-bottom: 100px;
@@ -39,7 +39,7 @@
     text-decoration: underline;
     background-color: rgb(24, 24, 24);
     padding: 20px;
-    border: antiquewhite solid 2px;
+    border: lightskyblue solid 2px;
     border-radius: 5px;
 }
 .radioLabel:hover {
@@ -58,7 +58,7 @@ display: none;
 }
 
 .submitSongForm {
-    border-radius: 22px;
+    border-radius: 5px;
     padding: 5px 35px 25px 35px;
     margin: 0 45px;
     background: linear-gradient(to bottom, goldenrod, orange);
@@ -83,8 +83,30 @@ display: none;
 .submitSongInputs {
     width: 100%;
     height: 25px;
-    border-radius: 12px;
+    border-radius: 4px;
+    border: none;
     padding: 5px;
+}
+.submitSongInputs::placeholder {
+    text-align: center;
+}
+
+.formSubmitButton {
+    border-radius: 5px;
+    background-color: rgb(24, 24, 24);
+    color: lightskyblue;
+    border: lightskyblue solid 2px;
+    width: 60%;
+    height: 45px;
+}
+
+.formSubmitButton:hover {
+    transition: 1s;
+    background-color: lightskyblue;
+    color: rgb(24, 24, 24);
+    border: rgb(24, 24, 24) solid 2px;
+    width: 70%;
+    height: 45px;
 }
 
 .underSongSubmit {

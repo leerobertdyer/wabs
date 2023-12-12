@@ -102,9 +102,9 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort }) {
                     <div className="titleBox">
                         <div className='sortSongs'>
                             <h3 className="sortBy">Sort by: </h3>
-                            <p className='sort' onClick={handleSort}>Latest</p>
-                            <p className='sort' onClick={handleSort}>Oldest</p>
                             <p className='sort' onClick={handleSort}>Most Popular</p>
+                            <p className='sort' onClick={handleSort}>Oldest</p>
+                            <p className='sort' onClick={handleSort}>Latest</p>
                         </div>
                     </div>
                         <h1 className="sortByTitle">{sortBy} Posts:</h1>
