@@ -115,7 +115,14 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort }) {
                         const cardColor = cardColors[post.type] || cardColors['default']
                         return (
                             <div className={`postCard ${cardColor}`}
-                                style={{ backgroundImage: `url(${post.feed_pic})`, backgroundSize: "cover", backgroundPositionY: "-100px" }} key={index}>
+                            style={post.type === "profile_pic"
+                            ? {
+                                backgroundImage: `url(${post.feed_pic})`,
+                                backgroundSize: "cover",
+                                backgroundPositionY: "-100px",
+                              }
+                            : {}}
+                                key={index}>
 
                                 <div className="topPostDiv">
                                     <div className="thumbnailDiv">
