@@ -13,7 +13,10 @@ feedRoutes.get('/feed', async (req, res) => {
             .leftJoin('lyrics', 'feed.lyric_id', '=', 'lyrics.lyric_id')
             .select('*')
             .orderBy('time', 'desc')
-        res.status(200).json({ newFeed: newFeed })
+        const filteredFeed = [...newFeed].filter((post) => {
+        return (post.type === "lyrics" || post.type === "music");
+        });
+        res.status(200).json({ newFeed: newFeed, filteredFeed: filteredFeed })
     } catch (error) {
         console.error(`Trouble getting feed from database: ${error}`)
     }

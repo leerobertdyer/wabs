@@ -17,6 +17,8 @@ const client = new pg.Client({
   .then(() => console.log('Connected to ElephantSQL', client.database))
   .catch((err) => {
     console.error('Error connecting to ElephantSQL:', err)
+  }).then(() => {
+    client.end()
   });
 
 const db = knex({
@@ -25,7 +27,7 @@ const db = knex({
     pool: {
       min: 2, 
       max: 5, 
-      idleTimeoutMillis: 60000, 
+      idleTimeoutMillis: 6000, 
     },
   });
   

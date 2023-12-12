@@ -24,131 +24,128 @@ function App() {
   const [feed, setFeed] = useState([])
   const [collabFeed, setCollabFeed] = useState([])
 
-
   useEffect(() => {
 
     const checkAuthentication = async () => {
-      try{
+      try {
         const response = await fetch('http://localhost:4000/auth/check-session', {
-           credentials: 'include'
-         })
+          credentials: 'include'
+        })
         //  console.log('client side cookie: ', document.cookie)
-         const data = await response.json()
-         const currentUser = data.user
-         loadUser(currentUser)
+        const data = await response.json()
+        const currentUser = data.user
+        loadUser(currentUser)
       }
-      catch(error) {
-          console.error('Error checking authentication:', error);
-        };
+      catch (error) {
+        console.error('Error checking authentication:', error);
+      };
     };
 
     checkAuthentication();
     loadFeed();
-    getCollabFeed();
+ 
   }, []);
 
-  const loadFeed = async() => {
+  const loadFeed = async () => {
     const resp = await fetch('http://localhost:4000/feed')
     const data = await resp.json();
     // console.log('feed data: ', data.newFeed)
     setFeed(data.newFeed)
+    setCollabFeed(data.filteredFeed)
   }
 
   const sortFeed = (method, currentFeed, type) => {
     let nextFeed
-    if (method === "Oldest"){
+    if (method === "Oldest") {
       nextFeed = [...currentFeed].sort((a, b) => a.feed_id - b.feed_id)
     }
-    else if (method === "Latest"){
+    else if (method === "Latest") {
       nextFeed = [...currentFeed].sort((a, b) => b.feed_id - a.feed_id)
     }
-    else if (method === "Most Popular"){
+    else if (method === "Most Popular") {
       nextFeed = [...currentFeed].sort((a, b) => b.stars - a.stars)
     }
     else {
       console.log('nothing changed...')
       nextFeed = [...currentFeed]
     }
-    if (type === 'home'){
+    if (type === 'home') {
       setFeed(nextFeed)
     } else if (type === 'collab') {
       setCollabFeed(nextFeed)
     }
   }
 
-  const getCollabFeed = async () => {
-  const resp = await fetch('http://localhost:4000/feed-collab')
-  const data = await resp.json();
-  setCollabFeed(data.collabFeed)
-  }
+
+
 
   const changeUserPic = (newPic) => {
-    const nextUser = {...user, user_profile_pic: newPic};
+    const nextUser = { ...user, user_profile_pic: newPic };
     setUser(nextUser);
   }
 
   const changeUserStatus = (newStatus) => {
-    const nextUser = {...user, status: newStatus};
+    const nextUser = { ...user, status: newStatus };
     setUser(nextUser);
   }
-  
- const loadUser = (data) => {
+
+  const loadUser = (data) => {
     setUser({
-        user_id: data.user_id,
-        userName: data.username,
-        email: data.user_email,
-        datecreated: data.date_user_joined,
-        score: data.score,
-        isLoggedIn: true,
-        user_profile_pic: data.user_profile_pic,
-        status: data.user_status
+      user_id: data.user_id,
+      userName: data.username,
+      email: data.user_email,
+      datecreated: data.date_user_joined,
+      score: data.score,
+      isLoggedIn: true,
+      user_profile_pic: data.user_profile_pic,
+      status: data.user_status
     })
   }
 
   const unloadUser = () => {
     try {
-     fetch('http://localhost:4000/auth/signout', {
-      method: 'POST',
-      credentials: 'include',
-    })
-     setUser({
-              user_id: '',
-              userName: '',
-              email: '',
-              isLoggedIn: false,
-              user_profile_pic: '',
-              score: 0,
-              datecreated: ''
-            })    
-        }
-      catch(error) {
-        console.error('Logout failed:', error);
-      }
+      fetch('http://localhost:4000/auth/signout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+      setUser({
+        user_id: '',
+        userName: '',
+        email: '',
+        isLoggedIn: false,
+        user_profile_pic: '',
+        score: 0,
+        datecreated: ''
+      })
+    }
+    catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
 
-    return (
-      <Router>
-        <div className='App'>
-          {
-            <div id='mainWrapper'>
-              <Nav user={user} unloadUser={unloadUser} />
-              <div className='spacing'></div>
-              <Routes>
-                <Route path='/' element={<Feed showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed}/>} />
-                <Route path="/login" element={<Login loadUser={loadUser} />} />
-                <Route path="/register" element={<Register loadUser={loadUser} />} />
-                <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
-                <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed}/>} />
-                <Route path="/collaborate" element={<Feed showSort={true} feed={collabFeed} user={user} loadFeed={getCollabFeed} sortFeed={sortFeed}/>} />
-              </Routes>
+  return (
+    <Router>
+      <div className='App'>
+        {
+          <div id='mainWrapper'>
+            <Nav user={user} unloadUser={unloadUser} />
+            <div className='spacing'></div>
+            <Routes>
+              <Route path='/' element={<Feed showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
+              <Route path="/login" element={<Login loadUser={loadUser} />} />
+              <Route path="/register" element={<Register loadUser={loadUser} />} />
+              <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} />} />
+              <Route path="/collaborate" element={<Feed showSort={true} feed={collabFeed} user={user} sortFeed={sortFeed} />} />
+            </Routes>
 
-              <Footer />
-            </div>
-          }
-        </div>
-      </Router>
-    );
-  }
+            <Footer />
+          </div>
+        }
+      </div>
+    </Router>
+  );
+}
 
 export default App;
