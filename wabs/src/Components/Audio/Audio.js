@@ -15,7 +15,7 @@ const Audio = ({ source }) => {
     return (
         <>
       <div className='audioContainer'>
-        <audio className="js-plyr mine" controls ref={(el) => (player.current = el)}>
+        <audio className="js-plyr" controls ref={(el) => (player.current = el)}>
           <source src={source} type="audio/mp3" />
         </audio>
       </div>

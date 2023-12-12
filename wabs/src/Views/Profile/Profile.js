@@ -118,6 +118,7 @@ function Profile({ feed, user, changeUserPic, loadSongs, loadFeed, sortFeed, cha
                                                 <input type="text"
                                                     id="statusChanger"
                                                     name="statusInput"
+                                                    maxLength={55}
                                                     onChange={(event) => changedStatus = event.target.value} />
                                                 <input type="submit"
                                                     className='clickMe smallFormButton'

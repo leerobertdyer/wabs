@@ -1,16 +1,17 @@
 #mainSubmitDiv {
-background-color: rgb(24, 24, 24);
-color: black;
-display: flex;
-flex-direction: column;
-justify-content: flex-start;
-align-items: center;
-margin-top: 40px;
+    background-color: rgb(24, 24, 24);
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 40px;
 }
 
 .black {
     color: black;
 }
+
 .center {
     text-align: center;
 }
@@ -21,11 +22,40 @@ margin-top: 40px;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    background-color: rgba(218, 165, 32, .8);
+    background: linear-gradient(to bottom right, rgb(150, 25, 25), orange);
+    border: solid antiquewhite 2px;
+    border-radius: 5px;
     padding: 30px;
     margin-bottom: 100px;
 }
 
+.popupTitle {
+    font-size: 27px;
+    text-align: center;
+}
+.radioLabel {
+    font-size: 28px;
+    color: lightskyblue;
+    text-decoration: underline;
+    background-color: rgb(24, 24, 24);
+    padding: 20px;
+    border: antiquewhite solid 2px;
+    border-radius: 5px;
+}
+.radioLabel:hover {
+    cursor: pointer;
+    background-color: lightskyblue;
+    color: rgb(24, 24, 24);
+    border: rgb(24, 24, 24) solid 2px;
+}
+
+.radioBtn {
+display: none;
+}
+
+.radioBtn:hover {
+    cursor: pointer;
+}
 
 .submitSongForm {
     border-radius: 22px;
@@ -40,11 +70,11 @@ margin-top: 40px;
 }
 
 .submitSongLegend {
-color: rgb(24, 24, 24);
+    color: rgb(24, 24, 24);
 }
 
 .formBlock {
-    display:flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
     width: 75%;
@@ -74,10 +104,11 @@ color: rgb(24, 24, 24);
 }
 
 
-@keyframes scroll{
+@keyframes scroll {
     0% {
         transform: translateX(100%);
     }
+
     100% {
         transform: translateX(-20%);
     }

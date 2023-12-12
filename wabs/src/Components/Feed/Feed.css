@@ -6,7 +6,9 @@
     border: solid goldenrod 1px;
     border-radius: 4px;
     font-family: 'Amatic SC', sans-serif;
+
 }
+
 
 .titleBox {
     padding: 2px;
@@ -16,27 +18,39 @@
     align-items: center;
     background-color: rgb(15, 14, 13);
     color: goldenrod;
-    border-top: solid goldenrod 1px;
     border-bottom: solid 4px teal;
 }
 
 .sortByTitle {
-    margin: 0;
+    margin: 0 auto;
+    background-color: goldenrod;
+    color: black;
+    padding: 10px;
+    text-align: center;
 }
 
 .sortSongs {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
     color: white;
     gap: 1em;
     padding: 4px;
-    width: 45%;
-}.sortSongs>p {
-    color: rgb(222, 4, 222);
-    font-size: 1em;
-}.sortSongs>p:hover {
+    width: 100%;
+}
+
+.sortBy {
+    font-size: 35px;
+    margin: 0;
+}
+
+.sortSongs>p {
+    color: rgb(185, 81, 185);
+    font-size: 20px;
+}
+
+.sortSongs>p:hover {
     transition: .3s;
     transform: scale(120%);
     color: goldenrod;
@@ -59,50 +73,97 @@
     justify-content: space-between;
     align-items: center;
     border-radius: 4px;
-    gap: 10px;
     width: 95%;
-    height: 250px;
+    height: 270px;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
 .topPostDiv {
     display: flex;
     justify-content: space-between;
+    align-items: start;
     width: 100%;
-}.thumbnailDiv {
+    border-bottom: solid gold 2px;
+    background-color: rgb(24, 24, 24);
+}
+
+.thumbnailDiv {
+    display: flex;
+    width: 100px;
+    height: 100px;
+}
+
+.usernameUnderImg {
+    font-size: 20px;
+    padding-bottom: 5px;
+    color: antiquewhite;
+    background-color: black;
+    width: 100%;
+    text-align: center;
+    align-self: end;
+}
+.usernameUnderImg:hover {
+    color: lightpink;
+}
+
+.postTitle {
+    font-size: 28px;
+    font-weight: 900;
+    color: antiquewhite;
+    background-color: black;
+    padding: 20px;
+    align-self: start;
+    margin: 0;
+    width: fit-content;
+    height: fit-content;
+    text-align: center;
+    border-right: solid gold 1px;
+    border-left: solid gold 1px;
+    border-bottom: solid gold 1px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
-}.usernameUnderImg {
-    font-size: 25px;
-    color: white;
-}.postTitle {
-    margin-top: 20px;
-    font-weight: 900;
-}.starsWrap {
+    justify-content: space-between;
+}
+.newSongPreTitle {
+    color: gold;
+    font-size: 18px;
+}
+
+.starsWrap {
     height: 100px;
     width: 100px;
     background-color: black;
     align-self: start;
     border-bottom-left-radius: 4px;
-}.starsPicAndDigit {
+}
+
+.starsPicAndDigit {
     color: antiquewhite;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
     font-size: 18px;
-}.starImg {
+}
+
+.starImg {
     width: 25px;
     height: 25px;
     align-self: center;
-}.starImg:hover {
+}
+
+.starImg:hover {
     transition: 1s;
     transform: scale(140%);
     border-radius: 20px;
 }
-
-
 
 .profilePicFeed {
     display: flex;
@@ -110,9 +171,12 @@
     flex-grow: 1;
     align-self: stretch;
     border-radius: 12px;
-}.postPicInfo {
+}
+
+.postPicInfo {
     background-color: antiquewhite;
-    padding: 10px;
+    padding: 20px;
+    border: solid black 1px;
     border-radius: 12px;
     width: fit-content;
     height: fit-content;
@@ -123,39 +187,52 @@
 
 .songFeedCard {
     background-image: url('../../../public/Assets/musicNotes.jpg');
-    background-size: 900px;
-    border: black solid 4px;
-}.songInfo {
+    background-size: cover;
+    border: gold solid 4px;
+}
+
+.songInfo {
     background-color: rgb(24, 24, 24);
     border-radius: 4px;
     padding: 20px;
     display: inline;
-}.songUserName {
+}
+
+.songUserName {
     display: inline;
 }
 
 .statusFeedCard {
-    background-color: rgb(24, 24, 24);
+    background: linear-gradient(to bottom right, purple, red);
     color: antiquewhite;
-    border: solid antiquewhite 4px;
-}.feedStatusContainer {
+    border: black solid 4px;
+}
+
+.feedStatusContainer {
     flex-grow: 1;
     text-align: center;
-}.feedStatus {
-    flex: 1;
-    font-size: 3.5vw;
+}
+
+.feedStatus {
+    font-size: 4vmax;
+    margin: 0;
+    background-color: rgb(24, 24, 24);
+    padding: 10px;
+    border-radius: 4px;
 }
 
 .picFeedCard {
     background-color: rgb(24, 24, 24);
-    border: solid 4px aqua;
+    border: solid 4px black;
 }
 
 .musicFeedCard {
     background-color: rgb(24, 24, 24);
     color: antiquewhite;
     border: solid 4px lightblue;
-}.musicFeedDiv {
+}
+
+.musicFeedDiv {
     flex-grow: 1;
     flex-shrink: 1;
     display: flex;
@@ -169,35 +246,29 @@
         linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
         linear-gradient(#eee .1em, transparent .1em);
     background-size: 100% 1.2em;
-    border: gold solid 4px;
-}.lyricFeedDiv {
+    border: black solid 4px;
+}
+
+.lyricFeedDiv {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     flex-grow: 1;
-}.lyricsFeed {
-    margin: 0;
+}
+
+.lyricsFeed {
+    margin-top: 30px;
     text-align: center;
     width: 100%;
-    font-size: 18px;
+    font-size: 17px;
+    flex-grow: 1;
 }
 
 
 .gray {
     background-color: gray;
-}
-
-.feedSongInfo {
-    width: fit-content;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    gap: 8px;
-
 }
 
 .songUserName {
@@ -207,21 +278,23 @@
     padding: 10px;
 }
 
-.blackSong {
-    color: black;
-    display: inline;
-    padding: 0;
-    margin: 0;
-}
-
 .trash {
     font-size: 6vw;
     align-self: end;
     margin-right: 5px;
     margin-bottom: 5px;
-}.trash:hover {
-    transition: 1s;
+    background-color: antiquewhite;
+    border-radius: 4px;
+    width: 50px;
+    height: 50px;
+    border: black solid 1px;
+    color: black;
+}
+
+.trash:hover {
+    transition: .4s;
     color: rgb(182, 0, 0);
+    background-color: black;
     transform: scale(115%);
     cursor: pointer;
 }
@@ -237,12 +310,4 @@
     height: 100px;
     width: 100px;
     align-self: start;
-    border-bottom-right-radius: 4px;
-}
-
-.thumbnail2 {
-    height: 100px;
-    width: 100px;
-    align-self: start;
-    border-bottom-right-radius: 4px;
 }

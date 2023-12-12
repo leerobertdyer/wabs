@@ -8,23 +8,24 @@
     align-items: center;
     top: 0;
     position:fixed;
-    border-bottom: solid white 3px;
+    border-bottom: solid goldenrod 1px;
     font-size: 2vw;
     z-index: 9999;
     transition: height 1s;
 }
 .notShrunken { 
   transition: height 1s;
-  height: 100px
+  height: 120px
 }
 
 .shrunken {
   transition: height 1s;
-  height: 50px;
+  height: 70px;
 }
 
 .nav .links {
-    color: purple;
+  color: rgb(185, 81, 185);
+
 }
 
 .nav .links:hover {
@@ -50,9 +51,9 @@
     background-color: white;
     width: 8vw;
     border-radius: 28px;
-    font-size: 1.75vw;
-    padding: 10px;
-    height: 1.5vw;
+    font-size: 13px;
+    padding: 6px;
+    height: 25px;
   }
 
   .loginBox:hover {
@@ -84,6 +85,7 @@
 
   .shrunkenAboveLogout {
     transition: 1s;
+    margin: 0;
     font-size: 0vw;
   }
 

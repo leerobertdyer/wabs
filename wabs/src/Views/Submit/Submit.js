@@ -94,32 +94,34 @@ function Submit(props) {
                     {showPopup && (
                         <>
                                 <form className='firstPopup'>
-                                    <h1>What are we submitting today?</h1>
-
-                                    <label htmlFor="fullSong">A Full Song</label>
+                                    <h1 className='popupTitle'>What are we submitting today?</h1>
+                                    
+                                    <label htmlFor="fullSong" className='radioLabel'>A Full Song</label>
                                     <input type="radio"
+                                        className='radioBtn'
                                         name='submitType'
                                         value="fullSong"
                                         id='fullSong'
                                         onClick={showFormOnClick}
                                     ></input>
-
-                                    <label htmlFor="justLyrics">Just Lyrics</label>
+                                    
+                                    <label htmlFor="justLyrics" className='radioLabel'>Just Lyrics</label>
                                     <input type="radio"
+                                        className='radioBtn'
                                         name='submitType'
                                         value="justLyrics"
                                         id='justLyrics'
                                         onClick={showFormOnClick}
                                     ></input>
-
-                                    <label htmlFor="justMusic">Just Music</label>
+                                    
+                                    <label htmlFor="justMusic" className='radioLabel'>Just Music</label>
                                     <input type="radio"
+                                        className='radioBtn'
                                         name='submitType'
                                         value="justMusic"
                                         id='justMusic'
                                         onClick={showFormOnClick}
-                                    ></input>
-
+                                    ></input> 
                                 </form>
                         </>)}
 

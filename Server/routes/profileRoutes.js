@@ -19,7 +19,8 @@ profileRoutes.put('/update-status', async (req, res) => {
     await db('feed')
     .insert(
       {type: 'status',
-      user_id: id
+      user_id: id,
+      feed_status: newStatus
     })
       res.cookie('user', req.cookies.user, { maxAge: 3000000, httpOnly: true, path: '/' });
         res.status(200).json({ status: newStatus })
@@ -33,7 +34,7 @@ profileRoutes.put('/update-status', async (req, res) => {
     let token = req.cookies.token
     const user = req.body.user_id;
   if (!(await isAccessTokenValid(token))) {
-    // console.log('expired, sending 4 new token')
+    console.log('Fix isAccessTokenValid, sending 4 new token')
     token = await refreshToken(user, token);
   }
 
@@ -79,7 +80,8 @@ profileRoutes.put('/update-status', async (req, res) => {
       await db('feed')
       .insert({
         type: 'profile_pic',
-        user_id: user
+        user_id: user,
+        feed_pic: databaseLink
       })
       req.cookies.user.user_profile_pic = databaseLink
       res.cookie('user', req.cookies.user, { maxAge: 3000000, httpOnly: true, path: '/' });

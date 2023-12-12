@@ -4,7 +4,21 @@
     --plyr-audio-control-color: blue;
     --plyr-audio-control-color-hover: goldenrod;
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+.audioContainer .plyr {
+    width: 50%;
+    border-radius: 10px;
+    background-color: rgb(24, 24, 24);
+    border: solid gold 2px;
+    padding: 10px;
+  }
+
+.audioContainer .plyr audio {
+    width: 100%;
+    height: 100%;
+  }

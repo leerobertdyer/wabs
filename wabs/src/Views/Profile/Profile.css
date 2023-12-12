@@ -70,7 +70,6 @@
 
 
 #loginFromProfile {
-    margin-top: 250px;
     background-color: black;
     color: antiquewhite;
     border: solid antiquewhite 5px;
@@ -80,7 +79,7 @@
     justify-content: center;
     align-items: center;
     width: 40%;
-    margin: 100px auto;
+    margin: 10vmax auto;
     gap: 20px;
 }
 

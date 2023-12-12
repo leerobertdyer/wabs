@@ -98,16 +98,17 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort }) {
     return (
         <>
             <div className="outerFeedDiv">
-                {showSort &&
+                {showSort &&<>
                     <div className="titleBox">
-                        <h1 className="sortByTitle">{sortBy} Posts:</h1>
                         <div className='sortSongs'>
-                            <h3>Sort by: </h3>
+                            <h3 className="sortBy">Sort by: </h3>
                             <p className='sort' onClick={handleSort}>Latest</p>
                             <p className='sort' onClick={handleSort}>Oldest</p>
                             <p className='sort' onClick={handleSort}>Most Popular</p>
                         </div>
                     </div>
+                        <h1 className="sortByTitle">{sortBy} Posts:</h1>
+                        </> 
                 }
 
                 <div className='allPosts'>
@@ -125,12 +126,12 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort }) {
                                 key={index}>
 
                                 <div className="topPostDiv">
-                                    <div className="thumbnailDiv">
-                                        <img className="thumbnail" src={post.user_profile_pic} alt="userProfile"></img>
-                                        <a href="#profile" className="usernameUnderImg">{post.username}</a>
+                                    <div className="thumbnailDiv" style={{backgroundImage: `url(${post.user_profile_pic})`, backgroundSize: 'cover' }}>
+                                    <a href="#profile" className="usernameUnderImg">{post.username}</a>
                                     </div>
-                                    {(post.type === "music" || post.type === "song" || post.type === "lyrics")
+                                    {(post.type === "music" || post.type === "lyrics")
                                         && <h3 className="postTitle">"{post.title}"</h3>}
+                                    {post.type === "song" && <h3 className="postTitle"><span className="newSongPreTitle">New Song:</span>{post.title}</h3>}
                                     {post.type === "status"
                                         && <h2 >{`${post.username} says:`}</h2>}
                                     <div className="starsWrap">
@@ -141,26 +142,23 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort }) {
                                                 alt="star"
                                                 className="starImg"
                                                 onClick={() => updateStars(user.user_id, post.feed_id)}></img>
-                                            <p>Stars: </p>
-                                            <p>{post.stars}</p>
+                                            <p>Stars: {post.stars}</p>
                                         </div>
                                     </div>
 
 
                                 </div>
-                                {(post.type === "song" || post.type === "music") && <> <Audio source={post.song_file} /> <div></div> </>}
+                                {(post.type === "song" || post.type === "music") && <> <Audio className="feedAudio" source={post.song_file} /> <div></div> </>}
 
                                 {post.type === "lyrics"
                                     && <pre className="lyricsFeed">{post.lyrics.substring(0, 105)}...</pre>}
 
                                 {post.type === "profile_pic" && <p className="postPicInfo">{post.username} updated their profile pic...</p>}
 
-                                {post.type === "status" && <h3 className='feedStatus'>{`"${post.user_status}"`}</h3>}
+                                {post.type === "status" && <h3 className='feedStatus'>{`"${post.feed_status}"`}</h3>}
 
                                 {user.user_id === post.user_id && <LiaTrashAlt className="trash"
                                     onClick={() => deletePost(post.feed_id, post.type, user.user_id)} />}
-
-
                             </div>
                         )
                     }
