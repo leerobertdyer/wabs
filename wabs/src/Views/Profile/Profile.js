@@ -88,12 +88,7 @@ function Profile({ feed, user, changeUserPic, loadUser, loadSongs, loadFeed, sor
             }),
             credentials: 'include'
         })
-        if (user.collab === "true") {
-            loadUser({ ...user, collab: "false" })
-        } else {
-            loadUser({ ...user, collab: "true" })
-
-        }
+        
     }
 
     const { isLoggedIn } = user;

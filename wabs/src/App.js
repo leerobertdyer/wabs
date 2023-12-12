@@ -33,10 +33,11 @@ function App() {
         const response = await fetch('http://localhost:4000/auth/check-session', {
           credentials: 'include'
         })
-        //  console.log('client side cookie: ', document.cookie)
         const data = await response.json()
         const currentUser = data.user
         loadUser(currentUser)
+        console.log('client side cookie: ', document.cookie.user)
+        console.log(data)
       }
       catch (error) {
         console.error('Error checking authentication:', error);

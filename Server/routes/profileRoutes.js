@@ -96,29 +96,28 @@ profileRoutes.put('/upload-profile-pic', upload.single('photo'), async (req, res
 
 profileRoutes.put('/update-collab', async (req, res) => {
   const { id } = req.body
-  console.log('cookie: ', req.cookies.user.collab)
+  console.log('cookie: ', req.cookies.user)
+  let newCollab = ''
   try {
     const currentCollab = await db('users')
       .where('user_id', id)
       .select('collab')
     if (currentCollab[0].collab === "false"){
-      console.log('setting collab true');
       await db('users')
       .where('user_id', id)
       .update({
       collab: 'true'})
-      req.cookies.user.collab = "true"
+     newCollab = "true"
     } else {
       await db('users')
       .where('user_id', id)
       .update({
         collab: 'false'
       })
-      req.cookies.user.collab = "false"
+     newCollab = "false"
     }
-    console.log(currentCollab[0].collab)
-    console.log('endCookie: ', req.cookies.user.collab)
-    res.cookie('user', req.cookies.user, { maxAge: 3000000, httpOnly: true, path: '/' });
+    const updatedCookie = {...req.cookies.user, collab: newCollab}
+    res.cookie('user', updatedCookie, { maxAge: 3000000, httpOnly: true, path: '/' });
     res.status(200);
 
   } catch (err) {
