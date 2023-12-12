@@ -142,27 +142,18 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort }) {
 
 
                                 </div>
-                                {post.type === "song"
-                                    ? <Audio source={post.song_file} />
-                                    : post.type === "music" && <Audio source={post.song_file} />}
+                                {(post.type === "song" || post.type === "music") && <> <Audio source={post.song_file} /> <div></div> </>}
 
                                 {post.type === "lyrics"
                                     && <pre className="lyricsFeed">{post.lyrics.substring(0, 105)}...</pre>}
 
+                                {post.type === "profile_pic" && <p className="postPicInfo">{post.username} updated their profile pic...</p>}
+
+                                {post.type === "status" && <h3 className='feedStatus'>{`"${post.user_status}"`}</h3>}
+
                                 {user.user_id === post.user_id && <LiaTrashAlt className="trash"
                                     onClick={() => deletePost(post.feed_id, post.type, user.user_id)} />}
 
-
-                                {post.type === "profile_pic"
-                                    && (<>
-                                        <p className="postPicInfo">{post.username} updated their profile pic...</p>
-                                    </>)}
-
-
-                                {post.type === "status"
-                                    && (<>
-                                        <h3 className='feedStatus'>{`"${post.user_status}"`}</h3>
-                                    </>)}
 
                             </div>
                         )

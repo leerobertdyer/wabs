@@ -72,6 +72,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}.usernameUnderImg {
+    font-size: 25px;
+    color: white;
 }.postTitle {
     margin-top: 20px;
     font-weight: 900;
