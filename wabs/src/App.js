@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Login from './Components/Login/Login';
+import Login from './Views/Login/Login';
 import Nav from './Components/Nav/Nav';
 import Footer from './Components/Footer/Footer';
-import Register from './Components/Register/Register';
-import Profile from './Components/Profile/Profile';
+import Register from './Views/Register/Register';
+import Profile from './Views/Profile/Profile';
 import Feed from './Components/Feed/Feed';
-import Submit from './Components/Submit/Submit';
+import Submit from './Views/Submit/Submit';
 
 function App() {
   const [user, setUser] = useState({

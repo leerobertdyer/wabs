@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { LiaTrashAlt } from "react-icons/lia";
 import Audio from "../Audio/Audio";
-
 import './Feed.css'
 
 function Feed({ feed, user, loadFeed, sortFeed, showSort }) {

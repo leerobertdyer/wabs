@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Profile.css'
 import { Link } from 'react-router-dom';
-import Feed from '../Feed/Feed';
+import Feed from '../../Components/Feed/Feed';
 
 function Profile({ feed, user, changeUserPic, loadSongs, loadFeed, sortFeed, changeUserStatus }) {
 
