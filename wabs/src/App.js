@@ -36,7 +36,7 @@ function App() {
         const data = await response.json()
         const currentUser = data.user
         loadUser(currentUser)
-        console.log('client side cookie: ', document.cookie.user)
+        console.log('client side cookie: ', document.cookie)
         console.log(data)
       }
       catch (error) {
@@ -89,6 +89,10 @@ function App() {
     setUser(nextUser);
   }
 
+  const changeUserCollab = (newCollab) => {
+    const nextUser = {...user, collab: newCollab};
+    setUser(nextUser);
+  }
 
   const loadUser = (data) => {
     setUser({
@@ -138,7 +142,7 @@ function App() {
               <Route path='/' element={<Feed showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
-              <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} />} />
               <Route path="/collaborate" element={<Feed showSort={true} feed={collabFeed} user={user} sortFeed={sortFeed} />} />
             </Routes>

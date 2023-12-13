@@ -3,7 +3,7 @@ import './Profile.css'
 import { Link } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed';
 
-function Profile({ feed, user, changeUserPic, loadUser, loadSongs, loadFeed, sortFeed, changeUserStatus }) {
+function Profile({ feed, user, changeUserPic, changeUserCollab, loadSongs, loadFeed, sortFeed, changeUserStatus }) {
 
     const [showStatus, setShowStatus] = useState(false);
 
@@ -80,7 +80,7 @@ function Profile({ feed, user, changeUserPic, loadUser, loadSongs, loadFeed, sor
     }
 
     const handleCollabSwitch = async () => {
-        await fetch('http://localhost:4000/profile/update-collab', {
+        const resp = await fetch('http://localhost:4000/profile/update-collab', {
             headers: { 'content-type': 'application/json' },
             method: 'PUT',
             body: JSON.stringify({
@@ -88,6 +88,10 @@ function Profile({ feed, user, changeUserPic, loadUser, loadSongs, loadFeed, sor
             }),
             credentials: 'include'
         })
+        if (resp.ok) {
+            const data = await resp.json();
+            changeUserCollab(data.nextCollab)
+        }
         
     }
 
@@ -119,8 +123,13 @@ function Profile({ feed, user, changeUserPic, loadUser, loadSongs, loadFeed, sor
                                 <div className='switchAndStatusDiv'>
                                     <div className='switchDiv'>
                                         <label className="switch">
-                                            <input type="checkbox"
+                                            {user.collab === "true"
+                                            ?
+                                            <input type="checkbox" checked
                                                 onClick={() => handleCollabSwitch()} />
+                                                :<input type="checkbox"
+                                                    onClick={() => handleCollabSwitch()} />
+            }
                                             <span className="slider"></span>
                                         </label>
                                         {user.collab === "true"

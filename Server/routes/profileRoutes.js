@@ -97,7 +97,7 @@ profileRoutes.put('/upload-profile-pic', upload.single('photo'), async (req, res
 profileRoutes.put('/update-collab', async (req, res) => {
   const { id } = req.body
   console.log('cookie: ', req.cookies.user)
-  let newCollab = ''
+  let nextCollab = ''
   try {
     const currentCollab = await db('users')
       .where('user_id', id)
@@ -107,19 +107,20 @@ profileRoutes.put('/update-collab', async (req, res) => {
       .where('user_id', id)
       .update({
       collab: 'true'})
-     newCollab = "true"
+      nextCollab = 'true'
+      req.cookies.user.collab = 'true'
     } else {
       await db('users')
       .where('user_id', id)
       .update({
         collab: 'false'
       })
-     newCollab = "false"
+      nextCollab = 'false'
+      req.cookies.user.collab = 'false'
     }
-    const updatedCookie = {...req.cookies.user, collab: newCollab}
-    res.cookie('user', updatedCookie, { maxAge: 3000000, httpOnly: true, path: '/' });
-    res.status(200);
-
+    res.cookie('user', req.cookies.user, { maxAge: 3000000, httpOnly: true, path: '/' });
+    res.status(200).json({nextCollab: nextCollab});
+    console.log('this: ', req.cookies.user)
   } catch (err) {
     console.error(`Trouble setting collab boolean in db: ${err}`)
   }
