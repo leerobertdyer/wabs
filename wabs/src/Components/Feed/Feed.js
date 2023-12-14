@@ -3,9 +3,9 @@ import { LiaTrashAlt } from "react-icons/lia";
 import Audio from "../Audio/Audio";
 import './Feed.css'
 
-function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars}) {
+function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars, stars}) {
     const [sortBy, setSortBy] = useState('Latest')
-    const [stars, setStars] = useState([])
+    
     const page = window.location.href
 
     useEffect(() => {
@@ -22,38 +22,6 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars}
     const starHollow = '../../../Assets/star.png'
     const starFilled = '../../../Assets/starFilled.png'
 
-    const getStars = async (id) => {
-        const resp = await fetch(`http://localhost:4000/get-stars?id=${id}`, {
-            credentials: 'include'
-        })
-        const data = await resp.json();
-        const nextStars = data.userStars.map(star => Number(star.post_id))
-        setStars(nextStars)
-    }
-    const updateStars = async (user_id, post_id) => {
-        if (user.user_id > 0) {
-            try {
-                const resp = await fetch(`http://localhost:4000/update-stars?userId=${user_id}&postId=${post_id}`,
-                    {
-                        method: "put",
-                        credentials: 'include'
-                    })
-                const data = await resp.json();
-                // console.log('star checker: ', data);
-                if (data.message === 'starred') {
-                    const nextStars = [...stars, data.post]
-                    setStars(nextStars);
-                } else if (data.message === 'un-starred') {
-                    const nextStars = stars.filter(star => star.feed_id !== data.post)
-                    setStars(nextStars)
-                }
-                loadFeed();
-                getStars(user_id);
-            } catch (err) {
-                console.error(`There b errors in ye star fetch... ${err}`)
-            }
-        } else { return }
-    }
 
     const handleSort = (event) => {
         if (page === 'http://localhost:3000/') {

@@ -8,7 +8,6 @@ import Register from './Views/Register/Register';
 import Profile from './Views/Profile/Profile';
 import Feed from './Components/Feed/Feed';
 import Submit from './Views/Submit/Submit';
-import { setup } from 'plyr';
 
 function App() {
   const [user, setUser] = useState({
@@ -25,6 +24,7 @@ function App() {
 
   const [feed, setFeed] = useState([])
   const [collabFeed, setCollabFeed] = useState([])
+  const [stars, setStars] = useState([])
 
   useEffect(() => {
 
@@ -78,6 +78,39 @@ function App() {
       setCollabFeed(nextFeed)
     }
   }
+
+  const getStars = async (id) => {
+    const resp = await fetch(`http://localhost:4000/get-stars?id=${id}`, {
+        credentials: 'include'
+    })
+    const data = await resp.json();
+    const nextStars = data.userStars.map(star => Number(star.post_id))
+    setStars(nextStars)
+}
+const updateStars = async (user_id, post_id) => {
+    if (user.user_id > 0) {
+        try {
+            const resp = await fetch(`http://localhost:4000/update-stars?userId=${user_id}&postId=${post_id}`,
+                {
+                    method: "put",
+                    credentials: 'include'
+                })
+            const data = await resp.json();
+            // console.log('star checker: ', data);
+            if (data.message === 'starred') {
+                const nextStars = [...stars, data.post]
+                setStars(nextStars);
+            } else if (data.message === 'un-starred') {
+                const nextStars = stars.filter(star => star.feed_id !== data.post)
+                setStars(nextStars)
+            }
+            loadFeed();
+            getStars(user_id);
+        } catch (err) {
+            console.error(`There b errors in ye star fetch... ${err}`)
+        }
+    } else { return }
+}
 
   const changeUserPic = (newPic) => {
     const nextUser = { ...user, user_profile_pic: newPic };
@@ -139,12 +172,12 @@ function App() {
             <Nav user={user} unloadUser={unloadUser} />
             <div className='spacing'></div>
             <Routes>
-              <Route path='/' element={<Feed showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
+              <Route path='/' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
               <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} />} />
-              <Route path="/collaborate" element={<Feed showSort={true} feed={collabFeed} user={user} sortFeed={sortFeed} />} />
+              <Route path="/collaborate" element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={collabFeed} user={user} sortFeed={sortFeed} />} />
             </Routes>
 
             <Footer />
