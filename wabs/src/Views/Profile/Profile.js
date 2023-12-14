@@ -3,7 +3,7 @@ import './Profile.css'
 import { Link } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed';
 
-function Profile({ feed, user, changeUserPic, changeUserCollab, loadSongs, loadFeed, sortFeed, changeUserStatus }) {
+function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, changeUserCollab, loadSongs, loadFeed, sortFeed, changeUserStatus }) {
 
     const [showStatus, setShowStatus] = useState(false);
 
@@ -161,7 +161,7 @@ function Profile({ feed, user, changeUserPic, changeUserCollab, loadSongs, loadF
                         </div>
                         <div>
                             {userSongs.length === 0 ? <h2 className='noProfileSongs'>You have no songs! <Link className='profileLink' to="/submit">Submit one here</Link></h2>
-                                : <Feed user={user} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
+                                : <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
                             }
                         </div>
                     </div>

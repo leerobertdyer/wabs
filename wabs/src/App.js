@@ -25,7 +25,7 @@ function App() {
   const [feed, setFeed] = useState([])
   const [collabFeed, setCollabFeed] = useState([])
   const [stars, setStars] = useState([])
-
+  
   useEffect(() => {
 
     const checkAuthentication = async () => {
@@ -52,7 +52,6 @@ function App() {
   const loadFeed = async () => {
     const resp = await fetch('http://localhost:4000/feed')
     const data = await resp.json();
-    // console.log('feed data: ', data.newFeed)
     setFeed(data.newFeed)
     setCollabFeed(data.filteredFeed)
   }
@@ -77,6 +76,7 @@ function App() {
     } else if (type === 'collab') {
       setCollabFeed(nextFeed)
     }
+    console.log('sorted by ', method, ' on ', type)
   }
 
   const getStars = async (id) => {
@@ -87,7 +87,7 @@ function App() {
     const nextStars = data.userStars.map(star => Number(star.post_id))
     setStars(nextStars)
 }
-const updateStars = async (user_id, post_id) => {
+const updateStars = async (user_id, post_id, currentSort, page) => {
     if (user.user_id > 0) {
         try {
             const resp = await fetch(`http://localhost:4000/update-stars?userId=${user_id}&postId=${post_id}`,
@@ -96,17 +96,22 @@ const updateStars = async (user_id, post_id) => {
                     credentials: 'include'
                 })
             const data = await resp.json();
-            // console.log('star checker: ', data);
             if (data.message === 'starred') {
-                const nextStars = [...stars, data.post]
-                setStars(nextStars);
+                setStars(prevStars => [...stars, data.post]);
             } else if (data.message === 'un-starred') {
-                const nextStars = stars.filter(star => star.feed_id !== data.post)
-                setStars(nextStars)
+                setStars(prevStars => stars.filter(star => star.feed_id !== data.post))
             }
-            loadFeed();
-            getStars(user_id);
-        } catch (err) {
+
+            console.log('Stars after setStars:', stars); // Log the stars state
+
+            await loadFeed();
+
+            console.log('Feed after loadFeed:', feed); // Log the feed state
+
+            await getStars(user_id);
+
+            console.log('Stars after getStars:', stars); // Log the stars state again
+          } catch (err) {
             console.error(`There b errors in ye star fetch... ${err}`)
         }
     } else { return }
@@ -175,7 +180,7 @@ const updateStars = async (user_id, post_id) => {
               <Route path='/' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
-              <Route path="/profile" element={<Profile user={user} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/profile" element={<Profile user={user} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} />} />
               <Route path="/collaborate" element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={collabFeed} user={user} sortFeed={sortFeed} />} />
             </Routes>
