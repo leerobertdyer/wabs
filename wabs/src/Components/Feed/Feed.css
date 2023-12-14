@@ -163,6 +163,7 @@
     transition: 1s;
     transform: scale(140%);
     border-radius: 20px;
+    cursor: pointer;
 }
 
 .profilePicFeed {
@@ -245,7 +246,7 @@
     background-image:
         linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
         linear-gradient(#eee .1em, transparent .1em);
-    background-size: 100% 1.2em;
+    background-size: 100% 1em;
     border: black solid 4px;
 }
 
@@ -259,11 +260,9 @@
 }
 
 .lyricsFeed {
-    margin-top: 30px;
     text-align: center;
     width: 100%;
     font-size: 17px;
-    flex-grow: 1;
 }
 
 
@@ -279,21 +278,21 @@
 }
 
 .trash {
-    font-size: 6vw;
     align-self: end;
     margin-right: 5px;
     margin-bottom: 5px;
     background-color: antiquewhite;
     border-radius: 4px;
-    width: 50px;
-    height: 50px;
-    border: black solid 1px;
+    width: 40px;
+    height: 40px;
+    border: white solid 3px;
     color: black;
 }
 
 .trash:hover {
     transition: .4s;
     color: rgb(182, 0, 0);
+    border: red solid 3px;
     background-color: black;
     transform: scale(115%);
     cursor: pointer;
@@ -310,4 +309,21 @@
     height: 100px;
     width: 100px;
     align-self: start;
+}
+.collabButton {
+    padding: 10px;
+    width: 40%;
+    background-color: gold;
+    color: black;
+    border: solid 2px white;
+    border-bottom: none;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+}
+.collabButton:hover {
+    background-color: lightskyblue;
+    border: solid 2px gold;
+    border-bottom: none;
+    transition: .6s;
+    cursor: pointer;
 }

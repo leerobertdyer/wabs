@@ -3,7 +3,7 @@ import { LiaTrashAlt } from "react-icons/lia";
 import Audio from "../Audio/Audio";
 import './Feed.css'
 
-function Feed({ feed, user, loadFeed, sortFeed, showSort }) {
+function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars}) {
     const [sortBy, setSortBy] = useState('Latest')
     const [stars, setStars] = useState([])
     const page = window.location.href
@@ -154,11 +154,15 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort }) {
                                     && <pre className="lyricsFeed">{post.lyrics.substring(0, 105)}...</pre>}
 
                                 {post.type === "profile_pic" && <p className="postPicInfo">{post.username} updated their profile pic...</p>}
-
+                                
                                 {post.type === "status" && <h3 className='feedStatus'>{`"${post.feed_status}"`}</h3>}
-
-                                {user.user_id === post.user_id && <LiaTrashAlt className="trash"
-                                    onClick={() => deletePost(post.feed_id, post.type, user.user_id)} />}
+                                {(post.type === "music" || post.type === "lyrics") && post.user_id !== user.user_id
+                                && <><button className="collabButton">{post.type === "lyrics" ? "Got Music?" : "Got Lyrics?"}</button></>
+                            }
+                                {user.user_id === post.user_id && <div className="trash">
+                                    <LiaTrashAlt size={40}
+                                    onClick={() => deletePost(post.feed_id, post.type, user.user_id)} />
+                                    </div>}
                             </div>
                         )
                     }
