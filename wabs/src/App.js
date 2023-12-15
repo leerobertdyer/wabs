@@ -26,12 +26,12 @@ function App() {
   const [feed, setFeed] = useState([])
   const [collabFeed, setCollabFeed] = useState([])
   const [stars, setStars] = useState([])
-  
+
   useEffect(() => {
 
     const checkAuthentication = async () => {
       try {
-        const response = await fetch('http://localhost:4000/auth/check-session', {
+        const response = await fetch(`${BACKEND_URL}/auth/check-session`, {
           credentials: 'include'
         })
         const data = await response.json()
@@ -49,11 +49,10 @@ function App() {
 
   }, []);
 
-  const API_URL = process.env.REACT_APP_API_ENDPOINT
-  console.log(API_URL);
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 
   const loadFeed = async () => {
-    const resp = await fetch('http://localhost:4000/feed')
+    const resp = await fetch(`${BACKEND_URL}/feed`)
     const data = await resp.json();
     setFeed(data.newFeed)
     setCollabFeed(data.filteredFeed)
@@ -83,7 +82,7 @@ function App() {
   }
 
   const getStars = async (id) => {
-    const resp = await fetch(`http://localhost:4000/get-stars?id=${id}`, {
+    const resp = await fetch(`${BACKEND_URL}/get-stars?id=${id}`, {
         credentials: 'include'
     })
     const data = await resp.json();
@@ -93,7 +92,7 @@ function App() {
 const updateStars = async (user_id, post_id, currentSort, page) => {
     if (user.user_id > 0) {
         try {
-            const resp = await fetch(`http://localhost:4000/update-stars?userId=${user_id}&postId=${post_id}`,
+            const resp = await fetch(`${BACKEND_URL}/update-stars?userId=${user_id}&postId=${post_id}`,
                 {
                     method: "put",
                     credentials: 'include'
@@ -104,16 +103,9 @@ const updateStars = async (user_id, post_id, currentSort, page) => {
             } else if (data.message === 'un-starred') {
                 setStars(prevStars => stars.filter(star => star.feed_id !== data.post))
             }
-
-            console.log('Stars after setStars:', stars); // Log the stars state
-
             await loadFeed();
-
-            console.log('Feed after loadFeed:', feed); // Log the feed state
-
             await getStars(user_id);
-
-            console.log('Stars after getStars:', stars); // Log the stars state again
+            
           } catch (err) {
             console.error(`There b errors in ye star fetch... ${err}`)
         }
@@ -151,7 +143,7 @@ const updateStars = async (user_id, post_id, currentSort, page) => {
 
   const unloadUser = () => {
     try {
-      fetch('http://localhost:4000/auth/signout', {
+      fetch(`${BACKEND_URL}/auth/signout`, {
         method: 'POST',
         credentials: 'include',
       })

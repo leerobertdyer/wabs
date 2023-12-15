@@ -11,6 +11,7 @@ function Submit(props) {
     const [showLyrics, setShowLyrics] = useState(false);
     const [showMusic, setShowMusic] = useState(false);
 
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
     const navigate = useNavigate();
 
     const handleSongSubmit = async (event) => {
@@ -27,7 +28,7 @@ function Submit(props) {
             formData.append('lyrics', lyrics)
             formData.append('song', song)
             formData.append('user_id', props.user.user_id)
-            resp = await fetch('http://localhost:4000/submit-song', {
+            resp = await fetch(`${BACKEND_URL}/submit-song`, {
                 method: "POST",
                 body: formData,
                 credentials: 'include'
@@ -42,7 +43,7 @@ function Submit(props) {
             formData2.append('title', title)
             formData2.append('song', song)
             formData2.append('user_id', props.user.user_id)
-            resp = await fetch('http://localhost:4000/submit-music', {
+            resp = await fetch(`${BACKEND_URL}/submit-music`, {
                 method: "POST",
                 body: formData2,
                 credentials: 'include'
@@ -53,7 +54,7 @@ function Submit(props) {
                 lyrics: lyrics,
                 user_id: props.user.user_id
             }
-            resp = await fetch('http://localhost:4000/submit-lyrics', {
+            resp = await fetch(`${BACKEND_URL}/submit-lyrics`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

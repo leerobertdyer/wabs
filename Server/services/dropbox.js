@@ -10,7 +10,7 @@ const upload = multer({ storage: storage });
 
 const APP_KEY = process.env.DROPBOX_APP_KEY
 const APP_SECRET = process.env.DROPBOX_APP_SECRET
-const REDIRECT_URI = 'http://localhost:4000/auth/dbx-auth-callback'
+const REDIRECT_URI = `${process.env.BACKEND_URL}/auth/dbx-auth-callback`
 const dbx = new Dropbox({ clientId: APP_KEY, clientSecret: APP_SECRET, fetch });
 
 const isAccessTokenValid = async (accessToken) => {

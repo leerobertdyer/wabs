@@ -124,6 +124,16 @@ profileRoutes.put('/update-collab', async (req, res) => {
   } catch (err) {
     console.error(`Trouble setting collab boolean in db: ${err}`)
   }
+})
+
+profileRoutes.get('/collab-status', (req, res) => {
+  try {
+    const user = req.cookies.user
+  if (user.collab === 'true'){
+    res.status(200).json({collab: user.collab})
+  }} catch (err) {
+    console.error(`Must be signed in: ${err}`)
+  }
 
 })
 

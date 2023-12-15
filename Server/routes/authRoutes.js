@@ -4,7 +4,6 @@ import { Router } from 'express'
 import dropboxConfig from '../services/dropbox.js'
 const { dbx, REDIRECT_URI, isAccessTokenValid, refreshToken } = dropboxConfig
 const { db } = databaseConfig
-
 const authRoutes = Router()
 
 ////////////////    session    ////////////////
@@ -53,7 +52,7 @@ authRoutes.get('/dbx-auth-callback', async (req, res) => {
       })
       res.cookie('token', tempAuthToken, { maxAge: 30000000, httpOnly: true, path: '/' });
       tempAuthToken = ''
-      res.redirect('http://localhost:3000')
+      res.redirect(process.env.REACT_APP_FRONTEND_URL)
     }
   } catch (error) {
     console.error('Error obtaining access token:', error);

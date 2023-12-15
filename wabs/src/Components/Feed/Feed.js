@@ -6,8 +6,9 @@ import './Feed.css'
 function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars, stars}) {
     const [sortBy, setSortBy] = useState('Latest')
     const page = window.location.href
-
-
+    const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+    
     useEffect(() => {
         setSortBy('Latest')
         handleSort('Latest')
@@ -20,7 +21,7 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars,
     }, [user])
 
     useEffect(() => {
-        page === "http://localhost:3000/"
+        page === `${FRONTEND_URL}/`
         ? sortFeed(sortBy, feed, 'home')
         : sortFeed(sortBy, feed, 'collab')
       }, [stars])
@@ -29,7 +30,7 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars,
     const starFilled = '../../../Assets/starFilled.png'
 
     const handleSort = (event) => {
-        if (page === 'http://localhost:3000/') {
+        if (page === `${FRONTEND_URL}/`) {
             if (event === 'Latest') {
                 sortFeed(event, feed, 'home')
                 setSortBy(event)
@@ -37,7 +38,7 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars,
                 sortFeed(event.target.textContent, feed, 'home')
                 setSortBy(event.target.textContent)
             }
-        } else if (page === 'http://localhost:3000/collaborate') {
+        } else if (page === `${FRONTEND_URL}/collaborate`) {
             if (event === 'Latest') {
                 sortFeed(event, feed, 'collab')
                 setSortBy(event)
@@ -49,14 +50,14 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars,
     }
 
     const handleStarClick = async(post_id) => {
-        page === "http://localhost:3000/"
+        page === `${FRONTEND_URL}/`
         ? await updateStars(user.user_id, post_id, sortBy, 'home')
         : await updateStars(user.user_id, post_id, sortBy, 'collab')
     }
 
     const deletePost = async (feed_id, feed_type, user_id) => {
         console.log('Deleting Post ', feed_id)
-        const resp = await fetch(`http://localhost:4000/delete-post?feed_id=${feed_id}&feed_type=${feed_type}&user_id=${user_id}`, {
+        const resp = await fetch(`${BACKEND_URL}/delete-post?feed_id=${feed_id}&feed_type=${feed_type}&user_id=${user_id}`, {
             method: "DELETE",
             credentials: 'include'
         })

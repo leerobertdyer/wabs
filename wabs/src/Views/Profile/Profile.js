@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Profile.css'
 import { Link } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed';
 
 function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, changeUserCollab, loadSongs, loadFeed, sortFeed, changeUserStatus }) {
-
     const [showStatus, setShowStatus] = useState(false);
+    const [checked, setChecked] = useState(user.collab === "true")
+
+    useEffect(() => {
+        getCollab();
+    }, [])
+
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+    
+    const getCollab = async() => {
+        const resp = await fetch(`${BACKEND_URL}/profile/collab-status`, {credentials: 'include'})
+        const data = await resp.json();
+        setChecked(data.collab)
+    }
 
     const userSongs = feed
         .filter((post) => post.user_id === user.user_id && post.type === "song")
@@ -23,7 +35,7 @@ function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, chan
                 const formData = new FormData();
                 formData.append('user_id', user.user_id);
                 formData.append('photo', photo);
-                const response = await fetch('http://localhost:4000/profile/upload-profile-pic', {
+                const response = await fetch(`${BACKEND_URL}/profile/upload-profile-pic`, {
                     method: "PUT",
                     body: formData,
                     credentials: 'include'
@@ -56,7 +68,7 @@ function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, chan
     const handleStatusChange = async (event) => {
         event.preventDefault();
         if (changedStatus.length > 0) {
-            const response = await fetch('http://localhost:4000/profile/update-status', {
+            const response = await fetch(`${BACKEND_URL}/profile/update-status`, {
                 headers: { 'content-type': 'application/json' },
                 method: 'PUT',
                 body: JSON.stringify({
@@ -80,7 +92,7 @@ function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, chan
     }
 
     const handleCollabSwitch = async () => {
-        const resp = await fetch('http://localhost:4000/profile/update-collab', {
+        const resp = await fetch(`${BACKEND_URL}/profile/update-collab`, {
             headers: { 'content-type': 'application/json' },
             method: 'PUT',
             body: JSON.stringify({
@@ -90,7 +102,8 @@ function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, chan
         })
         if (resp.ok) {
             const data = await resp.json();
-            changeUserCollab(data.nextCollab)
+            await changeUserCollab(data.nextCollab)
+            setChecked(!checked)
         }
         
     }
@@ -123,13 +136,11 @@ function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, chan
                                 <div className='switchAndStatusDiv'>
                                     <div className='switchDiv'>
                                         <label className="switch">
-                                            {user.collab === "true"
-                                            ?
-                                            <input type="checkbox" checked
+                                            
+                                            <input type="checkbox" checked={!!checked}
+                                                onChange={() => {}}
                                                 onClick={() => handleCollabSwitch()} />
-                                                :<input type="checkbox"
-                                                    onClick={() => handleCollabSwitch()} />
-            }
+
                                             <span className="slider"></span>
                                         </label>
                                         {user.collab === "true"

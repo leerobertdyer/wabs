@@ -6,7 +6,8 @@ function Login(props) {
 const [loginEmail, setLoginEmail] = useState('')
 const [loginPassword, setLoginPassword] = useState('')
 
-  const navigate = useNavigate();
+
+ const navigate = useNavigate();
 
  const onEmailChange = (event) => {
     event.preventDefault();
@@ -22,7 +23,7 @@ const [loginPassword, setLoginPassword] = useState('')
     if (!loginEmail.trim() || !loginPassword.trim()) {
       return;
     }
-    fetch('http://localhost:4000/auth/login', {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({

@@ -15,7 +15,7 @@ const port = 4000;
 server.use(express.json());
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // Update this when deploying
+  origin: process.env.REACT_APP_FRONTEND_URL, // Update this when deploying
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,

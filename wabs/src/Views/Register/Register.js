@@ -7,11 +7,13 @@ function Register(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+
     const onRegisterSubmit = async (event) => {
         event.preventDefault()
         try {
             const registerResponse = await
-                fetch('http://localhost:4000/auth/register', {
+                fetch(`${BACKEND_URL}/auth/register`, {
                     method: "POST",
                     headers: { 'content-type': 'application/json' },
                     body: JSON.stringify({
@@ -28,7 +30,7 @@ function Register(props) {
             props.loadUser(user);
 
             if (user.user_id) {
-                const authUrlResponse = await fetch('http://localhost:4000/auth/dbx-auth', {
+                const authUrlResponse = await fetch(`${BACKEND_URL}/auth/dbx-auth`, {
                     method: 'POST',
                     headers: { 'content-type': 'application/json' },
                     credentials: 'include'
