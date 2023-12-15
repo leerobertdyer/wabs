@@ -3,7 +3,7 @@ import { LiaTrashAlt } from "react-icons/lia";
 import Audio from "../Audio/Audio";
 import './Feed.css'
 
-function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars, stars}) {
+function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, updateStars, stars}) {
     const [sortBy, setSortBy] = useState('Latest')
     const page = window.location.href
     const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL
@@ -21,9 +21,11 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars,
     }, [user])
 
     useEffect(() => {
-        page === `${FRONTEND_URL}/`
-        ? sortFeed(sortBy, feed, 'home')
-        : sortFeed(sortBy, feed, 'collab')
+        if (page === `${FRONTEND_URL}/`){
+            sortFeed(sortBy, feed, 'home')
+        } else if (page === `${FRONTEND_URL}/collab`){
+             sortFeed(sortBy, collabFeed, 'collab')
+        }
       }, [stars])
 
     const starHollow = '../../../Assets/star.png'

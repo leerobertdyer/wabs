@@ -6,7 +6,6 @@ function Login(props) {
 const [loginEmail, setLoginEmail] = useState('')
 const [loginPassword, setLoginPassword] = useState('')
 
-
  const navigate = useNavigate();
 
  const onEmailChange = (event) => {

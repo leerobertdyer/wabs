@@ -3,7 +3,7 @@ import './Profile.css'
 import { Link } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed';
 
-function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, changeUserCollab, loadSongs, loadFeed, sortFeed, changeUserStatus }) {
+function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
     const [checked, setChecked] = useState(user.collab === "true")
 
@@ -19,7 +19,7 @@ function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, chan
         setChecked(data.collab)
     }
 
-    const userSongs = feed
+    const userSongs = [...feed]
         .filter((post) => post.user_id === user.user_id && post.type === "song")
         .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
 
@@ -44,7 +44,7 @@ function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, chan
                 if (response.ok) {
                     const data = await response.json()
                     handleSetProfilePhoto(data.newPhoto)
-                    loadSongs()
+                    loadFeed()
                     // console.log('photo saved in dbx: ', data.newPhoto);
                 }
                 else {
