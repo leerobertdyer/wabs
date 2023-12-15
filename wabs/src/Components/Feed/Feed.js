@@ -7,6 +7,7 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars,
     const [sortBy, setSortBy] = useState('Latest')
     const page = window.location.href
 
+
     useEffect(() => {
         setSortBy('Latest')
         handleSort('Latest')
@@ -72,7 +73,6 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars,
         lyrics: 'lyricFeedCard',
         default: 'gray'
     };
-    console.log('stars: ', stars);
 
     return (
         <>

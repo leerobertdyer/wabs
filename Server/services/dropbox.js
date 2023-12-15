@@ -1,16 +1,9 @@
 import { Dropbox, DropboxAuth } from "dropbox";
 import multer from "multer";
-import path from 'path'
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv'
 import databaseConfig from '../database/db.js'
 const { db } = databaseConfig
 import 'isomorphic-fetch';
 import axios from "axios";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });

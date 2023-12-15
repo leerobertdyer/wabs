@@ -5,7 +5,10 @@ wabs/.pnp.js
 wabs/coverage
 wabs/build
 wabs/npm-debug.log*
+wabs/.env
 
 server/node_modules/
 server/npm-debug.log
+server/.env
+
 /.env

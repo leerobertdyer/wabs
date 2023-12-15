@@ -7,7 +7,7 @@ import dbConfig from './database/db.js'
 import cookieParser from 'cookie-parser';
 import feedRoutes from './routes/feedRoutes.js';
 
-const { db} = dbConfig
+const { db } = dbConfig
 const server = express();
 const port = 4000;
 

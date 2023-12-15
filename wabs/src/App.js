@@ -9,6 +9,7 @@ import Profile from './Views/Profile/Profile';
 import Feed from './Components/Feed/Feed';
 import Submit from './Views/Submit/Submit';
 
+
 function App() {
   const [user, setUser] = useState({
     user_id: '',
@@ -36,8 +37,7 @@ function App() {
         const data = await response.json()
         const currentUser = data.user
         loadUser(currentUser)
-        console.log('client side cookie: ', document.cookie)
-        console.log(data)
+        // console.log(data)
       }
       catch (error) {
         console.error('Error checking authentication:', error);
@@ -48,6 +48,9 @@ function App() {
     loadFeed();
 
   }, []);
+
+  const API_URL = process.env.REACT_APP_API_ENDPOINT
+  console.log(API_URL);
 
   const loadFeed = async () => {
     const resp = await fetch('http://localhost:4000/feed')
@@ -76,7 +79,7 @@ function App() {
     } else if (type === 'collab') {
       setCollabFeed(nextFeed)
     }
-    console.log('sorted by ', method, ' on ', type)
+    // console.log('sorted by ', method, ' on ', type)
   }
 
   const getStars = async (id) => {

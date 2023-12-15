@@ -1,15 +1,9 @@
 import knex from "knex";
 import pg from 'pg'
-import path from 'path'
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv'
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+import { ELEPHANTSQL_URL } from "../config.js";
 
 const client = new pg.Client({
-    connectionString: process.env.ELEPHANTSQL_URL,
+    connectionString: ELEPHANTSQL_URL,
     ssl: false // CHANGE THIS WHEN DEPLOYING!!!
   });
   
@@ -23,7 +17,7 @@ const client = new pg.Client({
 
 const db = knex({
     client: 'pg',
-    connection: process.env.ELEPHANTSQL_URL,
+    connection: ELEPHANTSQL_URL,
     pool: {
       min: 2, 
       max: 5, 
