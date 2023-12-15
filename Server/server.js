@@ -7,7 +7,7 @@ import dbConfig from './database/db.js'
 import cookieParser from 'cookie-parser';
 import feedRoutes from './routes/feedRoutes.js';
 
-const { db } = dbConfig
+const { db} = dbConfig
 const server = express();
 const port = 4000;
 
@@ -25,6 +25,7 @@ server.use(cors(corsOptions));
 server.use(cookieParser())
 
             //////ROUTES//////
+// home feed should display a variety of things: newest song submissions, collabs, and status updates
 server.use('/profile', profileRoutes)
 server.use('/', songRoutes)
 server.use('/auth', authRoutes)

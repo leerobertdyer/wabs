@@ -19,7 +19,7 @@ function Feed({ feed, user, loadFeed, sortFeed, showSort, getStars, updateStars,
     }, [user])
 
     useEffect(() => {
-        page === "home"
+        page === "http://localhost:3000/"
         ? sortFeed(sortBy, feed, 'home')
         : sortFeed(sortBy, feed, 'collab')
       }, [stars])

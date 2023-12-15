@@ -25,8 +25,7 @@ function App() {
   const [feed, setFeed] = useState([])
   const [collabFeed, setCollabFeed] = useState([])
   const [stars, setStars] = useState([])
-  const apiEndpoint = process.env.REACT_APP_SERVER_URL
-  console.log(apiEndpoint)
+  
   useEffect(() => {
 
     const checkAuthentication = async () => {
