@@ -15,6 +15,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
 const APP_KEY = process.env.DROPBOX_APP_KEY
 const APP_SECRET = process.env.DROPBOX_APP_SECRET
 const REDIRECT_URI = 'http://localhost:4000/auth/dbx-auth-callback'
