@@ -81,7 +81,7 @@
 .topPostDiv {
     display: flex;
     justify-content: space-between;
-    align-items: start;
+    align-items: flex-start;
     width: 100%;
     border-bottom: solid gold 2px;
     background-color: rgb(24, 24, 24);
@@ -100,7 +100,7 @@
     background-color: black;
     width: 100%;
     text-align: center;
-    align-self: end;
+    align-self: flex-end;
 }
 .usernameUnderImg:hover {
     color: lightpink;
@@ -112,7 +112,7 @@
     color: antiquewhite;
     background-color: black;
     padding: 20px;
-    align-self: start;
+    align-self: flex-start;
     margin: 0;
     width: fit-content;
     height: fit-content;
@@ -136,7 +136,7 @@
     height: 100px;
     width: 100px;
     background-color: black;
-    align-self: start;
+    align-self: flex-start;
     border-bottom-left-radius: 4px;
 }
 
@@ -280,7 +280,7 @@
 }
 
 .trash {
-    align-self: end;
+    align-self: flex-end;
     margin-right: 5px;
     margin-bottom: 5px;
     background-color: antiquewhite;
@@ -310,7 +310,7 @@
 .thumbnail {
     height: 100px;
     width: 100px;
-    align-self: start;
+    align-self: flex-start;
 }
 .collabButton {
     padding: 10px;
