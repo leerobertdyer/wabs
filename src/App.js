@@ -8,6 +8,8 @@ import Register from './Views/Register/Register';
 import Profile from './Views/Profile/Profile';
 import Feed from './Components/Feed/Feed';
 import Submit from './Views/Submit/Submit';
+import Collaborate from './Views/Collaborate/Collaborate';
+import Editor from './Views/Editor/Editor';
 
 
 function App() {
@@ -26,6 +28,7 @@ function App() {
   const [feed, setFeed] = useState([])
   const [collabFeed, setCollabFeed] = useState([])
   const [stars, setStars] = useState([])
+  const [collabUsers, setCollabUsers] = useState([])
 
   useEffect(() => {
 
@@ -46,10 +49,17 @@ function App() {
 
     checkAuthentication();
     loadFeed();
-
+    loadCollabUsers();
+// eslint-disable-next-line
   }, []);
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+
+  const loadCollabUsers = async () => {
+    const resp = await fetch(`${BACKEND_URL}/collab/get-all`)
+    const data = await resp.json();
+    setCollabUsers(data.collabUsers)
+  }
 
   const loadFeed = async () => {
     const resp = await fetch(`${BACKEND_URL}/feed`)
@@ -175,9 +185,10 @@ const updateStars = async (user_id, post_id, currentSort, page) => {
               <Route path='/' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
-              <Route path="/profile" element={<Profile user={user} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/profile" element={<Profile user={user} loadCollabUsers={loadCollabUsers} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} />} />
-              <Route path="/collaborate" element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} collabFeed={collabFeed} feed={collabFeed} user={user} sortFeed={sortFeed} />} />
+              <Route path="/collaborate" element={<Collaborate collabUsers={collabUsers} feed={feed} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
+              <Route path="/collaborate/editor" element={<Editor />}/>
             </Routes>
 
             <Footer />

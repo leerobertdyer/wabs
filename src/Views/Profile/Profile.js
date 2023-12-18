@@ -3,18 +3,19 @@ import './Profile.css'
 import { Link } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed';
 
-function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
+function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
     const [checked, setChecked] = useState(user.collab === "true")
 
     useEffect(() => {
         getCollab();
+        // eslint-disable-next-line
     }, [])
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
     
     const getCollab = async() => {
-        const resp = await fetch(`${BACKEND_URL}/profile/collab-status`, {credentials: 'include'})
+        const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {credentials: 'include'})
         const data = await resp.json();
         setChecked(data.collab)
     }
@@ -92,7 +93,7 @@ function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, chan
     }
 
     const handleCollabSwitch = async () => {
-        const resp = await fetch(`${BACKEND_URL}/profile/update-collab`, {
+        const resp = await fetch(`${BACKEND_URL}/collab/update-collab`, {
             headers: { 'content-type': 'application/json' },
             method: 'PUT',
             body: JSON.stringify({
@@ -104,6 +105,7 @@ function Profile({ feed, user, stars, getStars, updateStars, changeUserPic, chan
             const data = await resp.json();
             await changeUserCollab(data.nextCollab)
             setChecked(!checked)
+            loadCollabUsers();
         }
         
     }

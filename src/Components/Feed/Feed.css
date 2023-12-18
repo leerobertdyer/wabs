@@ -1,11 +1,14 @@
 .outerFeedDiv {
-    width: 90vw;
+    width: 90%;
     height: fit-content;
     background-color: gray;
     margin: 20px auto 20px auto;
     border: solid goldenrod 1px;
     border-radius: 4px;
     font-family: 'Amatic SC', sans-serif;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
 .titleBox {

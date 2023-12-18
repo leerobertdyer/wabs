@@ -13,16 +13,17 @@ function Register(props) {
         event.preventDefault()
         try {
             const registerResponse = await
-                fetch(`${BACKEND_URL}/auth/register`, {
-                    method: "POST",
-                    headers: { 'content-type': 'application/json' },
-                    body: JSON.stringify({
-                        "username": username.toLowerCase(),
-                        "email": email.toLowerCase(),
-                        "password": password
-                    }),
+            fetch(`${BACKEND_URL}/auth/register`, {
+                method: "POST",
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                    "username": username.toLowerCase(),
+                    "email": email.toLowerCase(),
+                    "password": password
+                }),
                     credentials: 'include'
                 })
+                console.log('object');
 
             const user = await registerResponse.json()
             console.log('Registered user: ', user)

@@ -2,30 +2,35 @@ import { useState, useEffect } from "react";
 import { LiaTrashAlt } from "react-icons/lia";
 import Audio from "../Audio/Audio";
 import './Feed.css'
+import { useNavigate } from "react-router-dom";
 
 function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, updateStars, stars}) {
     const [sortBy, setSortBy] = useState('Latest')
     const page = window.location.href
     const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+    const navigate = useNavigate();
     
     useEffect(() => {
         setSortBy('Latest')
         handleSort('Latest')
+        // eslint-disable-next-line
     }, [page])
 
     useEffect(() => {
         if (user.user_id) {
             getStars(user.user_id);
         }
+        // eslint-disable-next-line
     }, [user])
 
     useEffect(() => {
         if (page === `${FRONTEND_URL}/`){
             sortFeed(sortBy, feed, 'home')
-        } else if (page === `${FRONTEND_URL}/collab`){
+        } else if (page === `${FRONTEND_URL}/collaborate`){
              sortFeed(sortBy, collabFeed, 'collab')
         }
+        // eslint-disable-next-line
       }, [stars])
 
     const starHollow = '../../../Assets/star.png'
@@ -66,6 +71,10 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
         const data = await resp.json();
         console.log(data.message);
         loadFeed();
+    }
+
+    const handleCollabClick = (post) => {
+                navigate(`/collaborate/editor`, {state: { post }})
     }
 
     const cardColors = {
@@ -139,7 +148,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                 
                                 {post.type === "status" && <h3 className='feedStatus'>{`"${post.feed_status}"`}</h3>}
                                 {(post.type === "music" || post.type === "lyrics") && post.user_id !== user.user_id
-                                && <><button className="collabButton">{post.type === "lyrics" ? "Got Music?" : "Got Lyrics?"}</button></>
+                                && <button className="collabButton" onClick={() => (handleCollabClick(post))}>Collaborate!</button>
                             }
                                 {user.user_id === post.user_id && <div className="trash">
                                     <LiaTrashAlt size={40}

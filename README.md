@@ -28,7 +28,7 @@ Still very much in development
 -   Win “prizes” or badges each month based on point system 
 -   Scoreboard page
 -   Add/update bio 
-
+-    Add scroll effect on hover to show more lyrics on lyric feed....
 
 
 
