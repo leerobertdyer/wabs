@@ -187,8 +187,8 @@ const updateStars = async (user_id, post_id, currentSort, page) => {
               <Route path="/register" element={<Register loadUser={loadUser} />} />
               <Route path="/profile" element={<Profile user={user} loadCollabUsers={loadCollabUsers} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} />} />
-              <Route path="/collaborate" element={<Collaborate collabUsers={collabUsers} feed={feed} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
-              <Route path="/collaborate/editor" element={<Editor />}/>
+              <Route path="/collaborate" element={<Collaborate collabUsers={collabUsers} loadFeed={loadFeed} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
+              <Route path="/collaborate/editor" element={<Editor user={user}/>}/>
             </Routes>
 
             <Footer />

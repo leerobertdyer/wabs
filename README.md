@@ -8,16 +8,15 @@ Still very much in development
         to solve it I'll need to implement a redirect to auth when a user without a token tries to submit
 
 # To Do:
-        -Collab button will open a unique page where you can:
-                -leave notes to each other
-                -provide music for the lyricist to check off on
-                -provide lyrics for the musician to check off on
-                -There will be a finalize button 
+        -Editor Page:
+                -instead of the icon I could use an onClick to edit each item
+                -Add input to leave notes to each other
+                -Add finalize button 
                     -once both users click finalize the new song will be posted as a SPECIAL collab bonus pts
 
 -   I need to start implementing a points system, and pages to display the current monthly winner...
 -   Badges for collaboraters/monthly winners/most active
--   messaging on posts
+-   comments on posts
 -   DM messaging capability
 -   notifications via email and/or text
 -   noticications number and dropdown by username above login bar
@@ -27,8 +26,8 @@ Still very much in development
 -   follow other users 
 -   Win “prizes” or badges each month based on point system 
 -   Scoreboard page
--   Add/update bio 
--    Add scroll effect on hover to show more lyrics on lyric feed....
+-   Add/update bio
+-   Add scroll effect on hover to show more lyrics on lyric feed....
 
 
 

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Feed from '../../Components/Feed/Feed'
 import { MdMoreHoriz } from "react-icons/md";
 import './Collaborate.css'
-const Collaborate = ({ feed, stars, collabUsers, getStars, updateStars, collabFeed, user, sortFeed }) => {
+const Collaborate = ({ stars, collabUsers, getStars, updateStars, collabFeed, user, sortFeed, loadFeed }) => {
 const [showAll, setShowAll] = useState(false);
 const displayCollaborators = showAll
     ? collabUsers
