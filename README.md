@@ -1,7 +1,7 @@
 # WriteABadSong
 A social Media website based around songwriting that encourages quantity over quality, and promotes collaboration.
 
-Still very much in development 
+Still very much in progress 
 
 # BUGS:
 -   If you register, but decline to authorize dbx, then there is nothing in place to stop you from submitting, it will end up with an error
