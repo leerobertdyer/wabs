@@ -69,6 +69,10 @@ function App() {
     setCollabFeed(data.filteredFeed)
   }
 
+  const handleSetCollabFeed = (newFeed) => {
+    setCollabFeed(prevFeed => [...newFeed])
+  }
+
   const sortFeed = (method, currentFeed, type) => {
     let nextFeed
     if (method === "Oldest") {
@@ -138,6 +142,11 @@ const updateStars = async (user_id, post_id, currentSort, page) => {
     setUser(nextUser);
   }
 
+  const setCollabByUser = (username) => {
+    const nextFeed = collabFeed.filter(post => post.username === username)
+    setCollabFeed(nextFeed)
+  }
+
   const loadUser = (data) => {
     setUser({
       user_id: data.user_id,
@@ -188,7 +197,7 @@ const updateStars = async (user_id, post_id, currentSort, page) => {
               <Route path="/register" element={<Register loadUser={loadUser} />} />
               <Route path="/profile" element={<Profile user={user} loadCollabUsers={loadCollabUsers} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} />} />
-              <Route path="/collaborate" element={<Collaborate collabUsers={collabUsers} loadFeed={loadFeed} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
+              <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
               <Route path="/collaborate/editor" element={<Editor user={user}/>}/>
             </Routes>
 

@@ -1,34 +1,57 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { HashLink } from 'react-router-hash-link';
 import Feed from '../../Components/Feed/Feed'
 import { MdMoreHoriz } from "react-icons/md";
 import './Collaborate.css'
-const Collaborate = ({ stars, collabUsers, getStars, updateStars, collabFeed, user, sortFeed, loadFeed }) => {
+const Collaborate = ({ stars, collabUsers, handleSetCollabFeed, setCollabByUser, getStars, updateStars, collabFeed, user, sortFeed }) => {
 const [showAll, setShowAll] = useState(false);
+const [oldCollab, setOldCollab] = useState([])
+const [showClearFilter, setShowClearFilter] = useState(false)
+const [currentSelectedUser, setCurrentSelectedUser] = useState(null)
+
 const displayCollaborators = showAll
     ? collabUsers
     : collabUsers.slice(0, 3)
 
+const handleSetCollabByUser = (username) => {
+    setOldCollab(prevFeed => [...collabFeed])
+    setCurrentSelectedUser(username)
+    setShowClearFilter(true)
+    setCollabByUser(username)
+}
+
+const handleClear = () => {
+    setCurrentSelectedUser(null)
+    setShowClearFilter(false)
+    handleSetCollabFeed(oldCollab)
+}
 
   return (
     <>
     <div className='mainCollabDiv'>
         <div className='listOfCollaborators'>
             <h1 className='collaboratorsTitle'>Collab with:</h1>
-            {collabUsers.length > 0
-            ?(<>
+            {showClearFilter
+            && <>
+            <p className='collabUsername'>{currentSelectedUser}</p>
+            <p className="clearCollab" onClick={() => handleClear()}>Clear</p>
+            </>}
+            {collabUsers.length > 0 && !currentSelectedUser
+            && (<>
             {displayCollaborators.map((user, key) => {
-                return <Link to="/profile" key={key} className='collabUsername'>{user.username}</Link>
+                return <HashLink smooth to="/collaborate#collabFeedMarker"  key={key} className='collabUsername'onClick={() => handleSetCollabByUser(user.username)}>{user.username}</HashLink>
             })}
+            {collabUsers.length > 3 &&
             <div className="clickDotsDiv" onClick={() => setShowAll(!showAll)}>
             <MdMoreHoriz size={30} className='clickDots'/>
             </div>
-            </>)
-            :<p>No users currently collaborating... :(</p>
             }
+            </>)}
+            {collabUsers.length === 0 && <p>No users currently collaborating... :(</p>}
+            
         </div>
-        <div className='collabFeedDiv'>
-    <Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} collabFeed={collabFeed} feed={collabFeed} user={user} sortFeed={sortFeed} />
+        <div className='collabFeedDiv' id="collabFeedMarker">
+    <Feed  getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} collabFeed={collabFeed} feed={collabFeed} user={user} sortFeed={sortFeed} />
         </div>
     </div>
     </>

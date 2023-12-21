@@ -63,7 +63,19 @@
 }
 
 .collabFeedDiv {
-    width: 70%;
+    width: 90%;
     height: fit-content;
     align-self: center;
+}
+
+.clearCollab {
+    padding: 10px;
+    border-radius: 12px;
+    background-color: lightpink;
+    color: black;
+    font-weight: 800;
+    border: black solid 1px;
+}
+.clearCollab:hover {
+    cursor: pointer;
 }
