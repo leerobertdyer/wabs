@@ -46,6 +46,10 @@
     color: lightskyblue;
 }
 
+.picInputLabel {
+    font-size: 22px;
+}
+
 .switchAndStatusDiv {
     width: 100%;
     display: flex;
@@ -93,7 +97,7 @@
     text-align: center;
     background-color: black;
     padding: 20px;
-    margin: 0;
+    margin: 65px 0 130px 0;
     border-radius: 5px;
 }
 
@@ -108,12 +112,10 @@
     justify-content: center;
 }
 
-
-
 #loginFromProfile {
     background-color: black;
     color: antiquewhite;
-    border: solid antiquewhite 5px;
+    border: solid goldenrod 3px;
     border-radius: 15px;
     padding: 40px;
     display: flex;
@@ -126,7 +128,7 @@
 
 .labelInline {
     display: inline;
-    font-size: 12px;
+    font-size: 18px;
 }
 
 .formRow {
@@ -160,9 +162,6 @@
     display: block;
 }
 
-
-
-
 .switch {
     position: relative;
     display: inline-block;
@@ -170,14 +169,12 @@
     height: 34px;
 }
 
-/* Hide default HTML checkbox */
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-/* The slider */
 .slider {
     position: absolute;
     cursor: pointer;

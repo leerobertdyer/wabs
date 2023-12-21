@@ -1,4 +1,3 @@
-import { CiEdit } from "react-icons/ci";
 import './Editor.css'
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -13,15 +12,15 @@ const Editor = ({ user }) => {
 
   const handleTitleSubmit = (event) => {
     event.preventDefault();
-    console.log(title);
+    // console.log(title);
     //////    Store in new editor db table     ///////////
     setIsEditingTitle(false);
     setHasCollab(true)
   }
-  
+
   const handleLyricSubmit = (event) => {
     event.preventDefault();
-    console.log(lyrics);
+    // console.log(lyrics);
     //////    Store in new editor db table     ///////////
     setIsEditingLyrics(false);
     setHasCollab(true)
@@ -30,43 +29,44 @@ const Editor = ({ user }) => {
   return (
     <>
       <div className='mainEditorDiv'>
+        {isEditingTitle
+          ? <>
+            <form className="editDiv">
+              <div className='innerEditDiv'>
+                <input type='text' defaultValue={title} className="editDivInput" onChange={(event) => setTitle(event.target.value)} />
+                <input type='submit' onClick={(event) => handleTitleSubmit(event)} className="editSubmitBtn" />
+              </div>
+            </form>
+          </>
 
-        <div className="editDiv">
-          {isEditingTitle
-            ? <>
-              <form>
-                <input type='text' defaultValue={title} className="editDiv" onChange={(event) => setTitle(event.target.value)} />
-                <input type='submit' onClick={(event) => handleTitleSubmit(event)} className="submitBtn" />
-              </form>
-            </>
-
-            : <>
+          : <>
+            <div className="editDiv" onClick={() => setIsEditingTitle(true)}>
               <span className="titleAndUser">
                 {hasCollab
-                ? <>
-                <h1>"{title}"</h1><h2>by {post.username} & {user.userName}</h2>
-                </>
-                :<>
-                <h1>"{title}"</h1><h2>by {post.username}</h2>
-                </>
+                  ? <>
+                    <h1>"{title}"</h1><h2>by {post.username} & {user.userName}</h2>
+                  </>
+                  : <>
+                    <h1>"{title}"</h1><h2>by {post.username}</h2>
+                  </>
                 }
               </span>
-              <CiEdit className="editIcon" size={50} onClick={() => setIsEditingTitle(true)} />
-            </>
-          }
-        </div>
+            </div>
+          </>
+        }
 
         {post.type === "lyrics" &&
           isEditingLyrics
-          ? <form>
-              <input type='text' defaultValue={lyrics} className="editingLyrics" onChange={(event) => setLyrics(event.target.value)} />
-              <input type='submit' onClick={(event) => handleLyricSubmit(event)} className="submitBtn" />
+          ? <form className='editDiv'>
+            <div className='innerEditDiv'>
+              <textarea defaultValue={lyrics} className="editDivInput editDivTextArea" onChange={(event) => setLyrics(event.target.value)} />
+              <input type='submit' onClick={(event) => handleLyricSubmit(event)} className="editSubmitBtn" />
+            </div>
           </form>
-          : <div className="editDiv lyricsDivInEditor">
+          : <div className="editDiv lyricsDivInEditor" onClick={() => setIsEditingLyrics(true)}>
             <p className="lyricsInEditor">
               {post.lyrics}
             </p>
-            <CiEdit className="editIcon" size={50} onClick={() => setIsEditingLyrics(true)} />
           </div>
         }
 

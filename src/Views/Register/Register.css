@@ -1,59 +1,11 @@
 
 
 #Register {
-    background-color:rgb(24, 24, 24);
     width: 100vw;
-    height: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 50px 0 60px 0;
+    margin-top: 28px;
 }
 
-.formInput {
-    border-radius: 6px;
-    padding: 8px;
-    color: rgb(40, 2, 35);
-    background-color: antiquewhite;
-    margin-bottom: 3px;
-    display: inline;
-    width: 35vw;
-}
-
-label {
-    display: block;
-    margin-bottom: 3px;
-    color: white;
-}
-
-legend {
-    color: white;
-    margin: 0;
-    font-size: 25px;
-    padding-top: 5px;
-    text-align: center;
-}
-
-.formSubmitButton {
-    color: rgb(24, 24, 24);
-    background-color: white;
-    border: solid rgb(24, 24, 24) 2px;
-    border-radius: 12px;
-    width: 60%;
-    height: 40px;
-}
-
-.formSubmitButton:hover {
-    color: goldenrod;
-    background-color: rgb(24, 24, 24);
-    border: solid goldenrod 2px;
-}
-
-#nav a.active {
-    color: antiquewhite;
-    border: antiquewhite solid 1px;
-    border-radius: 4px;
-    background-color: purple;
-    padding: 10px;
-  }

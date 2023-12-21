@@ -1,25 +1,9 @@
-
-
 #login {
     width: 100vw;
-    height: 350px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-.formContainer {
-    width: 35%;
-    border: solid goldenrod 3px;
-    border-radius: 14px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: saddlebrown;
-    gap: 5px;
 }
 
 fieldset {
@@ -31,12 +15,8 @@ fieldset {
     justify-content: center;
 }
 
-
-.formSubmitButton:hover {
-    transform: scale(110%);
-    background-color: rgba(50, 203, 162, 0.766);
-    border: rgb(40, 2, 35) solid 2px;
-    cursor: pointer;
+.registerLink {
+    color: goldenrod;
+    font-size: 18px;
 }
-
 

@@ -6,6 +6,7 @@
     align-items: center;
     gap: 15px;
     margin-top: 20px;
+    margin-bottom: 200px;
     font-family: 'Amatic SC', sans-serif;
     font-weight: 800;
 }
@@ -19,6 +20,7 @@
 
 .editDiv {
     width: 70%;
+    height: fit-content;
     display: flex;
     align-items: center;
     align-self: center;
@@ -35,6 +37,30 @@
     padding-left: 100px;
 }
 
+.editDivInput {
+    border: none;
+    outline: none;
+    font-size: 22px;
+    width: 80%;
+    background-color: pink;
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    display: block;
+}
+
+.innerEditDiv {
+    width: 100%;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.editDivTextArea {
+    height: 300px;
+}
+
 .titleAndUser {
     display: flex;
     flex-direction: column;
@@ -43,16 +69,8 @@
     width: 90%;
 }
 
-.titleAndUser > * {
+.titleAndUser>* {
     margin: 0;
-}
-
-.lyricsDivInEditor {
-    background-color: #fff;
-    background-image:
-        linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
-        linear-gradient(#eee .1em, transparent .1em);
-    background-size: 100% 1em;
 }
 
 .lyricsInEditor {
@@ -92,4 +110,19 @@
     width: 75vw;
     padding: 20px;
     border: dashed black 1px;
+}
+
+
+.editSubmitBtn {
+    border: 1 solid black;
+    color: white;
+    background-color: rgb(24, 24, 24);
+    padding: 10px;
+    border-radius: 5px;
+    width: 100px;
+}
+.editSubmitBtn:hover {
+    color: black;
+    background-color: goldenrod;
+    border: solid black 1px;
 }

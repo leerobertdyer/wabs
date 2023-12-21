@@ -6,7 +6,7 @@ import Feed from '../../Components/Feed/Feed';
 function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
     const [checked, setChecked] = useState(user.collab === "true")
-    
+
     useEffect(() => {
         getCollab();
         // eslint-disable-next-line
@@ -60,10 +60,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
 
     let changedStatus = ''
     const showHiddenStatus = () => {
-        if (!showStatus) {
-            setShowStatus(true);
-        }
-        else { setShowStatus(false) }
+        setShowStatus(!showStatus)
     }
 
     const handleStatusChange = async (event) => {
@@ -125,7 +122,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                     </div>
                                     <form encType="multipart/form-data">
                                         <label className="picInputLabel clickMe"
-                                            htmlFor="filePicker">+pic</label>
+                                            htmlFor="filePicker">+Pic</label>
                                         <input
                                             type="file"
                                             id="filePicker"
@@ -151,12 +148,12 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                     </div>
 
                                     <div id="statusAndInput">
-                                        <h3 className="status">"{user.status}"</h3>
+                                        <h3 className="status" onClick={showHiddenStatus}>"{user.status}"</h3>
                                         <form className='formRow'>
-                                            <label htmlFor="statusChanger"
+                                            {!showStatus && <label htmlFor="statusChanger"
                                                 className='labelInline clickMe'
-                                                onClick={showHiddenStatus}>+change status</label>
-                                            {showStatus ? (
+                                                onClick={showHiddenStatus}>+change status</label>}
+                                            {showStatus && <>
                                                 <div className='formRow'>
                                                     <input type="text"
                                                         id="statusChanger"
@@ -167,29 +164,33 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                                         className='clickMe smallFormButton'
                                                         id="profileSubmitButton"
                                                         onClick={handleStatusChange} />
-                                                </div>) : null}
+                                                </div></>}
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className='profileBottomDiv'>
+
                             {
                                 userSongs.length === 0
                                     ? <>
-                                    <h2 className='noProfileSongs'>You have no songs! <Link className='profileLink' to="/submit">Submit one here</Link></h2>
+                                        <div></div>
+                                        <h2 className='noProfileSongs'>You have no songs! <Link className='profileLink' to="/submit">Submit one here</Link></h2>
+                                        <div></div>
                                     </>
                                     : <>
                                         <div className='yourSongs'>
+
                                             <h3 className='profileFeedTitles'>Your Songs:</h3>
                                             <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
                                         </div>
                                         <div className='yourCollabs'>
                                             <h4 className='profileFeedTitles'>Collabs In Progress:</h4>
                                             <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
-                                            </div>
+                                        </div>
                                     </>
-                                   
+
                             }
                         </div>
                     </div>

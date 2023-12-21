@@ -68,7 +68,7 @@ const [loginPassword, setLoginPassword] = useState('')
               <button className="formSubmitButton" 
               type='submit' id="submit" 
               onClick={onSubmitSignin}>Submit</button>
-              <Link to="/register">Register</Link>
+              <Link to="/register" className='registerLink'>Register</Link>
             </fieldset>
           </form>
         </div>

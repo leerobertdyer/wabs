@@ -2,15 +2,15 @@
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 2.5rem;    
+    height: 130px;    
+    background-color: black;
 }
 
 
 #Footer {
     color: goldenrod;
-    background-color: black;
     border-top: white 3px solid;
-    height: 15vh;
+    height: 100%;
     width: 100vw;
     display: flex;
     flex-flow: row wrap;

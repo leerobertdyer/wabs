@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Submit.css'
+import { Editor as TinyEdit } from '@tinymce/tinymce-react';
+const tinyKey = process.env.REACT_APP_TINY_EDITOR_KEY
 
 function Submit(props) {
     const [title, setTitle] = useState('')
     const [lyrics, setLyrics] = useState('')
+    // const [richLyrics, setRichLyrics] = useState('')
     const [song, setSong] = useState(null)
     const [showPopup, setShowPopup] = useState(true)
     const [showForm, setShowForm] = useState(false);
@@ -13,6 +16,7 @@ function Submit(props) {
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
     const navigate = useNavigate();
+    const editorWidth = '70vw'
 
     const handleSongSubmit = async (event) => {
         event.preventDefault()
@@ -84,6 +88,12 @@ function Submit(props) {
         setShowForm(true)
     }
 
+    const handleSetLyrics = (content, editor) => {
+        const text = editor.getContent({format: 'text'})
+        // setRichLyrics(content)
+        setLyrics(text)
+    }
+
     const { isLoggedIn } = props.user;
 
     return (
@@ -94,36 +104,36 @@ function Submit(props) {
 
                     {showPopup && (
                         <>
-                                <form className='firstPopup'>
-                                    <h1 className='popupTitle'>What are we submitting today?</h1>
-                                    
-                                    <label htmlFor="fullSong" className='radioLabel'>A Full Song</label>
-                                    <input type="radio"
-                                        className='radioBtn'
-                                        name='submitType'
-                                        value="fullSong"
-                                        id='fullSong'
-                                        onClick={showFormOnClick}
-                                    ></input>
-                                    
-                                    <label htmlFor="justLyrics" className='radioLabel'>Just Lyrics</label>
-                                    <input type="radio"
-                                        className='radioBtn'
-                                        name='submitType'
-                                        value="justLyrics"
-                                        id='justLyrics'
-                                        onClick={showFormOnClick}
-                                    ></input>
-                                    
-                                    <label htmlFor="justMusic" className='radioLabel'>Just Music</label>
-                                    <input type="radio"
-                                        className='radioBtn'
-                                        name='submitType'
-                                        value="justMusic"
-                                        id='justMusic'
-                                        onClick={showFormOnClick}
-                                    ></input> 
-                                </form>
+                            <form className='firstPopup'>
+                                <h1 className='popupTitle'>What are we submitting today?</h1>
+
+                                <label htmlFor="fullSong" className='radioLabel'>A Full Song</label>
+                                <input type="radio"
+                                    className='radioBtn'
+                                    name='submitType'
+                                    value="fullSong"
+                                    id='fullSong'
+                                    onClick={showFormOnClick}
+                                ></input>
+
+                                <label htmlFor="justLyrics" className='radioLabel'>Just Lyrics</label>
+                                <input type="radio"
+                                    className='radioBtn'
+                                    name='submitType'
+                                    value="justLyrics"
+                                    id='justLyrics'
+                                    onClick={showFormOnClick}
+                                ></input>
+
+                                <label htmlFor="justMusic" className='radioLabel'>Just Music</label>
+                                <input type="radio"
+                                    className='radioBtn'
+                                    name='submitType'
+                                    value="justMusic"
+                                    id='justMusic'
+                                    onClick={showFormOnClick}
+                                ></input>
+                            </form>
                         </>)}
 
                     {showForm && (
@@ -148,15 +158,21 @@ function Submit(props) {
                                 </div>
 
                                 {showLyrics && (
-                                    <div className='formBlock'>
-                                        <label htmlFor="lyrics"
-                                            className='clickMe black'>Lyrics</label>
-                                        <textarea name="lyrics" id="lyrics"
-                                            cols="50" rows="10"
-                                            placeholder='I wrote me a song.... it had some words.... and now it exits...'
-                                            required
-                                            onChange={(event) => { setLyrics(event.target.value) }} />
-                                    </div>
+                                    <><div className='formBlock'>
+                                        <TinyEdit
+                                            apiKey={tinyKey}
+                                            init={{
+                                                height: 400,
+                                                width: editorWidth,
+                                                menubar: false,
+                                                toolbar:
+                                                    'formatselect | ' +
+                                                    'bold italic | alignleft aligncenter ' +
+                                                    'alignright alignjustify | bullist numlist | '
+                                            }}
+                                            onEditorChange={(content, editor) => handleSetLyrics(content, editor)} />
+                                        </div>
+                                    </>
                                 )}
 
                                 {showMusic && (
