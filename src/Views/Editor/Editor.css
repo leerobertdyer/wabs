@@ -11,12 +11,20 @@
     font-weight: 800;
 }
 
-.editIcon:hover {
-    cursor: pointer;
-    transition: .6s;
-    transform: scale(110%);
-    fill: red;
+.mainPopupDiv {
+position: absolute;
+margin: 25px auto;
+width: 80vw;
+height: 80vw;
+background-color: rgba(253, 216, 6, .8);
 }
+
+.littleX {
+    float: right;
+    font-size: 45px;
+
+}
+
 
 .editDiv {
     width: 70%;
@@ -35,6 +43,9 @@
     border-radius: 12px;
     padding: 20px;
     padding-left: 100px;
+}
+.editDiv:hover {
+    cursor: pointer;
 }
 
 .editDivInput {
@@ -66,7 +77,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 90%;
+    width: 100%;
 }
 
 .titleAndUser>* {
@@ -77,6 +88,8 @@
     word-break: normal;
     font-size: 20px;
     max-width: 80%;
+    text-align: center;
+    margin-left: 70px;
 }
 
 .editorInputButton {
@@ -85,7 +98,8 @@
     background-color: gold;
     color: black;
     border: black solid 1px;
-
+    width: 125px;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .editorInputButton:hover {
@@ -112,7 +126,6 @@
     border: dashed black 1px;
 }
 
-
 .editSubmitBtn {
     border: 1 solid black;
     color: white;
@@ -126,3 +139,13 @@
     background-color: goldenrod;
     border: solid black 1px;
 }
+
+.editorTextArea {
+   background: none;
+    border: none;
+
+}
+.editorTextArea:focus {
+    outline: none;
+}
+

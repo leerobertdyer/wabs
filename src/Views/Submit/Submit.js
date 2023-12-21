@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Submit.css'
-import { Editor as TinyEdit } from '@tinymce/tinymce-react';
-const tinyKey = process.env.REACT_APP_TINY_EDITOR_KEY
 
 function Submit(props) {
     const [title, setTitle] = useState('')
     const [lyrics, setLyrics] = useState('')
-    // const [richLyrics, setRichLyrics] = useState('')
     const [song, setSong] = useState(null)
     const [showPopup, setShowPopup] = useState(true)
     const [showForm, setShowForm] = useState(false);
@@ -16,7 +13,6 @@ function Submit(props) {
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
     const navigate = useNavigate();
-    const editorWidth = '70vw'
 
     const handleSongSubmit = async (event) => {
         event.preventDefault()
@@ -88,12 +84,6 @@ function Submit(props) {
         setShowForm(true)
     }
 
-    const handleSetLyrics = (content, editor) => {
-        const text = editor.getContent({format: 'text'})
-        // setRichLyrics(content)
-        setLyrics(text)
-    }
-
     const { isLoggedIn } = props.user;
 
     return (
@@ -159,18 +149,7 @@ function Submit(props) {
 
                                 {showLyrics && (
                                     <><div className='formBlock'>
-                                        <TinyEdit
-                                            apiKey={tinyKey}
-                                            init={{
-                                                height: 400,
-                                                width: editorWidth,
-                                                menubar: false,
-                                                toolbar:
-                                                    'formatselect | ' +
-                                                    'bold italic | alignleft aligncenter ' +
-                                                    'alignright alignjustify | bullist numlist | '
-                                            }}
-                                            onEditorChange={(content, editor) => handleSetLyrics(content, editor)} />
+                                        <textarea onChange={(event) => setLyrics(event.target.value)} />
                                         </div>
                                     </>
                                 )}

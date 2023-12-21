@@ -5,10 +5,10 @@ import { useState } from "react";
 const Editor = ({ user }) => {
   const { post } = useLocation().state;
   const [isEditingTitle, setIsEditingTitle] = useState(false)
-  const [isEditingLyrics, setIsEditingLyrics] = useState(false)
   const [title, setTitle] = useState(post.title)
   const [lyrics, setLyrics] = useState(post.lyrics)
   const [hasCollab, setHasCollab] = useState(false)
+  const [showPopup, setShowPopup] = useState(true)
 
   const handleTitleSubmit = (event) => {
     event.preventDefault();
@@ -18,17 +18,21 @@ const Editor = ({ user }) => {
     setHasCollab(true)
   }
 
-  const handleLyricSubmit = (event) => {
-    event.preventDefault();
-    // console.log(lyrics);
-    //////    Store in new editor db table     ///////////
-    setIsEditingLyrics(false);
+  const handleLyricChange = (newLyrics) => {
+    setLyrics(newLyrics)
     setHasCollab(true)
   }
 
+  const handleSubmitCollab = () => {
+    console.log(title);
+    console.log(lyrics);
+  }
   return (
     <>
       <div className='mainEditorDiv'>
+        {showPopup && <div className='mainPopupDiv'>
+            <button className='littleX'>X</button>
+          </div>}
         {isEditingTitle
           ? <>
             <form className="editDiv">
@@ -55,27 +59,23 @@ const Editor = ({ user }) => {
           </>
         }
 
-        {post.type === "lyrics" &&
-          isEditingLyrics
-          ? <form className='editDiv'>
+        {(post.type === "lyrics" || post.type === "music") &&
+           <form className='editDiv'>
             <div className='innerEditDiv'>
-              <textarea defaultValue={lyrics} className="editDivInput editDivTextArea" onChange={(event) => setLyrics(event.target.value)} />
-              <input type='submit' onClick={(event) => handleLyricSubmit(event)} className="editSubmitBtn" />
+              <textarea defaultValue={lyrics} className="editorTextArea" onChange={(event) => handleLyricChange(event.target.value)} />
             </div>
           </form>
-          : <div className="editDiv lyricsDivInEditor" onClick={() => setIsEditingLyrics(true)}>
-            <p className="lyricsInEditor">
-              {post.lyrics}
-            </p>
-          </div>
         }
 
-        {post.type === "music" &&
+        {post.type === "lyrics" &&
           <label htmlFor="editorInputButton" className="editorInputButton" >Audio File+
             <input type="file" style={{ display: 'none' }} accept="mp3/m4a" id="editorInputButton" />
           </label>
         }
 
+        {hasCollab && <>
+          <button onClick={() => handleSubmitCollab()} style={{width: '200px'}} className='editorInputButton'>Submit For Review</button>
+        </>}
       </div>
     </>
   )

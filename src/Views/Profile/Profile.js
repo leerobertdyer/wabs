@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Profile.css'
 import { Link } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed';
+import { IoCameraSharp } from "react-icons/io5";
 
 function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
@@ -114,7 +115,10 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
             {isLoggedIn ? (
                 <div>
                     <div id="Profile">
-                        <div id="topBar">
+                        <div id="topBar" 
+                        style={user.profileBackground 
+                        ? {backgroundImage: `url(${user.profileBackground}`, backgroundSize: 'cover'} 
+                        : {backgroundImage: "url('https://dl.dropboxusercontent.com/scl/fi/fyvbbqbf8grhralhhqtvn/pianoBackground.jpg?rlkey=0xy5uflju0yc61sueajzz5dw7&dl=0')", backgroundSize: 'cover', backgroundPositionY: '-890px'}}>
                             <div id="picInputStatus">
                                 <div id="picAndInput">
                                     <div className="profilePicContainer">
@@ -122,7 +126,8 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                     </div>
                                     <form encType="multipart/form-data">
                                         <label className="picInputLabel clickMe"
-                                            htmlFor="filePicker">+Pic</label>
+                                            htmlFor="filePicker"><IoCameraSharp />
+                                            </label>
                                         <input
                                             type="file"
                                             id="filePicker"
@@ -133,6 +138,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                         />
                                     </form></div>
                                 <div className='switchAndStatusDiv'>
+                                    <div className='underSwitchDiv'>
                                     <div className='switchDiv'>
                                         <label className="switch">
 
@@ -146,12 +152,14 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                             ? <p className='setUserCollab'>Collab On</p>
                                             : <p className='setUserCollab'>Collab Off</p>}
                                     </div>
-
+                                    <p className='updateBackground padAndShade'><IoCameraSharp />Update Background</p>
+                                        </div>
                                     <div id="statusAndInput">
-                                        <h3 className="status" onClick={showHiddenStatus}>"{user.status}"</h3>
+                                        <p className='padAndShade usernameProfile'>{user.userName}</p>
+                                        <h3 className="padAndShade" onClick={showHiddenStatus}>"{user.status}"</h3>
                                         <form className='formRow'>
                                             {!showStatus && <label htmlFor="statusChanger"
-                                                className='labelInline clickMe'
+                                                className='labelInline clickMe padAndShade'
                                                 onClick={showHiddenStatus}>+change status</label>}
                                             {showStatus && <>
                                                 <div className='formRow'>
@@ -187,7 +195,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                         </div>
                                         <div className='yourCollabs'>
                                             <h4 className='profileFeedTitles'>Collabs In Progress:</h4>
-                                            <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
+
                                         </div>
                                     </>
 

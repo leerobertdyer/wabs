@@ -22,11 +22,15 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    background-color: gray;
+    background-color: black;
+    color: white;
     border: solid goldenrod 2px;
     border-radius: 5px;
     padding: 30px;
     margin-bottom: 100px;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
 .popupTitle {
@@ -41,14 +45,12 @@
     text-decoration: underline;
     background-color: rgb(24, 24, 24);
     padding: 20px;
-    border: goldenrod solid 2px;
     border-radius: 5px;
 }
 .radioLabel:hover {
     cursor: pointer;
-    background-color: lightskyblue;
-    color: rgb(24, 24, 24);
-    border: rgb(24, 24, 24) solid 2px;
+    border: white solid 2px;
+    color: white;
 }
 
 .radioBtn {
@@ -60,19 +62,22 @@ display: none;
 }
 
 .submitSongForm {
+    max-width: 700px;
     border-radius: 5px;
     padding: 5px 35px 25px 35px;
     margin: 0 45px;
     background: linear-gradient(to bottom, goldenrod, orange);
-    width: 80vw;
+    width: 70vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    border: white 2px solid;
 }
 
 .submitSongLegend {
     color: rgb(24, 24, 24);
+    padding: 10px
 }
 
 .formBlock {
@@ -83,7 +88,7 @@ display: none;
 }
 
 .submitSongInputs {
-    width: 68vw;
+    width: 75%;
     height: 25px;
     border-radius: 4px;
     border: none;
