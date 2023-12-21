@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { LiaTrashAlt } from "react-icons/lia";
 import Audio from "../Audio/Audio";
 import './Feed.css'
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, updateStars, stars}) {
     const [sortBy, setSortBy] = useState('Latest')
@@ -117,9 +117,9 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                 key={index}>
 
                                 <div className="topPostDiv">
-                                    <div className="thumbnailDiv" style={{backgroundImage: `url(${post.user_profile_pic})`, backgroundSize: 'cover' }}>
-                                    <a href="#profile" className="usernameUnderImg">{post.username}</a>
-                                    </div>
+                                    <Link to="/profile" className="thumbnailDiv" style={{backgroundImage: `url(${post.user_profile_pic})`, backgroundSize: 'cover' }}>
+                                    </Link>
+                                    <Link to="/profile" className="hiddenUser">{post.username}</Link> 
                                     {(post.type === "music" || post.type === "lyrics")
                                         && <h3 className="postTitle">"{post.title}"</h3>}
                                     {post.type === "song" && <h3 className="postTitle"><span className="newSongPreTitle">New Song:</span>{post.title}</h3>}

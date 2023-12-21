@@ -30,6 +30,7 @@ function App() {
   const [stars, setStars] = useState([])
   const [collabUsers, setCollabUsers] = useState([])
 
+
   useEffect(() => {
 
     const checkAuthentication = async () => {

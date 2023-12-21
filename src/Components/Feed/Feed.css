@@ -94,51 +94,47 @@
     display: flex;
     width: 100px;
     height: 100px;
+    cursor:pointer;
+    justify-content: center;
+    align-items: center;
 }
-
-.usernameUnderImg {
-    font-size: 20px;
-    padding-bottom: 5px;
-    color: antiquewhite;
-    background-color: black;
-    width: 100%;
-    text-align: center;
-    align-self: flex-end;
-}
-.usernameUnderImg:hover {
+.thumbnailDiv:hover + .hiddenUser {
+    display: block;
     color: lightpink;
+    background-color: rgb(24, 24, 24);
+    width: 100px;
+    height: 65px;
+    padding-top: 35px;
+    text-align: center;
+    position: absolute;
+    float: left;
+    font-size: 27px;
+}
+.hiddenUser {
+    display: none;
 }
 
 .postTitle {
-    font-size: 28px;
+    font-size: 18px;
     font-weight: 900;
     color: antiquewhite;
-    background-color: black;
-    padding: 20px;
-    align-self: flex-start;
+    padding: 15px 0;
     margin: 0;
-    width: fit-content;
-    height: fit-content;
     text-align: center;
-    border-right: solid gold 1px;
-    border-left: solid gold 1px;
-    border-bottom: solid gold 1px;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    gap: 20px;
 }
 .newSongPreTitle {
     color: gold;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .starsWrap {
     height: 100px;
     width: 100px;
-    background-color: black;
     align-self: flex-start;
     border-bottom-left-radius: 4px;
 }
@@ -180,8 +176,6 @@
     padding: 20px;
     border: solid black 1px;
     border-radius: 12px;
-    width: fit-content;
-    height: fit-content;
     align-self: center;
     margin: 0 auto;
     font-size: 1.5em;
@@ -189,7 +183,7 @@
 
 .songFeedCard {
     background-image: url('../../../public/Assets/musicNotes.jpg');
-    background-size: cover;
+    background-size: 900px;
     border: gold solid 4px;
 }
 

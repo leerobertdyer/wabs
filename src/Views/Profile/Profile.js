@@ -6,16 +6,16 @@ import Feed from '../../Components/Feed/Feed';
 function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
     const [checked, setChecked] = useState(user.collab === "true")
-
+    
     useEffect(() => {
         getCollab();
         // eslint-disable-next-line
     }, [])
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
-    
-    const getCollab = async() => {
-        const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {credentials: 'include'})
+
+    const getCollab = async () => {
+        const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, { credentials: 'include' })
         const data = await resp.json();
         setChecked(data.collab)
     }
@@ -107,7 +107,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
             setChecked(!checked)
             loadCollabUsers();
         }
-        
+
     }
 
     const { isLoggedIn } = user;
@@ -138,9 +138,9 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                 <div className='switchAndStatusDiv'>
                                     <div className='switchDiv'>
                                         <label className="switch">
-                                            
-                                            <input type="checkbox" checked={!!checked}
-                                                onChange={() => {}}
+
+                                            <input type="checkbox" id="collabSwitch" checked={!!checked}
+                                                onChange={() => { }}
                                                 onClick={() => handleCollabSwitch()} />
 
                                             <span className="slider"></span>
@@ -155,7 +155,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                         <form className='formRow'>
                                             <label htmlFor="statusChanger"
                                                 className='labelInline clickMe'
-                                                onClick={showHiddenStatus}>+status</label>
+                                                onClick={showHiddenStatus}>+change status</label>
                                             {showStatus ? (
                                                 <div className='formRow'>
                                                     <input type="text"
@@ -165,6 +165,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                                         onChange={(event) => changedStatus = event.target.value} />
                                                     <input type="submit"
                                                         className='clickMe smallFormButton'
+                                                        id="profileSubmitButton"
                                                         onClick={handleStatusChange} />
                                                 </div>) : null}
                                         </form>
@@ -172,9 +173,23 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            {userSongs.length === 0 ? <h2 className='noProfileSongs'>You have no songs! <Link className='profileLink' to="/submit">Submit one here</Link></h2>
-                                : <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
+                        <div className='profileBottomDiv'>
+                            {
+                                userSongs.length === 0
+                                    ? <>
+                                    <h2 className='noProfileSongs'>You have no songs! <Link className='profileLink' to="/submit">Submit one here</Link></h2>
+                                    </>
+                                    : <>
+                                        <div className='yourSongs'>
+                                            <h3 className='profileFeedTitles'>Your Songs:</h3>
+                                            <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
+                                        </div>
+                                        <div className='yourCollabs'>
+                                            <h4 className='profileFeedTitles'>Collabs In Progress:</h4>
+                                            <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
+                                            </div>
+                                    </>
+                                   
                             }
                         </div>
                     </div>
