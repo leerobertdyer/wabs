@@ -1,27 +1,39 @@
 import './Editor.css'
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Editor = ({ user }) => {
   const { post } = useLocation().state;
+
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [title, setTitle] = useState(post.title)
   const [lyrics, setLyrics] = useState(post.lyrics)
+  const [music, setMusic] = useState(post.music_id)
+  const [notes, setNotes] = useState('')
   const [hasCollab, setHasCollab] = useState(false)
   const [showPopup, setShowPopup] = useState(true)
-  const [notes, setNotes] = useState('')
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showFail, setShowFail] = useState(false)
+
+  const navigate = useNavigate();
 
   const handleTitleSubmit = (event) => {
     event.preventDefault();
-    // console.log(title);
-    //////    Store in new editor db table     ///////////
     setIsEditingTitle(false);
-    setHasCollab(true)
+    if (title !== post.title) {
+      setHasCollab(true)
+    } else if (title === post.title) {
+      setHasCollab(false)
+    }
   }
 
   const handleLyricChange = (newLyrics) => {
     setLyrics(newLyrics)
-    setHasCollab(true)
+    if (newLyrics !== post.lyrics) {
+      setHasCollab(true)
+    } else if (newLyrics === post.lyrics) {
+      setHasCollab(false)
+    }
   }
 
   const handleNotesChange = (event) => {
@@ -29,75 +41,139 @@ const Editor = ({ user }) => {
     setNotes(event.target.value)
   }
 
-  const handleSubmitCollab = () => {
-    console.log(title);
-    console.log(lyrics);
-    console.log(notes);
+  const handleMusicChange = async (event) => {
+    const newMusic = event.target.files[0]
+    const formData = new FormData();
+    formData.append('music', newMusic)
+    const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collab/submit-collab-music`, {
+      method: "PUT",
+      body: formData,
+      credentials: 'include'
+    })
+    if (resp.ok) {
+      const data = await resp.json();
+      setHasCollab(true)
+      setMusic(data.newMusic)
+    }
+  }
+
+  const handleClearButton = (event) => {
+    event.preventDefault();
+    setLyrics(post.lyrics)
+    if (post.title === title && post.music_id === music) {
+      setHasCollab(false)
+    }
+  }
+
+  const handleSubmitCollab = async () => {
+    const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collab/submit-collab-for-review`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'partner_id': user.user_id,
+        'user_id': post.user_id,
+        'title': title,
+        'lyrics': lyrics,
+        'music': music,
+        'notes': notes,
+        'feed_id': post.feed_id
+      }),
+      credentials: 'include'
+    })
+    if (resp.ok) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+      const data = await resp.json();
+      console.log(data);
+      setShowSuccess(true)
+    } else { setShowFail(true) }
     // fetch to new server route that stores any differences in database and notify original poster
   }
+
   return (
     <>
       <div className='mainEditorDiv'>
         {showPopup && <div className='mainPopupDiv'>
-            <button className='littleX' onClick={() => setShowPopup(false)}>X</button>
-            <div className='innerPopupDiv'>
-          <h3 className='welcomeToTheEditor'>Welcome to the editor!</h3>
-          <p>Let's work on <span className='username'>{post.username}'s</span> "{post.title}"</p>
-          <br/>
-          <div className='editInstructions'>
-          <p>Click any section to edit. <br/> 
-          When you're done editing, make sure to "submit for review". <br/>
-          {post.username} can send any notes they may have. <br/>
-          And when you are both happy <br/>
-          {post.username} can submit the song and you'll both get points!</p>
-          </div>
+          <button className='littleX' onClick={() => setShowPopup(false)}>X</button>
+          <div className='innerPopupDiv'>
+            <h3 className='welcomeToTheEditor'>Welcome to the editor!</h3>
+            <p>Let's work on <span className='username'>{post.username}'s</span> "{post.title}"</p>
+            <br />
+            <div className='editInstructions'>
+              <p>Click any section to edit. <br /><br />
+                When you're done editing, make sure to "submit for review". <br />
+                When you are both happy <br />
+                {post.username} can submit the song and you'll both get points!</p>
             </div>
-          </div>}
+          </div>
+        </div>}
         {isEditingTitle
           ? <>
-            <form className="editDiv">
-              <div className='innerEditDiv'>
+            <form>
+              <div className='innerEditDiv '>
                 <input type='text' defaultValue={title} className="editDivInput" onChange={(event) => setTitle(event.target.value)} />
-                <input type='submit' onClick={(event) => handleTitleSubmit(event)} className="editSubmitBtn" />
+                <input type='submit' value="Submit Title" onClick={(event) => handleTitleSubmit(event)} className="editSubmitBtn" />
               </div>
             </form>
           </>
 
-          : <>
-            <div className="editDiv" onClick={() => setIsEditingTitle(true)}>
-              
-                {hasCollab
-                  ? <>
-                    <h1>"{title}"</h1><h2>by {post.username} & {user.userName}</h2>
-                  </>
-                  : <>
-                    <h1>"{title}"</h1><h2>by {post.username}</h2>
-                  </>
-                }
+: <>
+            <div className="innerEditDiv titleDiv" onClick={() => setIsEditingTitle(true)}>
+
+              {hasCollab
+                ? <>
+                  <h1>"{title}"</h1><h2>by {post.username} & {user.userName}</h2>
+                </>
+                : <>
+                  <h1>"{title}"</h1><h2>by {post.username}</h2>
+                </>
+              }
 
             </div>
           </>
         }
 
+        {post.type === "lyrics" &&<>
+        <div className='musicInputDiv'>
+          <p className='isLookingFor'>{post.username} needs music for their song: </p>
+          <label htmlFor="editorInputButton" className="editorInputButton" >+Audio File
+            <input type="file" style={{ display: 'none' }} onChange={(event) => handleMusicChange(event)} accept="mp3/m4a" id="editorInputButton" />
+          </label>
+        </div>
+        </>
+        }
+
         {(post.type === "lyrics" || post.type === "music") &&
-           <form className='editDiv'>
+          <form className='editDiv'>
             <div className='innerEditDiv'>
-              <textarea defaultValue={lyrics} className="editorTextArea" onChange={(event) => handleLyricChange(event.target.value)} />
+              <legend className='editorLegend'>Lyrics:</legend>
+              <textarea value={lyrics} className="editorTextArea" onChange={(event) => handleLyricChange(event.target.value)} />
             </div>
+        {hasCollab && <button className='editorInputButton' onClick={(event) => handleClearButton(event)}>Clear</button>}
           </form>
         }
 
-        {post.type === "lyrics" &&
-          <label htmlFor="editorInputButton" className="editorInputButton" >Audio File+
-            <input type="file" style={{ display: 'none' }} onChange={() => setHasCollab(true)}accept="mp3/m4a" id="editorInputButton" />
-          </label>
-        }
-        <textarea className='anyMoreNotes' 
-        placeholder={`Any notes for ${post.username}?`}
-        onChange={(event) => handleNotesChange(event)}/>
+        <textarea className='anyMoreNotes'
+          placeholder={`Any notes for ${post.username}?`}
+          onChange={(event) => handleNotesChange(event)} />
 
         {hasCollab && <>
-          <button onClick={() => handleSubmitCollab()} style={{width: '200px'}} className='editorInputButton'>Submit For Review</button>
+          <button onClick={() => handleSubmitCollab()} style={{ width: '200px' }} className='editorInputButton'>Submit For Review</button>
+        </>}
+        {showSuccess && <>
+          <div className='successDiv'>
+          <button className='littleX' onClick={() => navigate('/profile')}>X</button>
+            Collab Under Way!
+          </div>
+        </>}
+        {showFail && <>
+          <div className='failDiv'>
+            Collab Failed...
+          </div>
         </>}
       </div>
     </>

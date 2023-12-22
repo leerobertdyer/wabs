@@ -11,7 +11,6 @@ import Submit from './Views/Submit/Submit';
 import Collaborate from './Views/Collaborate/Collaborate';
 import Editor from './Views/Editor/Editor';
 
-
 function App() {
   const [user, setUser] = useState({
     user_id: '',

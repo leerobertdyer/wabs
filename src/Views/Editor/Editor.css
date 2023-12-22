@@ -76,9 +76,6 @@ padding-bottom: 30px;
     padding: 20px;
     padding-left: 100px;
 }
-.editDiv:hover {
-    cursor: pointer;
-}
 
 .editDivInput {
     border: none;
@@ -100,6 +97,28 @@ padding-bottom: 30px;
     align-items: center;
 }
 
+.titleDiv{
+    border: none;
+    outline: none;
+    font-size: 16px;
+    width: 50%;
+    background-color: rgba(253, 216, 6, .8);
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    display: block;
+}
+.titleDiv:hover {
+    cursor: pointer;
+}
+
+.musicInputDiv {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    color: white;
+    align-items: center;
+}
 .editDivTextArea {
     height: 300px;
 }
@@ -175,12 +194,41 @@ padding-bottom: 30px;
 .editorTextArea {
    background: none;
     border: none;
-
+    
 }
 .editorTextArea:focus {
     outline: none;
 }
 
+
 .anyMoreNotes {
     height: 100px;
+    width: 70vw;
+    border-radius: 12px;
+    padding: 10px 10px 10px 120px;
+    background-color: #fff;
+    background-image:
+        linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+        linear-gradient(#eee .1em, transparent .1em);
+    background-size: 100% 1em;
+}
+
+.editorLegend {
+    background-color: rgba(24, 24, 24, .7);
+    padding: 10px;
+    border-radius: 12px;
+    align-self: flex-start;
+    width: 100%;
+}
+
+.successDiv {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(230, 171, 24, .8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 120px;
+    font-size: 80px;
 }

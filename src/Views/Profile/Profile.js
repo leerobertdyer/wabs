@@ -3,37 +3,62 @@ import './Profile.css'
 import { Link } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed';
 import { IoCameraSharp } from "react-icons/io5";
+import { CiEdit } from "react-icons/ci";
+import FullSongFeed from '../../Components/FullSongFeed/FullSongFeed';
+
+
+
 
 function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
-    const [checked, setChecked] = useState(user.collab === "true")
+    const [checked, setChecked] = useState(user.collab === "true");
+    const [showSongs, setShowSongs] = useState(false);
+    const [userCollab, setUsercollab] = useState([]);
+    const [showCollab, setShowCollab] = useState(false);
+    const [showPosts, setShowPosts] = useState(false);
+    const [showMessages, setShowMessages] = useState(false);
+    
 
     useEffect(() => {
-        getCollab();
+        getCollabStatus();
+        getCurrentCollabList();
         // eslint-disable-next-line
     }, [])
 
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-    const getCollab = async () => {
-        const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, { credentials: 'include' })
+    const getCollabStatus = async () => {
+        const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, { credentials: 'include' });
         const data = await resp.json();
-        setChecked(data.collab)
+        setChecked(data.collab);
     }
 
     const userSongs = [...feed]
         .filter((post) => post.user_id === user.user_id && post.type === "song")
         .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
 
-    const handleSetProfilePhoto = (newPhoto) => changeUserPic(newPhoto)
+    const userPosts = [...feed]
+    .filter(post => post.user_id === user.user_id)
+
+    const getCurrentCollabList = async() => {
+        const resp = await fetch(`${BACKEND_URL}/collab/get-profile-collabs`, {credentials: 'include',});
+        if (resp.ok) {
+            const data = await resp.json();
+            setUsercollab(data.userCollabs);
+        } else {
+            throw new Error(`Failed to get current user's collab list: ${resp.status}`);
+        }
+    }
+
+    const handleSetProfilePhoto = (newPhoto) => changeUserPic(newPhoto);
 
     const handlePhotoSubmit = async (event) => {
-        const ogPhoto = user.user_profile_pic
+        const ogPhoto = user.user_profile_pic;
         const photo = event.target.files[0];
         try {
             if (photo) {
                 const temp = URL.createObjectURL(photo);
-                handleSetProfilePhoto(temp)
+                handleSetProfilePhoto(temp);
                 const formData = new FormData();
                 formData.append('user_id', user.user_id);
                 formData.append('photo', photo);
@@ -44,14 +69,14 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                 });
 
                 if (response.ok) {
-                    const data = await response.json()
-                    handleSetProfilePhoto(data.newPhoto)
-                    loadFeed()
+                    const data = await response.json();
+                    handleSetProfilePhoto(data.newPhoto);
+                    loadFeed();
                     // console.log('photo saved in dbx: ', data.newPhoto);
                 }
                 else {
                     console.log(`Failed to upload your photo to dropbox: ${response.status}`);
-                    handlePhotoSubmit(ogPhoto)
+                    handlePhotoSubmit(ogPhoto);
                 }
             }
         } catch (error) {
@@ -60,9 +85,6 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
     }
 
     let changedStatus = ''
-    const showHiddenStatus = () => {
-        setShowStatus(!showStatus)
-    }
 
     const handleStatusChange = async (event) => {
         event.preventDefault();
@@ -80,12 +102,12 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                 const data = await response.json();
                 changeUserStatus(data.status);
                 loadFeed();
-                setShowStatus(false)
+                setShowStatus(false);
             } else {
-                throw new Error(`Failed to upload yer new statatus: ${response.status}`)
+                throw new Error(`Failed to upload yer new statatus: ${response.status}`);
             }
         } else {
-            setShowStatus(false)
+            setShowStatus(false);
             return null;
         }
     }
@@ -110,15 +132,26 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
 
     const { isLoggedIn } = user;
 
+    const handleProfileDisplay = (item) => {
+        setShowCollab(false);
+        setShowSongs(false);
+        setShowStatus(false);
+        setShowPosts(false);
+        if (item === "songs") { setShowSongs(true) }
+        if (item === "collabs") { setShowCollab(true) }
+        if (item === "posts") { setShowPosts(true) }
+        if (item === "messages") { setShowMessages(true) }
+    }
+
     return (
         <div>
             {isLoggedIn ? (
                 <div>
                     <div id="Profile">
-                        <div id="topBar" 
-                        style={user.profileBackground 
-                        ? {backgroundImage: `url(${user.profileBackground}`, backgroundSize: 'cover'} 
-                        : {backgroundImage: "url('https://dl.dropboxusercontent.com/scl/fi/fyvbbqbf8grhralhhqtvn/pianoBackground.jpg?rlkey=0xy5uflju0yc61sueajzz5dw7&dl=0')", backgroundSize: '2100px', backgroundPositionY: '-2200px'}}>
+                        <div id="topBar"
+                            style={user.profileBackground
+                                ? { backgroundImage: `url(${user.profileBackground}`, backgroundSize: 'cover' }
+                                : { backgroundImage: "url('https://dl.dropboxusercontent.com/scl/fi/fyvbbqbf8grhralhhqtvn/pianoBackground.jpg?rlkey=0xy5uflju0yc61sueajzz5dw7&dl=0')", backgroundSize: '2100px', backgroundPositionY: '-2200px' }}>
                             <div id="picInputStatus">
                                 <div className="picAndInput">
                                     <div className="profilePicContainer">
@@ -127,7 +160,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                     <form encType="multipart/form-data">
                                         <label className="picInputLabel clickMe"
                                             htmlFor="filePicker"><IoCameraSharp />
-                                            </label>
+                                        </label>
                                         <input
                                             type="file"
                                             id="filePicker"
@@ -137,8 +170,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                             onChange={handlePhotoSubmit}
                                         />
                                     </form></div>
-                                <div className='switchAndStatusDiv'>
-                                    <div className='underSwitchDiv'>
+                                <div className='underSwitchDiv'>
                                     <div className='switchDiv'>
                                         <label className="switch">
 
@@ -152,48 +184,58 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                             ? <p className='setUserCollab'>Collab On</p>
                                             : <p className='setUserCollab'>Collab Off</p>}
                                     </div>
-                                    <p className='updateBackground padAndShade'><IoCameraSharp />Update Background</p>
-                                        </div>
-                                    <div id="statusAndInput">
-                                        <h3 className="padAndShade" onClick={showHiddenStatus}>"{user.status}"</h3>
-                                        <form className='formRow'>
-                                            {!showStatus && <label htmlFor="statusChanger"
-                                                className='labelInline clickMe padAndShade'
-                                                onClick={showHiddenStatus}>+change status</label>}
-                                            {showStatus && <>
-                                                <div className='formRow'>
-                                                    <input type="text"
-                                                        id="statusChanger"
-                                                        name="statusInput"
-                                                        maxLength={55}
-                                                        onChange={(event) => changedStatus = event.target.value} />
-                                                    <input type="submit"
-                                                        className='clickMe smallFormButton'
-                                                        id="profileSubmitButton"
-                                                        onClick={handleStatusChange} />
-                                                </div></>}
-                                        </form>
+                                    <div className='flexCol gap'>
+                                        <p className='updateBackground padAndShade'
+                                            onClick={() => setShowStatus(!showStatus)}>
+                                            <CiEdit />Update Status</p>
+                                        <p className='updateBackground padAndShade'><IoCameraSharp />Update Background</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div className='profileNav'>
+                            <button className='btn' onClick={() => handleProfileDisplay('songs')}>Your Songs</button>
+                            <button className='btn' onClick={() => handleProfileDisplay('collabs')}>Your Collabs</button>
+                            <button className='btn' onClick={() => handleProfileDisplay('posts')}>Your posts</button>
+                            <button className='btn' onClick={() => handleProfileDisplay('messages')}>Your messages</button>
+                        </div>
+
+                        {showStatus && <>
+                            <div className='flexCol gap flexCtr padTen'>
+                                <p>"{user.status}"</p>
+                                <div className='flexRow gap'>
+                                    <form>
+                                        <input type='text' placeholder='new status...' onChange={(event) => changedStatus = event.target.value}></input>
+                                        <input type="submit" className='btn' onClick={(event) => handleStatusChange(event)}></input>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </>}
+
                         <div className='profileBottomDiv'>
 
                             {
-                                userSongs.length === 0
-                                    ? <>
-                                        <div></div>
-                                        <h2 className='noProfileSongs'>You have no songs! <Link className='profileLink' to="/submit">Submit one here</Link></h2>
-                                        <div></div>
-                                    </>
-                                    : <>
-                                        <div className='yourSongs'>
-
-                                            <h3 className='profileFeedTitles'>Your Songs:</h3>
-                                            <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
-                                        </div>
-                                    </>
-
+                                showSongs && <>
+                                    {userSongs.length === 0
+                                        ? <>
+                                            <div></div>
+                                            <h2 className='noProfileSongs'>You have no songs! <Link className='profileLink' to="/submit">Submit one here</Link></h2>
+                                            <div></div>
+                                        </>
+                                        : <>
+                                            <div className='yourSongs'>
+                                                <h3 className='profileFeedTitles'>Your Songs:</h3>
+                                                <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
+                                            </div>
+                                        </>}
+                               </>
+                            }
+                            {
+                                showPosts && userPosts.length > 0 && <>
+                             <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userPosts} loadFeed={loadFeed} sortFeed={sortFeed} />
+                                </>
                             }
                         </div>
                     </div>

@@ -133,3 +133,38 @@ textarea {
 p {
     margin: 0;
 }
+
+
+.btn {
+    border-radius: 4px;
+    background-color: gold;
+    color: black;
+    border: white 1px solid;
+    height: 30px;
+}
+
+.btn:hover {
+    background-color: black;
+    border: white 1px solid;
+    color: gold;
+    cursor: pointer;
+}
+
+.flexCol {
+    display: flex;
+    flex-direction: column;
+}
+.flexRow {
+    display: flex;
+}
+.gap {
+    gap: 10px;
+}
+.flexCtr {
+    justify-content: center;
+    align-items: center;
+}
+
+.padTen {
+    padding: 10px;
+}
