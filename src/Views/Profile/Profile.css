@@ -24,18 +24,24 @@
 .profilePicContainer {
     border: double goldenrod 6px;
     border-radius: 20%;
-    background-color: black;
-    min-width: 80px;
+    min-width: 100px;
     max-width: 200px;
-    min-height: 80px;
+    min-height: 100px;
     max-height: 200px;
     overflow: hidden;
-    margin-left: 25px;
+
 }
 
 .profilePic {
     width: 100%;
     height: 100%;
+}
+
+.picAndInput {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 25px;
 }
 
 #picInputStatus {
@@ -47,8 +53,8 @@
 }
 
 .picInputLabel {
-    font-size: 22px;
-    color: royalblue;
+    font-size: 42px;
+    color: white;
 }
 
 .switchAndStatusDiv {
@@ -58,7 +64,6 @@
     flex-direction: row-reverse;
     align-items: center;
     justify-content: space-evenly;
-
 }
 
 .switchDiv {
@@ -73,16 +78,19 @@
     justify-content: space-between;
     height: 100%;
 }
+
 .setUserCollab {
     background-color: rgba(24, 24, 24, .8);
     padding: 10px;
     border-radius: 4px;
 }
+
 .updateBackground {
     display: flex;
     gap: 5px;
     align-items: center;
 }
+
 .updateBackground:hover {
     cursor: pointer;
 }
@@ -99,8 +107,7 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    font-size: 18px;
-    width: 100%;
+    font-size: 16px;
 }
 
 .statusInput {
@@ -150,16 +157,9 @@
     gap: 20px;
 }
 
-.usernameProfile {
-    font-size: 52px;
-    margin: 0;
-    width: 400px;
-    color: goldenrod;
-}
-
 .labelInline {
     display: inline;
-    font-size: 18px;
+    font-size: 15px;
     font-family: 'Courier New', Courier, monospace;
     color: white;
 }

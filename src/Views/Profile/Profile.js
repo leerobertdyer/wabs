@@ -118,9 +118,9 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                         <div id="topBar" 
                         style={user.profileBackground 
                         ? {backgroundImage: `url(${user.profileBackground}`, backgroundSize: 'cover'} 
-                        : {backgroundImage: "url('https://dl.dropboxusercontent.com/scl/fi/fyvbbqbf8grhralhhqtvn/pianoBackground.jpg?rlkey=0xy5uflju0yc61sueajzz5dw7&dl=0')", backgroundSize: 'cover', backgroundPositionY: '-890px'}}>
+                        : {backgroundImage: "url('https://dl.dropboxusercontent.com/scl/fi/fyvbbqbf8grhralhhqtvn/pianoBackground.jpg?rlkey=0xy5uflju0yc61sueajzz5dw7&dl=0')", backgroundSize: '2100px', backgroundPositionY: '-2200px'}}>
                             <div id="picInputStatus">
-                                <div id="picAndInput">
+                                <div className="picAndInput">
                                     <div className="profilePicContainer">
                                         <img src={user.user_profile_pic} alt="Profile" className='profilePic' />
                                     </div>
@@ -155,7 +155,6 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                     <p className='updateBackground padAndShade'><IoCameraSharp />Update Background</p>
                                         </div>
                                     <div id="statusAndInput">
-                                        <p className='padAndShade usernameProfile'>{user.userName}</p>
                                         <h3 className="padAndShade" onClick={showHiddenStatus}>"{user.status}"</h3>
                                         <form className='formRow'>
                                             {!showStatus && <label htmlFor="statusChanger"
@@ -192,10 +191,6 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
 
                                             <h3 className='profileFeedTitles'>Your Songs:</h3>
                                             <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
-                                        </div>
-                                        <div className='yourCollabs'>
-                                            <h4 className='profileFeedTitles'>Collabs In Progress:</h4>
-
                                         </div>
                                     </>
 
