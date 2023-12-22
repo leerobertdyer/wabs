@@ -125,3 +125,13 @@ textarea {
     background-color: white;
     border: goldenrod solid 3px;
 }
+
+.username {
+    font-size: 150%;
+    padding: 0;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+}

@@ -9,9 +9,12 @@ const [oldCollab, setOldCollab] = useState([])
 const [showClearFilter, setShowClearFilter] = useState(false)
 const [currentSelectedUser, setCurrentSelectedUser] = useState(null)
 
+    const filteredUsers = collabUsers.filter(person => person.username !== user.userName)
+
+
 const displayCollaborators = showAll
-    ? collabUsers
-    : collabUsers.slice(0, 3)
+    ? filteredUsers
+    : filteredUsers.slice(0, 3)
 
 const handleSetCollabByUser = (username) => {
     setOldCollab(prevFeed => [...collabFeed])
@@ -36,18 +39,18 @@ const handleClear = () => {
             <p className='collabUsername'>{currentSelectedUser}</p>
             <p className="clearCollab" onClick={() => handleClear()}>Clear</p>
             </>}
-            {collabUsers.length > 0 && !currentSelectedUser
+            {filteredUsers.length > 0 && !currentSelectedUser
             && (<>
             {displayCollaborators.map((user, key) => {
                 return <HashLink smooth to="/collaborate#collabFeedMarker"  key={key} className='collabUsername'onClick={() => handleSetCollabByUser(user.username)}>{user.username}</HashLink>
             })}
-            {collabUsers.length > 3 &&
+            {filteredUsers.length > 3 &&
             <div className="clickDotsDiv" onClick={() => setShowAll(!showAll)}>
             <MdMoreHoriz size={30} className='clickDots'/>
             </div>
             }
             </>)}
-            {collabUsers.length === 0 && <p>No users currently collaborating... :(</p>}
+            {filteredUsers.length === 0 && <p>No users currently collaborating... :(</p>}
             
         </div>
         <div className='collabFeedDiv' id="collabFeedMarker">

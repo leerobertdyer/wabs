@@ -31,7 +31,19 @@ const Editor = ({ user }) => {
     <>
       <div className='mainEditorDiv'>
         {showPopup && <div className='mainPopupDiv'>
-            <button className='littleX'>X</button>
+            <button className='littleX' onClick={() => setShowPopup(false)}>X</button>
+            <div className='innerPopupDiv'>
+          <h3 className='welcomeToTheEditor'>Welcome to the editor!</h3>
+          <p>Let's edit <span className='username'>{post.username}'s</span> "{post.title}"</p>
+          <br/>
+          <div className='editInstructions'>
+          <p>Click any section to edit. <br/> 
+          When you're done editing, make sure to "submit for review". <br/>
+          {post.username} can send any notes they may have. <br/>
+          And when you are both happy <br/>
+          {post.username} can submit the song and you'll both get points!</p>
+          </div>
+            </div>
           </div>}
         {isEditingTitle
           ? <>
@@ -45,7 +57,7 @@ const Editor = ({ user }) => {
 
           : <>
             <div className="editDiv" onClick={() => setIsEditingTitle(true)}>
-              <span className="titleAndUser">
+              
                 {hasCollab
                   ? <>
                     <h1>"{title}"</h1><h2>by {post.username} & {user.userName}</h2>
@@ -54,7 +66,7 @@ const Editor = ({ user }) => {
                     <h1>"{title}"</h1><h2>by {post.username}</h2>
                   </>
                 }
-              </span>
+
             </div>
           </>
         }
@@ -69,7 +81,7 @@ const Editor = ({ user }) => {
 
         {post.type === "lyrics" &&
           <label htmlFor="editorInputButton" className="editorInputButton" >Audio File+
-            <input type="file" style={{ display: 'none' }} accept="mp3/m4a" id="editorInputButton" />
+            <input type="file" style={{ display: 'none' }} onChange={() => setHasCollab(true)}accept="mp3/m4a" id="editorInputButton" />
           </label>
         }
 
