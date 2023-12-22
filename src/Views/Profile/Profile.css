@@ -255,3 +255,8 @@ input:checked+.slider:before {
     flex-direction: column;
     align-items: center;
 }
+
+.allUserCollabs {
+    margin-top: 25px;
+    width: 90%;
+}

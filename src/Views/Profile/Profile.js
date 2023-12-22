@@ -232,11 +232,19 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
                                         </>}
                                </>
                             }
+
+                            {
+                                showCollab && <div className='allUserCollabs'>
+                                <FullSongFeed feed={userCollab} user={user} />
+                                </div>
+                            }
+
                             {
                                 showPosts && userPosts.length > 0 && <>
                              <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userPosts} loadFeed={loadFeed} sortFeed={sortFeed} />
                                 </>
                             }
+
                         </div>
                     </div>
                 </div>)

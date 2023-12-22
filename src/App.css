@@ -168,3 +168,10 @@ p {
 .padTen {
     padding: 10px;
 }
+
+.center {
+    align-self: center;
+    justify-self: center;
+    text-align: center;
+    margin: 0 auto;
+}

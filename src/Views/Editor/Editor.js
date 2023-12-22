@@ -14,7 +14,7 @@ const Editor = ({ user }) => {
   const [showPopup, setShowPopup] = useState(true)
   const [showSuccess, setShowSuccess] = useState(false)
   const [showFail, setShowFail] = useState(false)
-
+console.log(post);
   const navigate = useNavigate();
 
   const handleTitleSubmit = (event) => {
