@@ -5,11 +5,11 @@ Still very much in progress
 
 # BUGS:
 -   If you register, but decline to authorize dbx, then there is nothing in place to stop you from submitting, it will end up with an error
-        to solve it I'll need to implement a redirect to auth when a user without a token tries to submit
+        to solve it I'll need to implement a redirect to auth when a user without a token tries to submit,
+        OR wrap the auth process in some kind of transaction....
 
 # To Do:
         -Editor Page:
-                -instead of the icon I could use an onClick to edit each item
                 -Add input to leave notes to each other
                 -Add finalize button 
                     -once both users click finalize the new song will be posted as a SPECIAL collab bonus pts

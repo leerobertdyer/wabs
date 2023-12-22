@@ -9,6 +9,7 @@ const Editor = ({ user }) => {
   const [lyrics, setLyrics] = useState(post.lyrics)
   const [hasCollab, setHasCollab] = useState(false)
   const [showPopup, setShowPopup] = useState(true)
+  const [notes, setNotes] = useState('')
 
   const handleTitleSubmit = (event) => {
     event.preventDefault();
@@ -23,9 +24,16 @@ const Editor = ({ user }) => {
     setHasCollab(true)
   }
 
+  const handleNotesChange = (event) => {
+    setHasCollab(true)
+    setNotes(event.target.value)
+  }
+
   const handleSubmitCollab = () => {
     console.log(title);
     console.log(lyrics);
+    console.log(notes);
+    // fetch to new server route that stores any differences in database and notify original poster
   }
   return (
     <>
@@ -34,7 +42,7 @@ const Editor = ({ user }) => {
             <button className='littleX' onClick={() => setShowPopup(false)}>X</button>
             <div className='innerPopupDiv'>
           <h3 className='welcomeToTheEditor'>Welcome to the editor!</h3>
-          <p>Let's edit <span className='username'>{post.username}'s</span> "{post.title}"</p>
+          <p>Let's work on <span className='username'>{post.username}'s</span> "{post.title}"</p>
           <br/>
           <div className='editInstructions'>
           <p>Click any section to edit. <br/> 
@@ -84,6 +92,9 @@ const Editor = ({ user }) => {
             <input type="file" style={{ display: 'none' }} onChange={() => setHasCollab(true)}accept="mp3/m4a" id="editorInputButton" />
           </label>
         }
+        <textarea className='anyMoreNotes' 
+        placeholder={`Any notes for ${post.username}?`}
+        onChange={(event) => handleNotesChange(event)}/>
 
         {hasCollab && <>
           <button onClick={() => handleSubmitCollab()} style={{width: '200px'}} className='editorInputButton'>Submit For Review</button>
