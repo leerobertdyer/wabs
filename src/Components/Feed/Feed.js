@@ -77,6 +77,10 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
         user.userName
         ? navigate(`/collaborate/editor`, {state: { post }})
         : navigate('/login')
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          })
     }
 
     const cardColors = {

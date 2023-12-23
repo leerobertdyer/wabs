@@ -30,8 +30,23 @@
 .fullSongFeedLyrics {
     color: black;
     padding: 10px;
+    text-wrap: wrap;
 }
 
 .fullSongFeedAudio {
     margin-top: 10px;
+}
+
+.finalizeBtn {
+    background-color: red;
+    color: white;
+    width: 40%;
+    border: none;
+    padding: 10px;
+    margin: 0;
+}
+.finalizeBtn:hover {
+    background-color: lightskyblue;
+    color: darkred;
+    cursor: pointer;
 }

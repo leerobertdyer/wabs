@@ -10,6 +10,7 @@ import Feed from './Components/Feed/Feed';
 import Submit from './Views/Submit/Submit';
 import Collaborate from './Views/Collaborate/Collaborate';
 import Editor from './Views/Editor/Editor';
+import Scoreboard from './Views/Scoreboard/Scoreboard';
 
 function App() {
   const [user, setUser] = useState({
@@ -29,6 +30,7 @@ function App() {
   const [collabFeed, setCollabFeed] = useState([])
   const [stars, setStars] = useState([])
   const [collabUsers, setCollabUsers] = useState([])
+  const [allUsers, setAllUsers] = useState([])
 
 
   useEffect(() => {
@@ -60,6 +62,7 @@ function App() {
     const resp = await fetch(`${BACKEND_URL}/collab/get-all`)
     const data = await resp.json();
     setCollabUsers(data.collabUsers)
+    setAllUsers(data.allUsers)
   }
 
   const loadFeed = async () => {
@@ -201,6 +204,7 @@ function App() {
             <div className='spacing'></div>
             <Routes>
               <Route path='/' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
+              <Route path='score' element={<Scoreboard users={allUsers}/>}/>
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
               <Route path="/profile" element={<Profile user={user} loadCollabUsers={loadCollabUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />

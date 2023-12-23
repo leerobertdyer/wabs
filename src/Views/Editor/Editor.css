@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     margin-top: 20px;
     margin-bottom: 200px;
     font-family: 'Amatic SC', sans-serif;
@@ -13,15 +13,14 @@
 
 .mainPopupDiv {
 position: absolute;
-margin: 175px auto;
+margin: 60px auto 200px auto;
 width: 80vw;
-height: fit-content;
-background-color: rgba(253, 216, 6, .8);
+height: 400px;
+background-color: rgba(243, 229, 211, .9);
 border-radius: 12px;
 display: flex;
 flex-direction: column;
 align-items: center;
-margin-bottom: 200px;
 padding-bottom: 30px;
 }
 
@@ -34,13 +33,13 @@ padding-bottom: 30px;
 }
 
 .innerPopupDiv {
-    width: 80%;
-    height: 80%;
+    width: 85%;
+    height: 85%;
     background-color: rgba(238, 174, 11, .9);
     border-radius: 12px;
     font-size: 22px;
     text-align: center;
-    padding-bottom: 20px;
+    padding-bottom: 50px;
 }
 
 .welcomeToTheEditor {
@@ -81,7 +80,7 @@ padding-bottom: 30px;
     border: none;
     outline: none;
     font-size: 22px;
-    width: 80%;
+    width: 100%;
     background-color: pink;
     padding: 10px;
     border-radius: 12px;
@@ -114,10 +113,15 @@ padding-bottom: 30px;
 
 .musicInputDiv {
     display: flex;
+    flex-direction: column;
     gap: 10px;
     justify-content: center;
+    align-items: center;
     color: white;
     align-items: center;
+    padding: 20px;
+    border: white solid 1px;
+    width: 40%;
 }
 .editDivTextArea {
     height: 300px;
@@ -194,7 +198,6 @@ padding-bottom: 30px;
 .editorTextArea {
    background: none;
     border: none;
-    
 }
 .editorTextArea:focus {
     outline: none;
@@ -214,11 +217,13 @@ padding-bottom: 30px;
 }
 
 .editorLegend {
-    background-color: rgba(24, 24, 24, .7);
-    padding: 10px;
-    border-radius: 12px;
-    align-self: flex-start;
+    color: lightpink;
     width: 100%;
+    align-self: flex-start;
+    margin-right: 45px;
+    font-size: 45px;
+    margin: 0;
+    padding: 0;
 }
 
 .successDiv {
@@ -230,7 +235,7 @@ padding-bottom: 30px;
     align-items: center;
     position: absolute;
     top: 120px;
-    font-size: 80px;
+    font-size: 10vmax;
 }
 
 .clearBtn {
@@ -238,10 +243,17 @@ padding-bottom: 30px;
 }
 
 .afterSuccessMessage {
-    font-size: 16px;
-    background-color: black;
-    color: white;
-    padding: 20px;
+    font-size: 2vmax;
+    background-color: antiquewhite;
+    color: black;
+    padding: 30px;
+    width: 80%;
     border-radius: 12px;
     text-align: center;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+
+.editTitle {
+    font-size: 3vmax;
 }

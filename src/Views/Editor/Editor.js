@@ -7,7 +7,7 @@ const Editor = ({ user }) => {
 
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [title, setTitle] = useState(post.title)
-  const [lyrics, setLyrics] = useState(post.lyrics)
+  const [lyrics, setLyrics] = useState(post.lyrics || '')
   const [music, setMusic] = useState(post.music_id)
   const [notes, setNotes] = useState('')
   const [hasCollab, setHasCollab] = useState(false)
@@ -115,21 +115,23 @@ const Editor = ({ user }) => {
           ? <>
             <form>
               <div className='innerEditDiv '>
+                <legend className='editorLegend'>Title</legend>
                 <input type='text' defaultValue={title} className="editDivInput" onChange={(event) => setTitle(event.target.value)} />
                 <input type='submit' value="Submit Title" onClick={(event) => handleTitleSubmit(event)} className="editSubmitBtn" />
               </div>
             </form>
           </>
 
-: <>
+          : <>
+            <legend className='editorLegend'>Title</legend>
             <div className="innerEditDiv titleDiv" onClick={() => setIsEditingTitle(true)}>
 
               {hasCollab
                 ? <>
-                  <h1>"{title}"</h1><h2>by {post.username} & {user.userName}</h2>
+                  <h1 className='editTitle'>"{title}"</h1><h2>by {post.username} & {user.userName}</h2>
                 </>
                 : <>
-                  <h1>"{title}"</h1><h2>by {post.username}</h2>
+                  <h1 className='editTitle'>"{title}"</h1><h2>by {post.username}</h2>
                 </>
               }
 
@@ -137,24 +139,29 @@ const Editor = ({ user }) => {
           </>
         }
 
-        {post.type === "lyrics" &&<>
-        <div className='musicInputDiv'>
-          <p className='isLookingFor'>{post.username} needs music for their song: </p>
-          <label htmlFor="editorInputButton" className="editorInputButton" >+Audio File
-            <input type="file" style={{ display: 'none' }} onChange={(event) => handleMusicChange(event)} accept="mp3/m4a" id="editorInputButton" />
-          </label>
-        </div>
+        {post.type === "lyrics" && <>
+          <div className='musicInputDiv'>
+            <p className='isLookingFor'>{post.username} needs music for their song: </p>
+            <label htmlFor="editorInputButton" className="editorInputButton" >+Audio File
+              <input type="file" style={{ display: 'none' }} onChange={(event) => handleMusicChange(event)} accept="mp3/m4a" id="editorInputButton" />
+            </label>
+          </div>
         </>
         }
 
         {(post.type === "lyrics" || post.type === "music") &&
-          <form className='editDiv'>
-            <div className='innerEditDiv'>
-              <legend className='editorLegend'>Lyrics:</legend>
-              <textarea value={lyrics} className="editorTextArea" onChange={(event) => handleLyricChange(event.target.value)} />
-            </div>
-        {hasCollab && <button className='editorInputButton clearBtn' onClick={(event) => handleClearButton(event)}>Clear</button>}
-          </form>
+          <>
+            <label htmlFor='lyricsTextArea textAreaLabel' >
+            </label>
+            <legend className='editorLegend'>Lyrics</legend>
+            <form className='editDiv'>
+              <textarea id="lyricsTextArea" value={lyrics} className="editorTextArea" onChange={(event) => handleLyricChange(event.target.value)} />
+
+              {hasCollab && <button className='editorInputButton clearBtn' onClick={(event) => handleClearButton(event)}>Clear</button>}
+            </form>
+
+          </>
+
         }
 
         <textarea className='anyMoreNotes'
@@ -166,10 +173,10 @@ const Editor = ({ user }) => {
         </>}
         {showSuccess && <>
           <div className='successDiv'>
-          <button className='littleX' onClick={() => navigate('/profile')}>X</button>
+            <button className='littleX' onClick={() => navigate('/profile')}>X</button>
             Collab Under Way!
-            <p className='afterSuccessMessage'>{post.username} will get a chance to review your work.<br/>
-            When they are happy they can then submit the song</p>
+            <p className='afterSuccessMessage'>{post.username} will get a chance to review your work.<br />
+              When they are happy they can then submit the song</p>
           </div>
         </>}
         {showFail && <>

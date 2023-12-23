@@ -202,7 +202,7 @@
 }
 
 .statusFeedCard {
-    background: linear-gradient(to bottom right, purple, red);
+    background: linear-gradient(to bottom right, purple, lightskyblue, lightpink);
     color: antiquewhite;
     border: black solid 4px;
 }
@@ -226,7 +226,7 @@
 }
 
 .musicFeedCard {
-    background-color: rgb(24, 24, 24);
+    background: linear-gradient(to bottom right, pink, red, pink, rgb(128, 38, 0), orange, pink, rgb(109, 0, 18), lightcoral, red, pink, darkred, brown, orange, yellow,rgb(109, 0, 18), goldenrod, olive, darkgreen);
     color: antiquewhite;
     border: solid 4px lightblue;
 }
@@ -288,14 +288,17 @@
     border-radius: 4px;
     width: 40px;
     height: 40px;
-    border: white solid 3px;
+    border: red solid 3px;
     color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .trash:hover {
     transition: .4s;
     color: rgb(182, 0, 0);
-    border: red solid 3px;
+    border: black solid 3px;
     background-color: black;
     transform: scale(115%);
     cursor: pointer;
@@ -318,15 +321,11 @@
     width: 40%;
     background-color: gold;
     color: black;
-    border: solid 2px white;
-    border-bottom: none;
+    border: none;
     border-top-right-radius: 12px;
     border-top-left-radius: 12px;
 }
 .collabButton:hover {
     background-color: lightskyblue;
-    border: solid 2px gold;
-    border-bottom: none;
-    transition: .6s;
     cursor: pointer;
 }

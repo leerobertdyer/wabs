@@ -1,0 +1,56 @@
+.scoreFeedMainDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background:
+linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+background-color: olive;
+background-size: 20px 20px;
+border-radius: 12px;
+height: fit-content;
+padding: 45px;
+}
+
+.scoreFeedDiv {
+    text-align: center;
+    font-size: 12px;
+    border: white solid 2px;
+    border-radius: 4px;
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(250, 249, 249, 0.8);
+    color: black;
+}
+
+.firstPlaceBackground {
+    background-color: rgba(255, 166, 0, 0.8);
+}
+
+.secondPlaceBackground {
+    background-color: rgba(0, 255, 229, 0.8);
+}
+
+.thirdPlaceBackground {
+    background-color: rgba(220, 0, 245, 0.8);
+ 
+}
+
+
+.scoreFeedTitle {
+    padding: 0;
+    margin: 0;
+}
+
+.score {
+    margin: 0;
+    padding: 15px;
+    background-color: black;
+    border-radius: 22px;
+    color: white;
+}

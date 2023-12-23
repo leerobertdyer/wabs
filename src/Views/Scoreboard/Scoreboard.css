@@ -1,0 +1,11 @@
+.mainScoreBoardDiv {
+    background-color: rgb(97, 112, 66);
+    color: antiquewhite;
+    margin: 25px auto 200px auto;
+    width: 95%;
+    height: fit-content;
+    padding: 30px;
+    border-radius: 12px;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    border: groove gold 3px;
+}

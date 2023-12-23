@@ -49,7 +49,6 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    color: lightskyblue;
 }
 
 .picInputLabel {
@@ -81,6 +80,7 @@
     gap: 5px;
     align-items: center;
     justify-content: space-evenly;
+    color: lightskyblue;
 }
 
 .updateBackground:hover {
@@ -241,7 +241,7 @@ input:checked+.slider:before {
 .profileBottomDiv {
     width: 99vw;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
 }
 
 
@@ -257,6 +257,12 @@ input:checked+.slider:before {
 }
 
 .allUserCollabs {
-    margin-top: 25px;
     width: 90%;
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.yourSongs {
+    width: 100%;
 }

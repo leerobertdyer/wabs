@@ -9,8 +9,7 @@ const [oldCollab, setOldCollab] = useState([])
 const [showClearFilter, setShowClearFilter] = useState(false)
 const [currentSelectedUser, setCurrentSelectedUser] = useState(null)
 
-    const filteredUsers = collabUsers.filter(person => person.username !== user.userName)
-
+const filteredUsers = collabUsers.filter(person => person.username !== user.userName)
 
 const displayCollaborators = showAll
     ? filteredUsers

@@ -35,7 +35,7 @@ function Submit(props) {
             })
         } else if (showMusic && !showLyrics) {
             const formData2 = new FormData()
-            alert('Working on uploading music, hang tight...')
+            alert('Working on uploading music, hang tight...') // CHANGE TO LOADING PAGE
             if (song === null) {
                 console.error('No song selected');
                 return;

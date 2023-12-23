@@ -9,8 +9,10 @@ Still very much in progress
         OR wrap the auth process in some kind of transaction....
 
 # To Do:
+-Password Confirm input 
+   -Notification when failed.
+
         -Editor Page:
-                -Add input to leave notes to each other
                 -Add finalize button 
                     -once both users click finalize the new song will be posted as a SPECIAL collab bonus pts
 

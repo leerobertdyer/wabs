@@ -50,7 +50,7 @@ const [loginPassword, setLoginPassword] = useState('')
             <fieldset>
               <legend>Login</legend>
               <div>
-                <label htmlFor="username">Username/Email:</label>
+                <label htmlFor="username">Email:</label>
                 <input className="formInput" 
                 type="text" 
                 placeholder='David Blowie' 

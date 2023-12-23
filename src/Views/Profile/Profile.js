@@ -16,7 +16,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
     const [userCollab, setUsercollab] = useState([]);
     const [showCollab, setShowCollab] = useState(false);
     const [showPosts, setShowPosts] = useState(false);
-    const [showMessages, setShowMessages] = useState(false);
+    // const [showMessages, setShowMessages] = useState(false);
 
 
     useEffect(() => {
@@ -44,7 +44,8 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
         const resp = await fetch(`${BACKEND_URL}/collab/get-profile-collabs`, { credentials: 'include', });
         if (resp.ok) {
             const data = await resp.json();
-            setUsercollab(data.userCollabs);
+            const sortedFeed = data.userCollabs.sort((a, b) => b.collab_id - a.collab_id)
+            setUsercollab(sortedFeed);
         } else {
             throw new Error(`Failed to get current user's collab list: ${resp.status}`);
         }

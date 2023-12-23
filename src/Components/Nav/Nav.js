@@ -31,6 +31,8 @@ function Nav({ user, unloadUser }) {
 
                     <NavLink to="/collaborate" className={({ isActive }) => (isActive ? 'active' : 'links')}>Collaborate</NavLink>
 
+                    <NavLink to="/score" className={({ isActive }) => (isActive ? 'active' : 'links')}>Scoreboard</NavLink>
+
                     <div className="endOfNavBar">
                         {user.isLoggedIn ? (
                             <>
