@@ -157,7 +157,7 @@ const handleProfileDisplay = (item) => {
     if (item === "songs") { setShowSongs(true) }
     if (item === "collabs") { setShowCollab(true) }
     if (item === "posts") { setShowPosts(true) }
-    if (item === "messages") { setShowMessages(true) }
+    // if (item === "messages") { setShowMessages(true) }
 }
 
 return (
