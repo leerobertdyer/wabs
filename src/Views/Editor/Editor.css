@@ -232,3 +232,16 @@ padding-bottom: 30px;
     top: 120px;
     font-size: 80px;
 }
+
+.clearBtn {
+    margin-right: auto;
+}
+
+.afterSuccessMessage {
+    font-size: 16px;
+    background-color: black;
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}

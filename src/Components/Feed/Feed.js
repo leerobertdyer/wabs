@@ -85,7 +85,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
         profile_pic: 'picFeedCard',
         music: 'musicFeedCard',
         lyrics: 'lyricFeedCard',
-        default: 'gray'
+        default: 'defaultCard'
     };
 
     return (
@@ -109,7 +109,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                         const cardColor = cardColors[post.type] || cardColors['default']
                         return (
                             <div className={`postCard ${cardColor}`}
-                            style={post.type === "profile_pic"
+                            style={post.type === "profile_pic" || post.type === "profile_background"
                             ? {
                                 backgroundImage: `url(${post.feed_pic})`,
                                 backgroundSize: "cover",
@@ -128,6 +128,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                     {post.type === "status"
                                         && <h2 >{`${post.username} says:`}</h2>}
                                         {post.type === "profile_pic" && <p className="postPicInfo">{post.username} updated their profile pic...</p>}
+                                        {post.type === "profile_background" && <p className="postPicInfo">{post.username} updated their background pic...</p>}
                                     <div className="starsWrap">
                                         <div className="starsPicAndDigit">
                                             <img src={(stars.includes(post.feed_id))

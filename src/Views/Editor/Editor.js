@@ -14,7 +14,7 @@ const Editor = ({ user }) => {
   const [showPopup, setShowPopup] = useState(true)
   const [showSuccess, setShowSuccess] = useState(false)
   const [showFail, setShowFail] = useState(false)
-console.log(post);
+
   const navigate = useNavigate();
 
   const handleTitleSubmit = (event) => {
@@ -153,7 +153,7 @@ console.log(post);
               <legend className='editorLegend'>Lyrics:</legend>
               <textarea value={lyrics} className="editorTextArea" onChange={(event) => handleLyricChange(event.target.value)} />
             </div>
-        {hasCollab && <button className='editorInputButton' onClick={(event) => handleClearButton(event)}>Clear</button>}
+        {hasCollab && <button className='editorInputButton clearBtn' onClick={(event) => handleClearButton(event)}>Clear</button>}
           </form>
         }
 
@@ -168,6 +168,8 @@ console.log(post);
           <div className='successDiv'>
           <button className='littleX' onClick={() => navigate('/profile')}>X</button>
             Collab Under Way!
+            <p className='afterSuccessMessage'>{post.username} will get a chance to review your work.<br/>
+            When they are happy they can then submit the song</p>
           </div>
         </>}
         {showFail && <>

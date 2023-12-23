@@ -21,7 +21,8 @@ function App() {
     status: '',
     score: 0,
     datecreated: '',
-    collab: 'false'
+    collab: 'false',
+    profile_background: ''
   })
 
   const [feed, setFeed] = useState([])
@@ -50,7 +51,7 @@ function App() {
     checkAuthentication();
     loadFeed();
     loadCollabUsers();
-// eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
@@ -97,39 +98,44 @@ function App() {
 
   const getStars = async (id) => {
     const resp = await fetch(`${BACKEND_URL}/get-stars?id=${id}`, {
-        credentials: 'include'
+      credentials: 'include'
     })
     const data = await resp.json();
     const nextStars = data.userStars.map(star => Number(star.post_id))
     setStars(nextStars)
-}
-const updateStars = async (user_id, post_id, currentSort, page) => {
+  }
+  const updateStars = async (user_id, post_id, currentSort, page) => {
     if (user.user_id > 0) {
-        try {
-            const resp = await fetch(`${BACKEND_URL}/update-stars?userId=${user_id}&postId=${post_id}`,
-                {
-                    method: "put",
-                    credentials: 'include'
-                })
-            const data = await resp.json();
-            if (data.message === 'starred') {
-                setStars(prevStars => [...stars, data.post]);
-            } else if (data.message === 'un-starred') {
-                setStars(prevStars => stars.filter(star => star.feed_id !== data.post))
-            }
-            await loadFeed();
-            await getStars(user_id);
-            
-          } catch (err) {
-            console.error(`There b errors in ye star fetch... ${err}`)
+      try {
+        const resp = await fetch(`${BACKEND_URL}/update-stars?userId=${user_id}&postId=${post_id}`,
+          {
+            method: "put",
+            credentials: 'include'
+          })
+        const data = await resp.json();
+        if (data.message === 'starred') {
+          setStars(prevStars => [...stars, data.post]);
+        } else if (data.message === 'un-starred') {
+          setStars(prevStars => stars.filter(star => star.feed_id !== data.post))
         }
+        await loadFeed();
+        await getStars(user_id);
+
+      } catch (err) {
+        console.error(`There b errors in ye star fetch... ${err}`)
+      }
     } else { return }
-}
+  }
 
   const changeUserPic = (newPic) => {
     const nextUser = { ...user, user_profile_pic: newPic };
     setUser(nextUser);
   }
+
+  const changeUserProfile = (newPic => {
+    const nextUser = { ...user, profile_background: newPic }
+    setUser(nextUser)
+  })
 
   const changeUserStatus = (newStatus) => {
     const nextUser = { ...user, status: newStatus };
@@ -137,7 +143,7 @@ const updateStars = async (user_id, post_id, currentSort, page) => {
   }
 
   const changeUserCollab = (newCollab) => {
-    const nextUser = {...user, collab: newCollab};
+    const nextUser = { ...user, collab: newCollab };
     setUser(nextUser);
   }
 
@@ -156,7 +162,8 @@ const updateStars = async (user_id, post_id, currentSort, page) => {
       isLoggedIn: true,
       user_profile_pic: data.user_profile_pic,
       status: data.user_status,
-      collab: data.collab
+      collab: data.collab,
+      profile_background: data.profile_background
     })
   }
 
@@ -174,7 +181,9 @@ const updateStars = async (user_id, post_id, currentSort, page) => {
         user_profile_pic: '',
         score: 0,
         datecreated: '',
-        collab: false
+        collab: false,
+        profile_background: ''
+
       })
     }
     catch (error) {
@@ -194,10 +203,10 @@ const updateStars = async (user_id, post_id, currentSort, page) => {
               <Route path='/' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
-              <Route path="/profile" element={<Profile user={user} loadCollabUsers={loadCollabUsers} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/profile" element={<Profile user={user} loadCollabUsers={loadCollabUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} />} />
               <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
-              <Route path="/collaborate/editor" element={<Editor user={user}/>}/>
+              <Route path="/collaborate/editor" element={<Editor user={user} />} />
             </Routes>
 
             <Footer />

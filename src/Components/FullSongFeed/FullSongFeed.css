@@ -1,12 +1,23 @@
 .fullSongFeedMainDiv {
     width: 90%;
     height: fit-content;
-    background-color: white;
+    background-color: antiquewhite;
     border: solid goldenrod 2px;
     border-radius: 4px;
     -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
     box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    margin-bottom: 200px;
+}
+
+.fullSongFeedDiv {
+    background-color: white;
+    width: 95%;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    margin: 10px auto;
+    border: solid black 1px;
 }
 
 .fullSongFeedTitle {
@@ -19,4 +30,8 @@
 .fullSongFeedLyrics {
     color: black;
     padding: 10px;
+}
+
+.fullSongFeedAudio {
+    margin-top: 10px;
 }
