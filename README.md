@@ -8,7 +8,11 @@ Still very much in progress
         to solve it I'll need to implement a redirect to auth when a user without a token tries to submit,
         OR wrap the auth process in some kind of transaction....
 - Stars "fill in" when clicked on home page, but not on profile feeds...
+
 # To Do:
+
+!!!!!!!!STOP FORGETTING TO PUSH FML!!!!!!
+
 -Password Confirm input 
    -Notification when failed.
 
