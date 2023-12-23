@@ -257,3 +257,8 @@ padding-bottom: 30px;
 .editTitle {
     font-size: 3vmax;
 }
+
+
+.editorFinalBtn {
+    border-radius: 5px;
+}

@@ -154,9 +154,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40%;
-    margin: 10vmax auto;
+    width: 60%;
+    margin: 10vh auto 200px auto;
     gap: 20px;
+    font-size: 2vmax;
 }
 
 .labelInline {

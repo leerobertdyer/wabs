@@ -5,11 +5,25 @@ import { useNavigate } from "react-router-dom"
 
 const FullSongFeed = ({ feed, user }) => {
 const navigate = useNavigate();
+let final = false;
 
 const handleCollabClick = (post) => {
     user && user.userName
-    ? navigate(`/collaborate/editor`, {state: { post }})
+    ? navigate(`/collaborate/editor`, {state: { post, final }})
     : navigate('/login')
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+}
+
+const handleFinalizeClick = (post) => {
+    final = true;
+    navigate('/collaborate/editor', {state: { post, final }})
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
 }
 
     return (
@@ -26,7 +40,7 @@ const handleCollabClick = (post) => {
                 <button className="collabButton center collabBtnFullSongFeed" onClick={() => handleCollabClick(post)}>Collaborate!</button>
                 {
                     user.user_id === post.user_id &&
-                    <button className="finalizeBtn center" onClick={() => handleCollabClick(post)}>Finalize</button>
+                    <button className="finalizeBtn center" onClick={() => handleFinalizeClick(post)}>Finalize</button>
                 }
             </div>
         )

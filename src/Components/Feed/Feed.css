@@ -1,7 +1,7 @@
 .outerFeedDiv {
     width: 90%;
     height: fit-content;
-    background-color: gray;
+    background: linear-gradient(to right, gray, lightskyblue, lightpink, gray);
     margin: 20px auto 20px auto;
     border: solid goldenrod 1px;
     border-radius: 4px;
@@ -19,25 +19,25 @@
     justify-content: space-around;
     align-items: center;
     background-color: rgb(15, 14, 13);
-    color: goldenrod;
-    border-bottom: solid 4px teal;
+    color: rgb(227, 210, 164);
 }
 
 .sortByTitle {
     margin: 0 auto;
-    background-color: goldenrod;
+    background-color: teal;
     color: black;
     padding: 10px;
     text-align: center;
+    border-bottom: solid 2px black;
 }
 
 .sortSongs {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     color: white;
-    gap: 1em;
+    gap: 5vw;
     padding: 4px;
     width: 100%;
 }
@@ -326,6 +326,7 @@
     border-top-left-radius: 12px;
 }
 .collabButton:hover {
+    background-color: lightskyblue;
     background-color: lightskyblue;
     cursor: pointer;
 }

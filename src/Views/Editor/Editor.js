@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Editor = ({ user }) => {
-  const { post } = useLocation().state;
+  const { post, final } = useLocation().state;
 
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [title, setTitle] = useState(post.title)
@@ -91,13 +91,66 @@ const Editor = ({ user }) => {
       console.log(data);
       setShowSuccess(true)
     } else { setShowFail(true) }
-    // fetch to new server route that stores any differences in database and notify original poster
+    //    *****  notify original poster  *****  //
+  }
+
+  const handleFinalizeClick = async () => {
+    try {
+      try {
+        const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collab/finalize`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            'title': title,
+            'user_id': user.user_id,
+            'partner_id': post.partner_id,
+            'lyrics': lyrics,
+            'song_file': music,
+            'votes': 0
+          })
+        })
+        if (resp.ok) {
+          const data = await resp.json();
+          console.log(data);
+        }
+      } catch (err) {
+        console.error(`Error inserting new final collab song: `)
+      }
+
+      // try {
+      //   const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collab/cleanup`, {
+      //     method: "DELETE",
+      //     credentials: "include",
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify({
+      //       'collab_id': post.collab_id
+      //     })
+      //   })
+      //   if (resp.ok)
+      //   {
+      //     const data = await resp.json();
+      //     console.log(data);
+      //   }
+      // } catch (err) {
+      //   console.error(`Error deleting collab from db: ${err}`)
+      // }
+
+    } catch (err) {
+      console.error(`Error inserting New Song OR deleting collab: ${err}`)
+    }
   }
 
   return (
     <>
       <div className='mainEditorDiv'>
-        {showPopup && <div className='mainPopupDiv'>
+        {final && <button className='finalizeBtn editorFinalBtn'
+          onClick={() => handleFinalizeClick()}>Finalize!</button>}
+        {showPopup && !final && <div className='mainPopupDiv'>
           <button className='littleX' onClick={() => setShowPopup(false)}>X</button>
           <div className='innerPopupDiv'>
             <h3 className='welcomeToTheEditor'>Welcome to the editor!</h3>
