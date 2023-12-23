@@ -41,12 +41,16 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
         .filter(post => post.user_id === user.user_id)
 
     const getCurrentCollabList = async () => {
-        const resp = await fetch(`${BACKEND_URL}/collab/get-profile-collabs`, { credentials: 'include', });
-        if (resp.ok) {
-            const data = await resp.json();
-            setUsercollab(data.userCollabs);
-        } else {
-            throw new Error(`Failed to get current user's collab list: ${resp.status}`);
+        try {
+            const resp = await fetch(`${BACKEND_URL}/collab/get-profile-collabs`, { credentials: 'include', });
+            if (resp.ok) {
+                const data = await resp.json();
+                setUsercollab(data.userCollabs);
+            } else {
+                throw new Error(`Failed to get current user's collab list: ${resp.status}`);
+            }
+        } catch(err) {
+            console.error(`Failing to fetch getCurrentCollab from profile: ${err}`)
         }
     }
 
