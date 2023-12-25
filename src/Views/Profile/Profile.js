@@ -34,7 +34,7 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
     }
 
     const userSongs = [...feed]
-        .filter((post) => post.user_id === user.user_id && post.type === "song")
+        .filter((post) => post.user_id === user.user_id && (post.type === "song" || post.type === "collab"))
         .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
 
     const userPosts = [...feed]

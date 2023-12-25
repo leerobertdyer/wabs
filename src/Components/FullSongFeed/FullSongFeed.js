@@ -37,10 +37,10 @@ const handleFinalizeClick = (post) => {
                     <Audio source={post.music} />
                     </div>}
                 <pre className='fullSongFeedLyrics center '>{post.lyrics}</pre>
-                <button className="collabButton center collabBtnFullSongFeed" onClick={() => handleCollabClick(post)}>Collaborate!</button>
+                <button className="collabButton center collabBtnFullSongFeed" onClick={() => handleCollabClick(post)}>Edit Collab</button>
                 {
-                    user.user_id === post.user_id &&
-                    <button className="finalizeBtn center" onClick={() => handleFinalizeClick(post)}>Finalize</button>
+                    user.user_id === post.user_id && post.music && post.lyrics && post.title &&
+                        <button className="finalizeBtn center" onClick={() => handleFinalizeClick(post)}>Finalize</button>
                 }
             </div>
         )

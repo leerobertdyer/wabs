@@ -34,6 +34,10 @@ Still very much in progress
 -   Scoreboard page
 -   Add/update bio
 -   Add scroll effect on hover to show more lyrics on lyric feed....
+-       delete Collabs from profile (fullsongfeed)
+- save some kind of data to show that collab is co-written. Then display in feed with both usernames
+- Allow multiple people to collab on a single song
+- Show multiple versions of collab lyrics/titles/etc allow original poster to choose from them
 
 
 

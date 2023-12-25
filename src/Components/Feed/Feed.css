@@ -190,6 +190,13 @@
     border: gold solid 4px;
 }
 
+.collabFeedCard {
+    background-image: url('../../../public/Assets/goldBack1.jpeg');
+    border: gold dashed 8px;
+    background-size: cover;
+
+}
+
 .songInfo {
     background-color: rgb(24, 24, 24);
     border-radius: 4px;

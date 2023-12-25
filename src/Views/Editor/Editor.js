@@ -1,6 +1,8 @@
 import './Editor.css'
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { FaRegEdit } from "react-icons/fa";
+
 
 const Editor = ({ user }) => {
   const { post, final } = useLocation().state;
@@ -11,7 +13,6 @@ const Editor = ({ user }) => {
   const [music, setMusic] = useState(post.music_id)
   const [notes, setNotes] = useState('')
   const [hasCollab, setHasCollab] = useState(false)
-  const [showPopup, setShowPopup] = useState(true)
   const [showSuccess, setShowSuccess] = useState(false)
   const [showFail, setShowFail] = useState(false)
 
@@ -21,6 +22,7 @@ const Editor = ({ user }) => {
     event.preventDefault();
     setIsEditingTitle(false);
     if (title !== post.title) {
+      user.user_id !== post.user_id &&
       setHasCollab(true)
     } else if (title === post.title) {
       setHasCollab(false)
@@ -95,7 +97,6 @@ const Editor = ({ user }) => {
   }
 
   const handleFinalizeClick = async () => {
-    try {
       try {
         const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collab/finalize`, {
           method: "POST",
@@ -119,30 +120,6 @@ const Editor = ({ user }) => {
       } catch (err) {
         console.error(`Error inserting new final collab song: `)
       }
-
-      // try {
-      //   const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collab/cleanup`, {
-      //     method: "DELETE",
-      //     credentials: "include",
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify({
-      //       'collab_id': post.collab_id
-      //     })
-      //   })
-      //   if (resp.ok)
-      //   {
-      //     const data = await resp.json();
-      //     console.log(data);
-      //   }
-      // } catch (err) {
-      //   console.error(`Error deleting collab from db: ${err}`)
-      // }
-
-    } catch (err) {
-      console.error(`Error inserting New Song OR deleting collab: ${err}`)
-    }
   }
 
   return (
@@ -150,20 +127,6 @@ const Editor = ({ user }) => {
       <div className='mainEditorDiv'>
         {final && <button className='finalizeBtn editorFinalBtn'
           onClick={() => handleFinalizeClick()}>Finalize!</button>}
-        {showPopup && !final && <div className='mainPopupDiv'>
-          <button className='littleX' onClick={() => setShowPopup(false)}>X</button>
-          <div className='innerPopupDiv'>
-            <h3 className='welcomeToTheEditor'>Welcome to the editor!</h3>
-            <p>Let's work on <span className='username'>{post.username}'s</span> "{post.title}"</p>
-            <br />
-            <div className='editInstructions'>
-              <p>Click any section to edit. <br /><br />
-                When you're done editing, make sure to "submit for review". <br />
-                When you are both happy <br />
-                {post.username} can submit the song and you'll both get points!</p>
-            </div>
-          </div>
-        </div>}
         {isEditingTitle
           ? <>
             <form>
@@ -181,10 +144,10 @@ const Editor = ({ user }) => {
 
               {hasCollab
                 ? <>
-                  <h1 className='editTitle'>"{title}"</h1><h2>by {post.username} & {user.userName}</h2>
+                 <span className='titleAndIcon'><h1>"{title}"</h1><FaRegEdit size={30}/></span><h2>by {post.username} & {user.userName}</h2>
                 </>
                 : <>
-                  <h1 className='editTitle'>"{title}"</h1><h2>by {post.username}</h2>
+                  <span className='titleAndIcon'><h1>"{title}"</h1><FaRegEdit size={30}/></span><h2>by {post.username}</h2>
                 </>
               }
 
@@ -204,22 +167,19 @@ const Editor = ({ user }) => {
 
         {(post.type === "lyrics" || post.type === "music") &&
           <>
-            <label htmlFor='lyricsTextArea textAreaLabel' >
-            </label>
             <legend className='editorLegend'>Lyrics</legend>
-            <form className='editDiv'>
-              <textarea id="lyricsTextArea" value={lyrics} className="editorTextArea" onChange={(event) => handleLyricChange(event.target.value)} />
+              <textarea value={lyrics} className="lyricTextEditor paper" onChange={(event) => handleLyricChange(event.target.value)} />
 
-              {hasCollab && <button className='editorInputButton clearBtn' onClick={(event) => handleClearButton(event)}>Clear</button>}
-            </form>
+              {hasCollab && <button className='editorInputButton clearBtn' onClick={(event) => handleClearButton(event)}>Revert Lyrics</button>}
 
           </>
 
         }
-
-        <textarea className='anyMoreNotes'
+    {user.user_id !== post.user_id &&
+        <textarea className='anyMoreNotes paper'
           placeholder={`Any notes for ${post.username}?`}
           onChange={(event) => handleNotesChange(event)} />
+    }
 
         {hasCollab && <>
           <button onClick={() => handleSubmitCollab()} style={{ width: '200px' }} className='editorInputButton'>Submit For Review</button>

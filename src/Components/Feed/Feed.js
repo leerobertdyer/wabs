@@ -85,6 +85,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
 
     const cardColors = {
         song: 'songFeedCard',
+        collab: 'collabFeedCard',
         status: 'statusFeedCard',
         profile_pic: 'picFeedCard',
         music: 'musicFeedCard',
@@ -128,11 +129,15 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                     <Link to="/profile" className="hiddenUser">{post.username}</Link> 
                                     {(post.type === "music" || post.type === "lyrics")
                                         && <h3 className="postTitle">"{post.title}"</h3>}
-                                    {post.type === "song" && <h3 className="postTitle"><span className="newSongPreTitle">New Song:</span>{post.title}</h3>}
+                                    {post.type === "song" && 
+                                    <h3 className="postTitle"><span className="newSongPreTitle">New Song:</span>"{post.title}" by {post.username}</h3>}
+                                    {post.type === "collab" && 
+                                    <h3 className="postTitle"><span className="newSongPreTitle">New Collab:</span>"{post.title}" by {post.username} & {post.partner_username}</h3>}
                                     {post.type === "status"
                                         && <h2 >{`${post.username} says:`}</h2>}
                                         {post.type === "profile_pic" && <p className="postPicInfo">{post.username} updated their profile pic...</p>}
                                         {post.type === "profile_background" && <p className="postPicInfo">{post.username} updated their background pic...</p>}
+                                    
                                     <div className="starsWrap">
                                         <div className="starsPicAndDigit">
                                             <img src={(stars.includes(post.feed_id))
@@ -147,7 +152,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
 
 
                                 </div>
-                                {(post.type === "song" || post.type === "music") && <> <Audio className="feedAudio" source={post.song_file} /> <div></div> </>}
+                                {(post.type === "song" || post.type === "music" || post.type === "collab") && <> <Audio className="feedAudio" source={post.song_file} /> <div></div> </>}
 
                                 {post.type === "lyrics"
                                     && <pre className="lyricsFeed">{post.lyrics.substring(0, 105)}...</pre>}
