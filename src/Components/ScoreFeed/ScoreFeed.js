@@ -1,7 +1,6 @@
 import './ScoreFeed.css'
 
 const ScoreFeed = ({ users }) => {
-
     return (
 <>
 <div className="scoreFeedMainDiv">

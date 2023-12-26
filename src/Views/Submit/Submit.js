@@ -19,11 +19,11 @@ function Submit(props) {
         let resp
         if (showMusic && showLyrics) {
             const formData = new FormData()
-            alert('Working on uploading song, hang tight...')
             if (song === null) {
                 console.error('No song selected');
                 return;
             }
+            alert('Working on uploading song, hang tight...')
             formData.append('title', title)
             formData.append('lyrics', lyrics)
             formData.append('song', song)
@@ -67,6 +67,7 @@ function Submit(props) {
         if (resp.ok) {
             navigate('/profile');
             props.loadFeed();
+            props.loadAllUsers();
         } else { throw new Error(`Failed to upload yer damn song: ${resp.status}`); }
     }
 

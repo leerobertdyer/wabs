@@ -52,13 +52,13 @@ function App() {
 
     checkAuthentication();
     loadFeed();
-    loadCollabUsers();
+    loadAllUsers();
     // eslint-disable-next-line
   }, []);
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 
-  const loadCollabUsers = async () => {
+  const loadAllUsers = async () => {
     const resp = await fetch(`${BACKEND_URL}/collab/get-all`)
     const data = await resp.json();
     setCollabUsers(data.collabUsers)
@@ -204,11 +204,11 @@ function App() {
             <div className='spacing'></div>
             <Routes>
               <Route path='/' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
-              <Route path='score' element={<Scoreboard users={allUsers}/>}/>
+              <Route path='score' element={<Scoreboard users={allUsers} />}/>
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
-              <Route path="/profile" element={<Profile user={user} loadCollabUsers={loadCollabUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
-              <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} />} />
+              <Route path="/profile" element={<Profile user={user} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} loadAllUsers={loadAllUsers}/>} />
               <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
               <Route path="/collaborate/editor" element={<Editor user={user} />} />
             </Routes>
