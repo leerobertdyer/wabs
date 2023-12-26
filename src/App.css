@@ -194,3 +194,13 @@ h1, h2, h3, h4, h5, h6 {
         linear-gradient(#eee .1em, transparent .1em);
     background-size: 100% 1em;
 }
+
+.loading {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    background-color: rgba(24, 24, 24, .8);
+    position: absolute;
+}

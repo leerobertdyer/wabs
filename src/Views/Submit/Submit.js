@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import ReactLoading from 'react-loading';
 import './Submit.css'
 
 function Submit(props) {
@@ -10,12 +11,14 @@ function Submit(props) {
     const [showForm, setShowForm] = useState(false);
     const [showLyrics, setShowLyrics] = useState(false);
     const [showMusic, setShowMusic] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
     const navigate = useNavigate();
 
     const handleSongSubmit = async (event) => {
         event.preventDefault()
+        setIsLoading(true)
         let resp
         if (showMusic && showLyrics) {
             const formData = new FormData()
@@ -65,6 +68,7 @@ function Submit(props) {
         }
 
         if (resp.ok) {
+            setIsLoading(false)
             navigate('/profile');
             props.loadFeed();
             props.loadAllUsers();
@@ -89,6 +93,9 @@ function Submit(props) {
 
     return (
         <div>
+            {isLoading && <div className='loading'>
+                <ReactLoading type={'spinningBubbles'} color={'orange'} height={'20%'} width={'20%'} />
+                </div>}
             {isLoggedIn ? (
                 <div id="mainSubmitDiv"
                     className='black'>

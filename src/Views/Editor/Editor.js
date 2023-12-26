@@ -2,7 +2,7 @@ import './Editor.css'
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
-
+import ReactLoading from 'react-loading';
 
 const Editor = ({ user }) => {
   const { post, final } = useLocation().state;
@@ -15,7 +15,7 @@ const Editor = ({ user }) => {
   const [hasCollab, setHasCollab] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [showFail, setShowFail] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleTitleSubmit = (event) => {
@@ -44,6 +44,7 @@ const Editor = ({ user }) => {
   }
 
   const handleMusicChange = async (event) => {
+    setIsLoading(true)
     const newMusic = event.target.files[0]
     const formData = new FormData();
     formData.append('music', newMusic)
@@ -53,6 +54,7 @@ const Editor = ({ user }) => {
       credentials: 'include'
     })
     if (resp.ok) {
+      setIsLoading(false)
       const data = await resp.json();
       setHasCollab(true)
       setMusic(data.newMusic)
@@ -68,6 +70,7 @@ const Editor = ({ user }) => {
   }
 
   const handleSubmitCollab = async () => {
+    setIsLoading(true)
     const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collab/submit-collab-for-review`, {
       method: "PUT",
       headers: {
@@ -85,6 +88,7 @@ const Editor = ({ user }) => {
       credentials: 'include'
     })
     if (resp.ok) {
+      setIsLoading(false)
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
@@ -98,6 +102,7 @@ const Editor = ({ user }) => {
 
   const handleFinalizeClick = async () => {
       try {
+        setIsLoading(true)
         const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collab/finalize`, {
           method: "POST",
           credentials: "include",
@@ -114,6 +119,8 @@ const Editor = ({ user }) => {
           })
         })
         if (resp.ok) {
+          setIsLoading(false)
+          navigate('/home')
           const data = await resp.json();
           console.log(data);
         }
@@ -124,6 +131,9 @@ const Editor = ({ user }) => {
 
   return (
     <>
+    {isLoading && <div className='loading'>
+                <ReactLoading type={'spinningBubbles'} color={'orange'} height={'20%'} width={'20%'} />
+                </div>}
       <div className='mainEditorDiv'>
         {final && <button className='finalizeBtn editorFinalBtn'
           onClick={() => handleFinalizeClick()}>Finalize!</button>}
@@ -155,15 +165,14 @@ const Editor = ({ user }) => {
           </>
         }
 
-        {post.type === "lyrics" && <>
+
           <div className='musicInputDiv'>
             <p className='isLookingFor'>{post.username} needs music for their song: </p>
             <label htmlFor="editorInputButton" className="editorInputButton" >+Audio File
               <input type="file" style={{ display: 'none' }} onChange={(event) => handleMusicChange(event)} accept="mp3/m4a" id="editorInputButton" />
             </label>
           </div>
-        </>
-        }
+
 
         {(post.type === "lyrics" || post.type === "music") &&
           <>

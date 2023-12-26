@@ -9,6 +9,7 @@ import FullSongFeed from '../../Components/FullSongFeed/FullSongFeed';
 
 
 
+
 function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
     const [checked, setChecked] = useState(user.collab === "true");

@@ -18,7 +18,6 @@ Still very much in progress
 -Password Confirm input 
    -Notification when failed.
 
--   Store each new months points in separate table
 -   Win “prizes” or badges each month based on point system 
 -   Badges for collaboraters/monthly winners/most active
 -   comments on posts
@@ -35,6 +34,7 @@ Still very much in progress
 - Allow multiple people to collab on a single song
 - Show multiple versions of collab lyrics/titles/etc allow original poster to choose from them
 - add function to move background pic around
+- build out a "previous months winners" page accesible from scoreboard that lists out previous months score and breaks down how points where made
 
 
 
