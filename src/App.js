@@ -13,8 +13,6 @@ import Editor from './Views/Editor/Editor';
 import Scoreboard from './Views/Scoreboard/Scoreboard';
 import { auth } from './firebase';
 
-
-
 function App() {
   const [user, setUser] = useState({
     user_id: '',
@@ -53,7 +51,7 @@ function App() {
         });
 
         const data = await response.json();
-        console.log('Response Data:', data);
+        // console.log('Response Data:', data);
 
         loadUser(data.user);
       }
@@ -61,9 +59,10 @@ function App() {
         console.error('Error checking authentication:', error);
       };
     };
+    
     auth.onAuthStateChanged((user) => {
       if (user) {
-        console.log(user);
+        // console.log(user);
         checkAuthentication();
       }
     })
@@ -224,7 +223,7 @@ function App() {
               <Route path='score' element={<Scoreboard users={allUsers} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
-              <Route path="/profile" element={<Profile user={user} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/profile" element={<Profile user={user} token={token} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} loadAllUsers={loadAllUsers} />} />
               <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
               <Route path="/collaborate/editor" element={<Editor user={user} />} />
