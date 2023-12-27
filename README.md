@@ -18,6 +18,11 @@ Still very much in progress
 -Password Confirm input 
    -Notification when failed.
 
+-       Add Google/Facebook Sign in to firebase: https://console.firebase.google.com/u/0/project/wabs-e49c4/authentication/providers
+
+
+-       ON SONG DELETE GIVE WARNING "Are you sure? You will lose any points associated with this song!"
+-       Add option to edit instead
 -   Win “prizes” or badges each month based on point system 
 -   Badges for collaboraters/monthly winners/most active
 -   comments on posts

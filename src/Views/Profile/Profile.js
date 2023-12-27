@@ -5,9 +5,8 @@ import Feed from '../../Components/Feed/Feed';
 import { IoCameraSharp } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import FullSongFeed from '../../Components/FullSongFeed/FullSongFeed';
-
-
-
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 
 function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
@@ -17,9 +16,17 @@ function Profile({ feed, user, loadCollabUsers, stars, getStars, updateStars, ch
     const [userCollab, setUsercollab] = useState([]);
     const [showCollab, setShowCollab] = useState(false);
     const [showPosts, setShowPosts] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     // const [showMessages, setShowMessages] = useState(false);
 
-
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setIsLoggedIn(true) 
+        } else {
+            setIsLoggedIn(false)
+        }
+      });
+      
     useEffect(() => {
         getCollabStatus();
         getCurrentCollabList();
@@ -152,8 +159,6 @@ const handleCollabSwitch = async () => {
 
 }
 
-const { isLoggedIn } = user;
-
 const handleProfileDisplay = (item) => {
     setShowCollab(false);
     setShowSongs(false);
@@ -172,7 +177,7 @@ return (
                 <div id="Profile">
                     <div id="topBar"
                         style={user.profile_background
-                            ? { backgroundImage: `url(${user.profile_background}`, backgroundSize: 'cover' }
+                            ? { backgroundImage: `url(${auth.currentUser.photoURL}`, backgroundSize: 'cover' }
                             : { backgroundImage: "url('https://dl.dropboxusercontent.com/scl/fi/fyvbbqbf8grhralhhqtvn/pianoBackground.jpg?rlkey=0xy5uflju0yc61sueajzz5dw7&dl=0')", backgroundSize: '2100px', backgroundPositionY: '-2200px' }}>
                         <div id="picInputStatus">
                             <div className="picAndInput">

@@ -1,9 +1,12 @@
 import { useEffect, useState  } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import './Nav.css';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
 
-function Nav({ user, unloadUser }) {
+function Nav({ user }) {
     const [isShrunken, setIsShrunken] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
       const handleScroll = () => {
@@ -16,7 +19,13 @@ function Nav({ user, unloadUser }) {
         window.removeEventListener('scroll', handleScroll);
       };}, []); 
 
-
+      const handleSignout = () => {
+        signOut(auth).then(() => {
+                navigate('/login')
+          }).catch((error) => {
+            alert(error)
+          });
+      }
         return (
             <div>
                 <div  className={isShrunken ? "shrunken nav" : "notShrunken nav"}>
@@ -34,13 +43,13 @@ function Nav({ user, unloadUser }) {
                     <NavLink to="/score" className={({ isActive }) => (isActive ? 'active' : 'links')}>Scoreboard</NavLink>
 
                     <div className="endOfNavBar">
-                        {user.isLoggedIn ? (
+                        {auth.currentUser ? (
                             <>
                                 <h3 className={isShrunken ? "shrunkenAboveLogout": "aboveLogout"}>{user.userName}</h3>
                                 <div className="loginBox" >
-                                    <Link className="loginAndOutLink" to="/signout" onClick={unloadUser}>
+                                    <div className="loginAndOutLink" to="/signout" onClick={handleSignout}>
                                         Sign Out
-                                    </Link>
+                                    </div>
                                 </div>
                             </>
                         ) : (

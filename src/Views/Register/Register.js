@@ -1,60 +1,114 @@
 import { NavLink } from "react-router-dom";
 import './Register.css'
-import { useState } from "react";
+import { useState } from "react"
+import { auth, fdb } from "../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { setDoc, doc } from "firebase/firestore";
 
-function Register(props) {
+function Register({ loadUser }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 
-    const onRegisterSubmit = async (event) => {
+
+const onRegisterSubmit = (event) => {
         event.preventDefault()
-        try {
-            const registerResponse = await
-            fetch(`${BACKEND_URL}/auth/register`, {
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(user.uid);
+            console.log(username);
+            return fetch(`${BACKEND_URL}/auth/register`, {
                 method: "POST",
                 headers: { 'content-type': 'application/json' },
                 body: JSON.stringify({
-                    "username": username.toLowerCase(),
-                    "email": email.toLowerCase(),
-                    "password": password
-                }),
-                    credentials: 'include'
+                "username": username.toLowerCase(),
+                "email": email,
+                "UID": user.uid
                 })
-                console.log('object');
-
-            const user = await registerResponse.json()
-            console.log('Registered user: ', user)
-            console.log('client side cookie: ', document.cookie);
-            props.loadUser(user);
-
-            if (user.user_id) {
-                const authUrlResponse = await fetch(`${BACKEND_URL}/auth/dbx-auth`, {
-                    method: 'POST',
-                    headers: { 'content-type': 'application/json' },
-                    credentials: 'include'
-                })
-
-                if (!authUrlResponse.ok) {
-                    throw new Error(`Failed to get auth URL: ${authUrlResponse.status}`);
+            })
+            }).then(resp => {
+                if (!resp.ok) {
+                    throw new Error('Failed to create new user register.js(36)')
                 }
+                return resp.json();
+            }).then(data => {
+                loadUser(data)
+                setDoc(doc(fdb, "users", username), data)
+                if (data.user_id) {
+                    return fetch(`${BACKEND_URL}/auth/dbx-auth`, {
+                        method: 'POST',
+                        headers: { 'content-type': 'application/json' }
+                    })
+                }})
+                    .then(authUrlResponse => {
+                        if (!authUrlResponse.ok) {
+                        throw new Error(`Failed to get auth URL: ${authUrlResponse.status}`);
+                    }
+                    return authUrlResponse.json();
+                    }).then(data => {
+                        console.log(data);
+                        const authUrl = data.authUrl;
+                        console.log('authurl: ', authUrl)
+                            
+                    window.open(authUrl, '_blank')
+                    // window.location.href = authUrl
+                    })
+            .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+                alert(`${errorCode}: ${errorMessage}`)
+            });
+      
 
-                const authData = await authUrlResponse.json();
-                const authUrl = authData.authUrl
+//OLDER VERSION : 
+    //     try {
+    //         const registerResponse = await
+    //         fetch(`${BACKEND_URL}/auth/register`, {
+    //             method: "POST",
+    //             headers: { 'content-type': 'application/json' },
+    //             body: JSON.stringify({
+    //                 "username": username.toLowerCase(),
+    //                 "email": email.toLowerCase(),
+    //                 "password": password
+    //             }),
+    //                 credentials: 'include'
+    //             })
+    //             console.log('object');
 
-                console.log('authData', authData)
-                console.log('authurl: ', authUrl)
+    //         const user = await registerResponse.json()
+    //         console.log('Registered user: ', user)
+    //         console.log('client side cookie: ', document.cookie);
+    //         props.loadUser(user);
 
-                // window.open(authUrl, '_blank')
-                window.location.href = authUrl
-            }
+    //         if (user.user_id) {
+    //             const authUrlResponse = await fetch(`${BACKEND_URL}/auth/dbx-auth`, {
+    //                 method: 'POST',
+    //                 headers: { 'content-type': 'application/json' },
+    //                 credentials: 'include'
+    //             })
 
-        }
-        catch (error) {
-            console.error('Error during user Registration:', error);
-        }
+    //             if (!authUrlResponse.ok) {
+    //                 throw new Error(`Failed to get auth URL: ${authUrlResponse.status}`);
+    //             }
+
+    //             const authData = await authUrlResponse.json();
+    //             const authUrl = authData.authUrl
+
+    //             console.log('authData', authData)
+    //             console.log('authurl: ', authUrl)
+
+    //             // window.open(authUrl, '_blank')
+    //             window.location.href = authUrl
+    //         }
+
+    //     }
+    //     catch (error) {
+    //         console.error('Error during user Registration:', error);
+    //     }
     }
 
     return (
