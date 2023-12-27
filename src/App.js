@@ -11,6 +11,9 @@ import Submit from './Views/Submit/Submit';
 import Collaborate from './Views/Collaborate/Collaborate';
 import Editor from './Views/Editor/Editor';
 import Scoreboard from './Views/Scoreboard/Scoreboard';
+import { auth } from './firebase';
+
+
 
 function App() {
   const [user, setUser] = useState({
@@ -31,26 +34,40 @@ function App() {
   const [stars, setStars] = useState([])
   const [collabUsers, setCollabUsers] = useState([])
   const [allUsers, setAllUsers] = useState([])
+  const [token, setToken] = useState('')
 
 
   useEffect(() => {
 
     const checkAuthentication = async () => {
       try {
+        const firebaseToken = await auth.currentUser.getIdToken();
+        setToken(firebaseToken)
+        // console.log('Firebase Token:', firebaseToken);
+
         const response = await fetch(`${BACKEND_URL}/auth/check-session`, {
-          credentials: 'include'
-        })
-        const data = await response.json()
-        const currentUser = data.user
-        loadUser(currentUser)
-        // console.log(data)
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${firebaseToken}`,
+          },
+        });
+
+        const data = await response.json();
+        console.log('Response Data:', data);
+
+        loadUser(data.user);
       }
       catch (error) {
         console.error('Error checking authentication:', error);
       };
     };
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user);
+        checkAuthentication();
+      }
+    })
 
-    checkAuthentication();
     loadFeed();
     loadAllUsers();
     // eslint-disable-next-line
@@ -204,11 +221,11 @@ function App() {
             <div className='spacing'></div>
             <Routes>
               <Route path='/' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
-              <Route path='score' element={<Scoreboard users={allUsers} />}/>
+              <Route path='score' element={<Scoreboard users={allUsers} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
               <Route path="/profile" element={<Profile user={user} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
-              <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} loadAllUsers={loadAllUsers}/>} />
+              <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} loadAllUsers={loadAllUsers} />} />
               <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
               <Route path="/collaborate/editor" element={<Editor user={user} />} />
             </Routes>
