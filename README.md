@@ -20,21 +20,21 @@ Still very much in progress
 
 -       Add Google/Facebook Sign in to firebase: https://console.firebase.google.com/u/0/project/wabs-e49c4/authentication/providers
 
-
+-   Home Page
+-   Hamburger Menu
+-   comments on posts
+-   DM messaging capability
+-   noticications number and dropdown by username above login bar and in profile nav
+-   notifications via email and/or text
+-   follow other users (notifications for their posts at least, but maybe tie in dm with follow)
+-   link user names to user profiles make profile pages dynamic
+-   delete Collabs from profile (fullsongfeed)
+-   make delete function actually delete from dbx
 -   Add option to edit instead of delete.
 -   Win “prizes” or badges each month based on point system 
 -   Badges for collaboraters/monthly winners/most active
--   comments on posts
--   DM messaging capability
--   notifications via email and/or text
--   noticications number and dropdown by username above login bar
--   link user names to user profiles make profile pages dynamic
--   make delete function actually delete form dbx
--   Do something with load time for new song submission... display a loading wheel at least...
--   follow other users 
 -   Add/update bio
 -   Add scroll effect on hover to show more lyrics on lyric feed....
--       delete Collabs from profile (fullsongfeed)
 - Allow multiple people to collab on a single song
 - Show multiple versions of collab lyrics/titles/etc allow original poster to choose from them
 - add function to move background pic around

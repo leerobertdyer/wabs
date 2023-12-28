@@ -4,7 +4,7 @@
     color: antiquewhite;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     top: 0;
     position:fixed;
@@ -23,6 +23,13 @@
   height: 70px;
 }
 
+.linkList {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 65%;
+  margin-right: 10px;
+}
 .nav .links {
   color: rgb(185, 81, 185);
 
@@ -49,9 +56,9 @@
     justify-content: center;
     align-items: center;
     background-color: white;
-    width: 8vw;
+    width: 10vw;
     border-radius: 28px;
-    font-size: 13px;
+    font-size: 15px;
     padding: 6px;
     height: 25px;
   }
@@ -62,6 +69,7 @@
 
   .endOfNavBar {
     height: 100%;
+    width: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -106,12 +114,29 @@
     height: 100px;
     width: 90px;
     transition: height 1s, width 1s;
-
-
   }
   
   .shrunkenLogo {
     height: 40px;
     width: 36px;
     transition: height 1s, width 1s;
+  }
+
+  .hamburger {
+    flex-grow: 1;
+    text-align: center;
+
+  }
+
+  .showLinks {
+    font-size: 33px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    color: white;
+    gap: 20px;
+    position: absolute;
+    top: 0;
+    padding-top: 120px;
   }
