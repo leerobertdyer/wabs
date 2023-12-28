@@ -27,8 +27,8 @@ const [loginPassword, setLoginPassword] = useState('')
 
     signInWithEmailAndPassword(auth, loginEmail, loginPassword)
   .then((userCredential) => {
-    const user = userCredential.user;
-    console.log(user);
+    // const user = userCredential.user;
+    // console.log(user);
     navigate('/profile')
 
   })

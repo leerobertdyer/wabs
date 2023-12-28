@@ -253,6 +253,7 @@
 }
 
 .lyricFeedCard {
+    color: white;
     background-color: #fff;
     background-image:
         linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
@@ -342,4 +343,33 @@
     background-color: lightskyblue;
     background-color: lightskyblue;
     cursor: pointer;
+}
+
+.deleteDialogBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 2vmax;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: lightgray;
+    border: yellow solid 2px;
+    border-radius: 4px;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    position: absolute;
+    margin: 10% auto;
+    width: 60vw;
+    height: 20vh;
+}
+
+.deleteBtnDiv {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.deleteBtn {
+    background-color: rgb(246, 60, 60);
 }
