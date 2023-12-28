@@ -1,0 +1,86 @@
+.mainHomeDiv {
+background: linear-gradient(to bottom right, rgb(186, 250, 229), rgb(223, 154, 207));
+width: 100vw;
+height: fit-content;
+padding-bottom: 200px;
+}
+
+.homeTopImage {
+    background-image: url('../../../public/Assets/mozartOutline.jpeg');
+    background-size: 120vmax;
+    background-position-y: -180px;
+    background-position-x: -45px;
+    width: 100vw;
+    height: 300px;
+    padding: 20px;
+    color: antiquewhite;
+}
+
+.headerTextDiv {
+    padding: 20px;
+    background-color: rgba(24, 24, 24, .8);
+    border-radius: 7px;
+    width: fit-content;
+}
+.firstLine {
+    font-size: 3.5vmax;
+}
+
+.headerText {
+    font-size: 2.7vmax;
+}
+
+.writeabadsong {
+    color: lightskyblue;
+    font-family: 'Amatic SC', sans-serif;
+    font-size: 4.5vmax;
+}
+.bad {
+    animation: bad 1s linear .5s forwards;
+}
+
+.secondDiv {
+    width: 100vw;
+    height: 170px;
+    background-color: rgba(24, 124, 124, .8);
+    padding: 20px;
+    color: antiquewhite;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.thirdDiv {
+    width: 100vw;
+    height: 170px;
+    background-color: rgba(111, 5, 81, 0.8);
+    color: antiquewhite;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 10px;
+    padding: 20px;
+
+}
+
+.linkBtn {
+    width: 80%;
+}
+
+
+@keyframes bad {
+   
+    from {
+        color: pink;
+        text-decoration: none;
+    } 
+    to {
+        font-size: 55px;
+        color: red;
+        text-decoration: line-through;
+        
+    }
+}
+
+

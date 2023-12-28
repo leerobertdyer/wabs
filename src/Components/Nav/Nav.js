@@ -51,6 +51,7 @@ function Nav({ user, unloadUser }) {
                 {showLinks &&
                         <div className='loading showLinks' onClick={() => setShowLinks(false)}>
                             <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : 'links')}>Home</NavLink>
+                            <NavLink to="/feed" className={({ isActive }) => (isActive ? 'active' : 'links')}>Feed</NavLink>
                             <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : 'links')}>Profile</NavLink>
                             <NavLink to="/submit" className={({ isActive }) => (isActive ? 'active' : 'links')}>Submit</NavLink>
                             <NavLink to="/collaborate" className={({ isActive }) => (isActive ? 'active' : 'links')}>Collaborate</NavLink>
@@ -65,6 +66,7 @@ function Nav({ user, unloadUser }) {
                         : 
                         <div className='linkList'>
                             <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : 'links')}>Home</NavLink>
+                            <NavLink to="/feed" className={({ isActive }) => (isActive ? 'active' : 'links')}>Feed</NavLink>
                             <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : 'links')}>Profile</NavLink>
                             <NavLink to="/submit" className={({ isActive }) => (isActive ? 'active' : 'links')}>Submit</NavLink>
                             <NavLink to="/collaborate" className={({ isActive }) => (isActive ? 'active' : 'links')}>Collaborate</NavLink>

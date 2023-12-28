@@ -21,7 +21,6 @@ Still very much in progress
 -       Add Google/Facebook Sign in to firebase: https://console.firebase.google.com/u/0/project/wabs-e49c4/authentication/providers
 
 -   Home Page
--   Hamburger Menu
 -   comments on posts
 -   DM messaging capability
 -   noticications number and dropdown by username above login bar and in profile nav

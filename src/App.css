@@ -141,6 +141,7 @@ p {
     color: black;
     border: white 1px solid;
     height: 30px;
+    width: 80%;
 }
 
 .btn:hover {

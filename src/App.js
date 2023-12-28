@@ -11,6 +11,7 @@ import Submit from './Views/Submit/Submit';
 import Collaborate from './Views/Collaborate/Collaborate';
 import Editor from './Views/Editor/Editor';
 import Scoreboard from './Views/Scoreboard/Scoreboard';
+import Home from './Views/Home/Home';
 import { auth } from './firebase';
 
 function App() {
@@ -209,7 +210,8 @@ function App() {
             <Nav user={user} unloadUser={unloadUser} />
             <div className='spacing'></div>
             <Routes>
-              <Route path='/' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
+              <Route path='/' element={<Home user={user} />} />
+              <Route path='/feed' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
               <Route path='score' element={<Scoreboard users={allUsers} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />

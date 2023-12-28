@@ -152,7 +152,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                     {(post.type === "music" || post.type === "lyrics")
                                         && <div>
                                             <h3 className="postTitle">"{post.title}"</h3>
-                                            <h4>Looking for {post.type === "music" ? 'lyrics' : 'music'}</h4>
+                                            <h4 style={{textAlign: 'center', fontSize: '2vmax'}}>Looking for {post.type === "music" ? 'lyrics' : 'music'}</h4>
                                         </div>
                                     }
                                     {post.type === "song" &&
