@@ -20,13 +20,15 @@ Still very much in progress
 
 -       Add Google/Facebook Sign in to firebase: https://console.firebase.google.com/u/0/project/wabs-e49c4/authentication/providers
 
--   Home Page
 -   comments on posts
 -   DM messaging capability
 -   noticications number and dropdown by username above login bar and in profile nav
 -   notifications via email and/or text
 -   follow other users (notifications for their posts at least, but maybe tie in dm with follow)
--   link user names to user profiles make profile pages dynamic
+
+-   link user names to user profiles 
+-   make profile pages dynamic
+
 -   delete Collabs from profile (fullsongfeed)
 -   make delete function actually delete from dbx
 -   Add option to edit instead of delete.
