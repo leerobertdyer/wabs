@@ -26,7 +26,6 @@ function Submit(props) {
                 console.error('No song selected');
                 return;
             }
-            alert('Working on uploading song, hang tight...')
             formData.append('title', title)
             formData.append('lyrics', lyrics)
             formData.append('song', song)
@@ -38,7 +37,6 @@ function Submit(props) {
             })
         } else if (showMusic && !showLyrics) {
             const formData2 = new FormData()
-            alert('Working on uploading music, hang tight...') // CHANGE TO LOADING PAGE
             if (song === null) {
                 console.error('No song selected');
                 return;

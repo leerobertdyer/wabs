@@ -45,7 +45,8 @@ function Nav({ user }) {
                     <div className="endOfNavBar">
                         {auth.currentUser ? (
                             <>
-                                <h3 className={isShrunken ? "shrunkenAboveLogout": "aboveLogout"}>{user.userName}</h3>
+                                <h3 className={isShrunken ? "shrunkenAboveLogout": "aboveLogout"}>
+                                    {user.userName.length > 10 ? `${user.userName.slice(0, 10)}...` : user.userName}</h3>
                                 <div className="loginBox" >
                                     <div className="loginAndOutLink" to="/signout" onClick={handleSignout}>
                                         Sign Out

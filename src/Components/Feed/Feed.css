@@ -135,9 +135,9 @@
 
 .starsWrap {
     height: 100px;
-    width: 100px;
     align-self: flex-start;
     border-bottom-left-radius: 4px;
+    padding: 10px;
 }
 
 .starsPicAndDigit {
@@ -174,14 +174,17 @@
 }
 
 .postPicInfo {
-    background-color: antiquewhite;
-    padding: 20px;
-    border: solid black 1px;
-    border-radius: 12px;
+    padding: 10px;
+    border: solid white 1px;
+    color: white;
+    font-size: 2vmax;
+    border-radius: 4px;
     align-self: center;
     margin: 0 auto;
-    font-size: 1.5em;
-    color: black;
+    text-align: center;
+    width: 30vw;
+    display: flex;
+    justify-content: center;
 }
 
 .songFeedCard {

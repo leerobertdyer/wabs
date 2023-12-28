@@ -5,8 +5,6 @@ import Feed from '../../Components/Feed/Feed';
 import { IoCameraSharp } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import FullSongFeed from '../../Components/FullSongFeed/FullSongFeed';
-import { auth } from '../../firebase';
-
 
 function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
@@ -83,17 +81,16 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                 formData.append('user_id', user.user_id);
                 formData.append('photo', photo);
                 let resp;
+                console.log('userId, photo: ', user.user_id, photo);
                 if (type === "profile_pic") {
                     resp = await fetch(`${BACKEND_URL}/profile/upload-profile-pic`, {
                         method: "PUT",
                         body: formData,
-                        credentials: 'include'
                     });
                 } else {
                     resp = await fetch(`${BACKEND_URL}/profile/upload-background-pic`, {
                         method: "PUT",
                         body: formData,
-                        credentials: 'include'
                     });
                 }
                 if (resp.ok) {
@@ -165,7 +162,6 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
     }
 
     const handleProfileDisplay = (item) => {
-        console.log('here');
         setShowCollab(false);
         setShowSongs(false);
         setShowStatus(false);
@@ -185,7 +181,7 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                     <div id="Profile">
                         <div id="topBar"
                             style={user.profile_background
-                                ? { backgroundImage: `url(${auth.currentUser.photoURL}`, backgroundSize: 'cover' }
+                                ? { backgroundImage: `url(${user.profile_background}`, backgroundSize: 'cover' }
                                 : { backgroundImage: "url('https://dl.dropboxusercontent.com/scl/fi/fyvbbqbf8grhralhhqtvn/pianoBackground.jpg?rlkey=0xy5uflju0yc61sueajzz5dw7&dl=0')", backgroundSize: '2100px', backgroundPositionY: '-2200px' }}>
                             <div id="picInputStatus">
                                 <div className="picAndInput">
