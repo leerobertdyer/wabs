@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ReactLoading from 'react-loading';
 import './Submit.css'
@@ -12,6 +12,16 @@ function Submit(props) {
     const [showLyrics, setShowLyrics] = useState(false);
     const [showMusic, setShowMusic] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [userDataIsLoaded, setUserDataIsLoaded] = useState(false)
+
+    useEffect(() => {
+       const timer = async() => {
+           setTimeout(() => {
+            setUserDataIsLoaded(true)
+           }, 400)
+       }
+       timer();
+    }, [])
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
     const navigate = useNavigate();
@@ -91,10 +101,10 @@ function Submit(props) {
 
     return (
         <div>
-            {isLoading && <div className='loading'>
+            {isLoading &&  <div className='loading'>
                 <ReactLoading type={'spinningBubbles'} color={'orange'} height={'20%'} width={'20%'} />
                 </div>}
-            {isLoggedIn ? (
+            {isLoggedIn && userDataIsLoaded ? (
                 <div id="mainSubmitDiv"
                     className='black'>
 
@@ -191,7 +201,7 @@ function Submit(props) {
                         </>)}
                 </div>
 
-            ) : <div>
+            ) : userDataIsLoaded && <div>
                 <div id="loginFromProfile">
                     <h2>Please </h2><Link to="/login">Log In</Link>
                 </div>

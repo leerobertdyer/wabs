@@ -117,7 +117,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                             style={post.type === "profile_pic" || post.type === "profile_background"
                             ? {
                                 backgroundImage: `url(${post.feed_pic})`,
-                                backgroundSize: "cover",
+                                backgroundSize: "100vw",
                                 backgroundPositionY: "-100px",
                               }
                             : {}}

@@ -116,6 +116,8 @@
 }
 
 .postTitle {
+    flex-grow: 1;
+    text-align: center;
     font-size: 18px;
     font-weight: 900;
     color: antiquewhite;
@@ -135,6 +137,7 @@
 
 .starsWrap {
     height: 100px;
+    width: 100px;
     align-self: flex-start;
     border-bottom-left-radius: 4px;
     padding: 10px;
@@ -180,7 +183,7 @@
     font-size: 2vmax;
     border-radius: 4px;
     align-self: center;
-    margin: 0 auto;
+    margin-left: 25px;
     text-align: center;
     width: 30vw;
     display: flex;

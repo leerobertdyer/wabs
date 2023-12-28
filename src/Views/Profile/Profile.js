@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import './Profile.css'
 import { Link } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed';
 import { IoCameraSharp } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import FullSongFeed from '../../Components/FullSongFeed/FullSongFeed';
+import { auth } from '../../firebase';
 
 function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
@@ -13,13 +14,24 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
     const [userCollab, setUsercollab] = useState([]);
     const [showCollab, setShowCollab] = useState(false);
     const [showPosts, setShowPosts] = useState(false);
+    const [userDataIsLoaded, setUserDataIsLoaded] = useState(false)
     // const [showMessages, setShowMessages] = useState(false);
 
     useEffect(() => {
-        if (token) {
-            getCollabStatus();
-            getCurrentCollabList();
+        const timer = async () => {
+            setTimeout(() => {
+                setUserDataIsLoaded(true)
+            }, 300)
         }
+
+        if (token) {
+            const fetchData = async () => {
+                await getCollabStatus();
+                await getCurrentCollabList();
+                setUserDataIsLoaded(true)
+            }
+            fetchData();
+        } else { timer(); }
         // eslint-disable-next-line
     }, [token])
 
@@ -119,7 +131,7 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
         event.preventDefault();
         if (changedStatus.length > 0) {
             const response = await fetch(`${BACKEND_URL}/profile/update-status`, {
-                headers: { 
+                headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
@@ -188,7 +200,8 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                                     <div className="profilePicContainer">
                                         <label className="picInputLabel clickMe"
                                             htmlFor="filePicker">
-                                            <img src={user.user_profile_pic} alt="Profile" className='profilePic' />
+                                            <div className='profilePic' style={{ backgroundImage: `url(${user.user_profile_pic})`, backgroundSize: 'cover' }}>
+                                            </div>
                                         </label>
                                     </div>
                                     <form encType="multipart/form-data">
@@ -214,7 +227,7 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                                         <label className="switch">
 
                                             <input type="checkbox" id="collabSwitch" checked={!!checked}
-                                                onChange={()=>{}}
+                                                onChange={() => { }}
                                                 onClick={() => handleCollabSwitch()} />
 
                                             <span className="slider"></span>
@@ -276,7 +289,14 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
 
                             {
                                 showCollab && <div className='allUserCollabs'>
-                                    <FullSongFeed feed={userCollab} user={user} />
+                                    {userCollab.length > 0
+                                        ? <FullSongFeed feed={userCollab} user={user} />
+                                        :<>
+                                            <div></div>
+                                            <h2 className='noProfileSongs'>You have no Collabs! <Link className='profileLink' to="/collaborate">Check out Collab Page!</Link></h2>
+                                            <div></div>
+                                        </>
+                                    }
                                 </div>
                             }
 
@@ -289,7 +309,9 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                         </div>
                     </div>
                 </div>)
-                : <div>
+
+                : auth.currentUser === null && userDataIsLoaded &&
+                <div>
                     <div id="loginFromProfile">
                         <h2>Please </h2><Link to="/login">Log In</Link>
                     </div>

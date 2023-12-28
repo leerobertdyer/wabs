@@ -1,10 +1,10 @@
 import './Editor.css'
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import ReactLoading from 'react-loading';
 
-const Editor = ({ user }) => {
+const Editor = ({ user, token }) => {
   const { post, final } = useLocation().state;
 
   const [isEditingTitle, setIsEditingTitle] = useState(false)
@@ -17,6 +17,10 @@ const Editor = ({ user }) => {
   const [showFail, setShowFail] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setMusic(prevMusic => post.music)
+  }, [post])
 
   const handleTitleSubmit = (event) => {
     event.preventDefault();
@@ -48,10 +52,10 @@ const Editor = ({ user }) => {
     const newMusic = event.target.files[0]
     const formData = new FormData();
     formData.append('music', newMusic)
+    formData.append('user_id', user.user_id)
     const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collab/submit-collab-music`, {
       method: "PUT",
       body: formData,
-      credentials: 'include'
     })
     if (resp.ok) {
       setIsLoading(false)
@@ -85,7 +89,7 @@ const Editor = ({ user }) => {
         'notes': notes,
         'feed_id': post.feed_id
       }),
-      credentials: 'include'
+
     })
     if (resp.ok) {
       setIsLoading(false)
@@ -105,7 +109,6 @@ const Editor = ({ user }) => {
         setIsLoading(true)
         const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collab/finalize`, {
           method: "POST",
-          credentials: "include",
           headers: {
             'Content-Type': 'application/json',
           },
@@ -120,7 +123,7 @@ const Editor = ({ user }) => {
         })
         if (resp.ok) {
           setIsLoading(false)
-          navigate('/home')
+          navigate('/')
           const data = await resp.json();
           console.log(data);
         }
@@ -167,7 +170,11 @@ const Editor = ({ user }) => {
 
 
           <div className='musicInputDiv'>
-            <p className='isLookingFor'>{post.username} needs music for their song: </p>
+            {post.type === "lyrics"
+            ? <p className='isLookingFor'>{post.username} needs music for their song: </p>
+            :  <p className='isLookingFor'>{post.username} already has music for their song, <br/>
+            But feel free to offer yours: </p>
+           }
             <label htmlFor="editorInputButton" className="editorInputButton" >+Audio File
               <input type="file" style={{ display: 'none' }} onChange={(event) => handleMusicChange(event)} accept="mp3/m4a" id="editorInputButton" />
             </label>
@@ -177,7 +184,7 @@ const Editor = ({ user }) => {
         {(post.type === "lyrics" || post.type === "music") &&
           <>
             <legend className='editorLegend'>Lyrics</legend>
-              <textarea value={lyrics} className="lyricTextEditor paper" onChange={(event) => handleLyricChange(event.target.value)} />
+              <textarea value={lyrics} placeholder='Add lyrics here...' className="lyricTextEditor paper" onChange={(event) => handleLyricChange(event.target.value)} />
 
               {hasCollab && <button className='editorInputButton clearBtn' onClick={(event) => handleClearButton(event)}>Revert Lyrics</button>}
 

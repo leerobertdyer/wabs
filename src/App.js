@@ -187,11 +187,6 @@ function App() {
   }
 
   const unloadUser = () => {
-    try {
-      fetch(`${BACKEND_URL}/auth/signout`, {
-        method: 'POST',
-        credentials: 'include',
-      })
       setUser({
         user_id: '',
         userName: '',
@@ -205,11 +200,6 @@ function App() {
 
       })
     }
-    catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
 
   return (
     <Router>
@@ -226,7 +216,7 @@ function App() {
               <Route path="/profile" element={<Profile user={user} token={token} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} loadAllUsers={loadAllUsers} />} />
               <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
-              <Route path="/collaborate/editor" element={<Editor user={user} />} />
+              <Route path="/collaborate/editor" element={<Editor user={user} token={token} />} />
             </Routes>
 
             <Footer />

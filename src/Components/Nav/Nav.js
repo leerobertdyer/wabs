@@ -4,7 +4,7 @@ import './Nav.css';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 
-function Nav({ user }) {
+function Nav({ user, unloadUser }) {
     const [isShrunken, setIsShrunken] = useState(false);
     const navigate = useNavigate();
 
@@ -21,11 +21,13 @@ function Nav({ user }) {
 
       const handleSignout = () => {
         signOut(auth).then(() => {
+                unloadUser();
                 navigate('/login')
           }).catch((error) => {
             alert(error)
           });
       }
+
         return (
             <div>
                 <div  className={isShrunken ? "shrunken nav" : "notShrunken nav"}>

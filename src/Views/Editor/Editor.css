@@ -100,7 +100,7 @@ padding-bottom: 30px;
     border: none;
     outline: none;
     font-size: 16px;
-    width: 50%;
+    width: 80%;
     background-color: rgba(253, 216, 6, .8);
     padding: 10px;
     border-radius: 12px;
@@ -255,4 +255,8 @@ font-size: 2vmax;
     justify-content: center;
     align-items: center;
     font-size: 3vmax;
+}
+
+.isLookingFor {
+    text-align: center;
 }
