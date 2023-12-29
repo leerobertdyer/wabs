@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import './Register.css'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { auth, fdb } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
@@ -9,12 +9,35 @@ function Register({ loadUser }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [allUsers, setAllUsers] = useState([]);
 
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
+    useEffect(() => {
+        const fetchAllUsers = async() => {
+            const resp = await fetch(`${BACKEND_URL}/auth/get-all-emails`);
+            if (resp.ok) {
+                const data = await resp.json();
+                setAllUsers(data.allUsers)
+            }
+        }
+        fetchAllUsers();
+    }, [BACKEND_URL])
 
     const onRegisterSubmit = async (event) => {
         event.preventDefault()
+        if (allUsers.includes(email)) {
+            alert('Email is already taken');
+            return;
+        } else if (allUsers.includes(username)) {
+            alert('User name is already taken');
+            return;
+        }
+        if (password !== confirmPassword) {
+            alert('Passwords do not match');
+            return;
+        }
 
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -98,6 +121,14 @@ function Register({ loadUser }) {
                                 placeholder='**top*secret**'
                                 id="password" name="password"
                                 onChange={(event) => setPassword(event.target.value)} />
+                        </div>
+                        <div>
+                            <label htmlFor="confirmPassword">Confirm Password:</label>
+                            <input className="formInput"
+                                type="password"
+                                placeholder='**top*secret**'
+                                id="confirmPassword" name="confirmPassword"
+                                onChange={(event) => setConfirmPassword(event.target.value)} />
                         </div>
                         <button className="formSubmitButton"
                             type='submit' id="submit">Submit</button>

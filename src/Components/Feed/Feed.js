@@ -13,6 +13,21 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
     const navigate = useNavigate();
 
+    const [scrollPosition, setScrollPosition] = useState(0);
+
+    const handleScroll = () => {
+        const position = window.pageYOffset;
+        setScrollPosition(position);
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     useEffect(() => {
         setSortBy('Latest')
         handleSort('Latest')
@@ -109,7 +124,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
         <>
             {confirmDelete &&
                 <div className="loading">
-                    <div className="deleteDialogBox">
+                    <div className="deleteDialogBox" style={{marginTop: scrollPosition - 100}}>
                         Are you sure?
                         <p>(this can't be undone)</p>
                         <div className="deleteBtnDiv">
@@ -152,7 +167,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                     {(post.type === "music" || post.type === "lyrics")
                                         && <div>
                                             <h3 className="postTitle">"{post.title}"</h3>
-                                            <h4 style={{textAlign: 'center', fontSize: '2vmax'}}>Looking for {post.type === "music" ? 'lyrics' : 'music'}</h4>
+                                            <h4 style={{ textAlign: 'center', fontSize: '2vmax' }}>Looking for {post.type === "music" ? 'lyrics' : 'music'}</h4>
                                         </div>
                                     }
                                     {post.type === "song" &&

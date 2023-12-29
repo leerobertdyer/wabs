@@ -354,6 +354,7 @@
     font-size: 2vmax;
     font-family: 'Courier New', Courier, monospace;
     background-color: lightgray;
+    color: black;
     border: yellow solid 2px;
     border-radius: 4px;
     -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);

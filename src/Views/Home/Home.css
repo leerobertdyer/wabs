@@ -14,6 +14,9 @@ padding-bottom: 200px;
     height: 300px;
     padding: 20px;
     color: antiquewhite;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .headerTextDiv {
@@ -85,3 +88,19 @@ padding-bottom: 200px;
 }
 
 
+
+.signUpLink {
+    width: 100%;
+    max-width: 350px;
+    min-width: 100px;
+    align-self: center;
+    text-align: center;
+}
+
+.signUpBtn {
+    height: 38px;
+    border: black solid 1px;
+    font-family: 'Amatic SC', sans-serif;
+    font-size: 25px;
+    font-weight: 800;
+}

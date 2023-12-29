@@ -126,7 +126,7 @@
   .hamburger {
     flex-grow: 1;
     text-align: center;
-
+    margin-left: 25px;
   }
 
   .showLinks {

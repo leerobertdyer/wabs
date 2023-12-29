@@ -7,6 +7,7 @@ Still very much in progress
 -   If you register, but decline to authorize dbx, then there is nothing in place to stop you from submitting, it will end up with an error
         to solve it I'll need to implement a redirect to auth when a user without a token tries to submit,
         OR wrap the auth process in some kind of transaction....
+- Also on REGISTER if username or email already taken, may still allow account creation but breaks app.
 - Stars "fill in" when clicked on home page, but not on profile feeds...
 - Submitting two collabs with the same name both will be deleted if one is finalized.
                 Either prevent by making collab titles have unique names
@@ -14,9 +15,6 @@ Still very much in progress
 -Scoreboard displays winners even when everyone is at 0 points...
 
 # To Do:
-
--Password Confirm input 
-   -Notification when failed.
 
 -       Add Google/Facebook Sign in to firebase: https://console.firebase.google.com/u/0/project/wabs-e49c4/authentication/providers
 
