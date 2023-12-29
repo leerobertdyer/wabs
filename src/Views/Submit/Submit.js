@@ -101,9 +101,15 @@ function Submit(props) {
 
     return (
         <div>
-            {isLoading &&  <div className='loading'>
+            {isLoading &&  
+            <>
+            <div className='loading'>
                 <ReactLoading type={'spinningBubbles'} color={'orange'} height={'20%'} width={'20%'} />
-                </div>}
+                </div>
+                <p className='loadingToDbx golden scrollingText'>Uploading To Dropbox...</p>
+                <p className='savingToDb golden scrollingText'>Saving To Database...</p>
+            </>
+                }
             {isLoggedIn && userDataIsLoaded ? (
                 <div id="mainSubmitDiv"
                     className='black'>

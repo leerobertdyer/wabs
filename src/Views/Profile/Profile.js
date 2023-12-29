@@ -6,6 +6,7 @@ import { IoCameraSharp } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import FullSongFeed from '../../Components/FullSongFeed/FullSongFeed';
 import { auth } from '../../firebase';
+import Messages from '../../Components/Messages/Messages';
 
 function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
@@ -15,19 +16,30 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
     const [showCollab, setShowCollab] = useState(false);
     const [showPosts, setShowPosts] = useState(false);
     const [userDataIsLoaded, setUserDataIsLoaded] = useState(false)
-    // const [showMessages, setShowMessages] = useState(false);
+    const [messages, setMessages] = useState([])
+    const [showMessages, setShowMessages] = useState(false);
+
+
+    useEffect(() => {
+       const getMessagesIfDifferent = async() => {
+        await getMessages();
+       }
+       getMessagesIfDifferent();
+//eslint-disable-next-line
+    }, [messages])
 
     useEffect(() => {
         const timer = async () => {
             setTimeout(() => {
                 setUserDataIsLoaded(true)
-            }, 300)
+            }, 350)
         }
 
         if (token) {
             const fetchData = async () => {
                 await getCollabStatus();
                 await getCurrentCollabList();
+                await getMessages();
                 setUserDataIsLoaded(true)
             }
             fetchData();
@@ -37,8 +49,24 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-    const getCollabStatus = async () => {
+    const getMessages = async () => {
+        const resp = await fetch(`${BACKEND_URL}/profile/get-messages`, {
+            headers: {
+                'content-type': 'application/json',
+                'authorization': `Bearer ${token}`,
+            }
+        })
+        if (resp.ok) {
+            const data = await resp.json();
+            console.log(data.messages);
+            const nextMessages = data.messages.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+            if (nextMessages.length !== messages.length) {
+                setMessages(nextMessages)
+            }
+        }
+    }
 
+    const getCollabStatus = async () => {
         const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
             headers: {
                 'content-type': 'application/json',
@@ -157,12 +185,11 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
 
     const handleCollabSwitch = async () => {
         const resp = await fetch(`${BACKEND_URL}/collab/update-collab`, {
-            headers: { 'content-type': 'application/json' },
             method: 'PUT',
+            headers: { 'content-type': 'application/json' },
             body: JSON.stringify({
                 id: user.user_id,
-            }),
-            credentials: 'include'
+            })
         })
         if (resp.ok) {
             const data = await resp.json();
@@ -178,10 +205,15 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
         setShowSongs(false);
         setShowStatus(false);
         setShowPosts(false);
+        setShowMessages(false);
         if (item === "songs") { setShowSongs(true) }
         if (item === "collabs") { setShowCollab(true) }
         if (item === "posts") { setShowPosts(true) }
-        // if (item === "messages") { setShowMessages(true) }
+        if (item === "messages") { setShowMessages(true) }
+    }
+
+    const handleRefreshMessages = (nextMessages) => {
+        setMessages(prevMessages => nextMessages)
     }
 
     const { isLoggedIn } = user
@@ -192,9 +224,7 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                 <div>
                     <div id="Profile">
                         <div id="topBar"
-                            style={user.profile_background
-                                ? { backgroundImage: `url(${user.profile_background}`, backgroundSize: 'cover' }
-                                : { backgroundImage: "url('https://dl.dropboxusercontent.com/scl/fi/fyvbbqbf8grhralhhqtvn/pianoBackground.jpg?rlkey=0xy5uflju0yc61sueajzz5dw7&dl=0')", backgroundSize: '2100px', backgroundPositionY: '-2200px' }}>
+                            style={{ backgroundImage: `url(${user.profile_background}`, backgroundSize: 'cover' }}>
                             <div id="picInputStatus">
                                 <div className="picAndInput">
                                     <div className="profilePicContainer">
@@ -251,8 +281,8 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                         <div className='profileNav'>
                             <button className='btn' onClick={() => handleProfileDisplay('songs')}>Your Songs</button>
                             <button className='btn' onClick={() => handleProfileDisplay('collabs')}>Your Collabs</button>
-                            <button className='btn' onClick={() => handleProfileDisplay('posts')}>Your posts</button>
-                            <button className='btn' onClick={() => handleProfileDisplay('messages')}>Your messages</button>
+                            <button className='btn' onClick={() => handleProfileDisplay('posts')}>Your Posts</button>
+                            <button className='btn' onClick={() => handleProfileDisplay('messages')}>Messages</button>
                         </div>
 
                         {showStatus && <>
@@ -279,7 +309,7 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                                             <div></div>
                                         </>
                                         : <>
-                                            <div className='yourSongs'>
+                                            <div className='yourDivs'>
                                                 <h3 className='profileFeedTitles'>Your Songs:</h3>
                                                 <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
                                             </div>
@@ -290,8 +320,11 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                             {
                                 showCollab && <div className='allUserCollabs'>
                                     {userCollab.length > 0
-                                        ? <FullSongFeed feed={userCollab} user={user} />
-                                        :<>
+                                        ? <div className='yourDivs'>
+                                    <h3 className='profileFeedTitles'>Your Collabs:</h3>
+                                    <FullSongFeed feed={userCollab} user={user} />    
+                                        </div>
+                                        : <>
                                             <div></div>
                                             <h2 className='noProfileSongs'>You have no Collabs! <Link className='profileLink' to="/collaborate">Check out Collab Page!</Link></h2>
                                             <div></div>
@@ -301,8 +334,15 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                             }
 
                             {
-                                showPosts && userPosts.length > 0 && <>
+                                showPosts && userPosts.length > 0 && <div className='yourDivs'>
+                                    <h3 className='profileFeedTitles'>Your Posts:</h3>
                                     <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userPosts} loadFeed={loadFeed} sortFeed={sortFeed} />
+                                </div>
+                            }
+
+                            {
+                                showMessages && messages.length > 0 && <>
+                                    <Messages feed={messages} user={user} handleRefreshMessages={handleRefreshMessages}/>
                                 </>
                             }
 

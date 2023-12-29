@@ -1,0 +1,67 @@
+.mainMessageDiv {
+    width: 97%;
+    height: fit-content;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 20px 40px 20px;
+    margin-top: 25px;
+    margin-bottom: 225px;
+    gap: 20px;
+}
+
+.eachMessage {
+    border: double white 8px;
+    background-color: black;
+    border-radius: 4px;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.messageSender {
+    width: 100%;
+    text-align: center;
+    padding-bottom: 5px;
+    font-size: 30px;
+}
+
+.messageContent {
+    width: 100%;
+    padding: 25px;
+}
+
+.messageBtnDiv {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+    justify-content: center;
+}
+
+.respondMessageBtn {
+    color: black;
+    background-color: goldenrod;
+    border-radius: 4px;
+    border: solid white 2px;
+    width: 23vw;
+    height: 30px;
+}
+
+.deleteMessageBtn {
+    color: black;
+    background-color: crimson;
+    border: white solid 2px;
+    border-radius: 4px;
+    width: 23vw;
+    height: 30px;
+}
+
+.respondMessageBtn:hover,
+.deleteMessageBtn:hover {
+    color: white;
+    background-color: black;
+}

@@ -30,13 +30,18 @@ Still very much in progress
 -   delete Collabs from profile (fullsongfeed)
 -   make delete function actually delete from dbx
 -   Add option to edit instead of delete.
+
+-   Add first time marker in database to give TOUR of PROFILE options
+-   Add/update bio
+- add function to move background pic around
+
 -   Win “prizes” or badges each month based on point system 
 -   Badges for collaboraters/monthly winners/most active
--   Add/update bio
--   Add scroll effect on hover to show more lyrics on lyric feed....
+
 - Allow multiple people to collab on a single song
 - Show multiple versions of collab lyrics/titles/etc allow original poster to choose from them
-- add function to move background pic around
+- In COLLAB page if you click a user and they have no songs, post message linking to their profile
+
 - build out a "previous months winners" page accesible from scoreboard that lists out previous months score and breaks down how points where made
 
 

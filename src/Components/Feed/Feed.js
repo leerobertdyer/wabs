@@ -19,7 +19,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
         const position = window.pageYOffset;
         setScrollPosition(position);
     };
-
+    
     useEffect(() => {
         window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -42,7 +42,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
     }, [user])
 
     useEffect(() => {
-        if (page === `${FRONTEND_URL}/`) {
+        if (page === `${FRONTEND_URL}/feed`) {
             sortFeed(sortBy, feed, 'home')
         } else if (page === `${FRONTEND_URL}/collaborate`) {
             sortFeed(sortBy, collabFeed, 'collab')
@@ -54,27 +54,27 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
     const starFilled = '../../../Assets/starFilled.png'
 
     const handleSort = (event) => {
-        if (page === `${FRONTEND_URL}/`) {
+        if (page === `${FRONTEND_URL}/feed`) {
             if (event === 'Latest') {
                 sortFeed(event, feed, 'home')
                 setSortBy(event)
             } else {
-                sortFeed(event.target.textContent, feed, 'home')
-                setSortBy(event.target.textContent)
+                sortFeed(event, feed, 'home')
+                setSortBy(event)
             }
         } else if (page === `${FRONTEND_URL}/collaborate`) {
             if (event === 'Latest') {
                 sortFeed(event, feed, 'collab')
                 setSortBy(event)
             } else {
-                sortFeed(event.target.textContent, feed, 'collab')
-                setSortBy(event.target.textContent)
+                sortFeed(event, feed, 'collab')
+                setSortBy(event)
             }
         }
     }
 
     const handleStarClick = async (post_id) => {
-        page === `${FRONTEND_URL}/`
+        page === `${FRONTEND_URL}/feed`
             ? await updateStars(user.user_id, post_id, sortBy, 'home')
             : await updateStars(user.user_id, post_id, sortBy, 'collab')
     }
@@ -124,7 +124,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
         <>
             {confirmDelete &&
                 <div className="loading">
-                    <div className="deleteDialogBox" style={{marginTop: scrollPosition - 100}}>
+                    <div className="deleteDialogBox" style={{ marginTop: scrollPosition - 100 }}>
                         Are you sure?
                         <p>(this can't be undone)</p>
                         <div className="deleteBtnDiv">
@@ -138,9 +138,9 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                     <div className="titleBox">
                         <div className='sortSongs'>
                             <h3 className="sortBy">Sort by: </h3>
-                            <p className='sort' onClick={handleSort}>Most Popular</p>
-                            <p className='sort' onClick={handleSort}>Oldest</p>
-                            <p className='sort' onClick={handleSort}>Latest</p>
+                            <p className='sort' onClick={() => handleSort('Most Popular')}>Most Popular</p>
+                            <p className='sort' onClick={() => handleSort("Oldest")}>Oldest</p>
+                            <p className='sort' onClick={() => handleSort("Latest")}>Latest</p>
                         </div>
                     </div>
                     <h1 className="sortByTitle">{sortBy} Posts:</h1>
@@ -196,9 +196,16 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                 {(post.type === "song" || post.type === "music" || post.type === "collab") && <> <Audio className="feedAudio" source={post.song_file} /> <div></div> </>}
 
                                 {post.type === "lyrics"
-                                    && <pre className="lyricsFeed">{post.lyrics.substring(0, 105)}...</pre>}
+                                    && 
+                                    <pre className="lyricsFeed">{post.lyrics}</pre>}
 
-                                {post.type === "status" && <h3 className='feedStatus'>{`"${post.feed_status}"`}</h3>}
+                                {post.type === "status" &&
+                                    <>
+                                        <h3 className='feedStatus'>{`"${post.feed_status}"`}</h3>
+                                    {post.user_id !== user.user_id && <div></div>}
+                                    </>
+                                }
+
                                 {(post.type === "music" || post.type === "lyrics") && post.user_id !== user.user_id
                                     && <button className="collabButton" onClick={() => (handleCollabClick(post))}>Collaborate!</button>
                                 }
