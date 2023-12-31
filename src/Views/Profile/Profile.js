@@ -43,8 +43,6 @@ function Profile({ feed, user, allMessages, conversations, token, socket, allUse
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const allOtherUsers = allUsers.filter(other => other.user_id !== user.user_id)
 
-    
-
     const getCollabStatus = async () => {
         const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
             headers: {

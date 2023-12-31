@@ -55,6 +55,8 @@ function App() {
         });
         const data = await response.json();
         loadUser(data.user);
+    getConversations();
+
         setSocket(io(BACKEND_URL, {
           transports: ['websocket'],
           query: {
@@ -74,7 +76,6 @@ function App() {
     })
     loadFeed();
     loadAllUsers();
-    getConversations();
     // eslint-disable-next-line
   }, []);
   
@@ -102,7 +103,7 @@ socket.on('messageReceived', () => {
     socket.off('connect');
     socket.off('disconnect');
   };
-
+//eslint-disable-next-line
 }, [socket, user.user_id, user.userName])
 
 const getConversations = async () => {
