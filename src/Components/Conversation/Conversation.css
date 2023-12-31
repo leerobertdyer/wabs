@@ -1,6 +1,6 @@
 .conversation {
     width: 97%;
-    height: 60px;
+    height: 100px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -13,13 +13,17 @@
 
 .showConversation {
     height: fit-content;
-    padding: 30px;
 }
 
 .convoTitle {
     justify-self: flex-start;
-    margin: 0;
-    padding: 0;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    font-size: 15px;
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
+    
 }
 
 .messageInput {
@@ -29,6 +33,7 @@
     color: white;
     height: 30px;
     padding: 4px;
+    margin-bottom: 30px;
 }
 
 .messageBtn {
@@ -46,8 +51,6 @@
     border: solid aquamarine 1px;
     cursor: pointer;
 }
-
-
 
 .showConvoBtn {
     margin-top: -35px;

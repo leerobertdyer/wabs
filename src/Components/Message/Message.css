@@ -19,20 +19,6 @@
     align-self: center;
 }
 
-.deleteMessageBtn {
-    color: black;
-    background-color: rgb(255, 35, 35);
-    border: gold solid 1px;
-    border-radius: 4px;
-    width: 13vw;
-    height: 30px;
-}
-
-.deleteMessageBtn:hover {
-    color: white;
-    background-color: black;
-}
-
 .nameAndMessage {
     display: flex;
     flex-grow: 1;
@@ -43,13 +29,15 @@
 
 .sentMessage {
     background-color: rgba(24, 124, 155, .6);
-    width: 40%;
+    width: 30%;
     align-self: flex-end;
     border-top-left-radius: 0;
+    margin-right: 25px;
 }
 .receivedMessage {
     background-color: rgba(214, 55, 230, .6);
-    width: 40%;
+    width: 30%;
     align-self: flex-start;
     border-bottom-right-radius: 0;
+    margin-left: 25px;
 }

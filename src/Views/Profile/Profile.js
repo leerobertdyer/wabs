@@ -10,7 +10,7 @@ import Conversation from '../../Components/Conversation/Conversation';
 
 
 
-function Profile({ feed, user, token, socket, allUsers, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
+function Profile({ feed, user, allMessages, conversations, token, socket, allUsers, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
     const [checked, setChecked] = useState(user.collab === 'true');
     const [showSongs, setShowSongs] = useState(false);
@@ -18,10 +18,8 @@ function Profile({ feed, user, token, socket, allUsers, loadAllUsers, stars, get
     const [showCollab, setShowCollab] = useState(false);
     const [showPosts, setShowPosts] = useState(false);
     const [userDataIsLoaded, setUserDataIsLoaded] = useState(false)
-    const [allMessages, setAllMessages] = useState([])
     const [showMessages, setShowMessages] = useState(false);
     const [showNewConvo, setShowNewConvo] = useState(false);
-    const [conversations, setConversations] = useState([]);
 
     useEffect(() => {
         const timer = async () => {
@@ -34,7 +32,6 @@ function Profile({ feed, user, token, socket, allUsers, loadAllUsers, stars, get
             const fetchData = async () => {
                 await getCollabStatus();
                 await getCurrentCollabList();
-                await getConversations();
                 setUserDataIsLoaded(true)
             }
             fetchData();
@@ -42,23 +39,11 @@ function Profile({ feed, user, token, socket, allUsers, loadAllUsers, stars, get
         // eslint-disable-next-line
     }, [token])
 
+
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const allOtherUsers = allUsers.filter(other => other.user_id !== user.user_id)
 
-    const getConversations = async() => {
-        const resp = await fetch(`${BACKEND_URL}/messages/get-conversations`, {
-            headers: {
-                'content-type': 'application/json',
-                'authorization': `Bearer ${token}`
-            }
-        });
-        if (resp.ok) {
-            const data = await resp.json();
-            console.log('Conversations: ', data.conversations);
-            setConversations(prev => data.conversations)
-            setAllMessages(prev => data.messages)
-        }
-    }
+    
 
     const getCollabStatus = async () => {
         const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
@@ -207,13 +192,12 @@ function Profile({ feed, user, token, socket, allUsers, loadAllUsers, stars, get
 
     const handleNewConvo = () => {
         setShowNewConvo(true)
-        
     }
 
-    const createConversation = async(user2) => {
+    const createConversation = async (user2) => {
         const resp = await fetch(`${BACKEND_URL}/messages/new-conversation`, {
             method: "POST",
-            headers: {"content-type": "application/json"},
+            headers: { "content-type": "application/json" },
             body: JSON.stringify({
                 user1: user.user_id,
                 user2: user2.user_id
@@ -222,7 +206,7 @@ function Profile({ feed, user, token, socket, allUsers, loadAllUsers, stars, get
         if (resp.ok) {
             const data = await resp.json();
             console.log(data.conversations);
-            await getConversations();
+            socket.emit('messageReceived')
             setShowNewConvo(false);
         }
     }
@@ -361,12 +345,12 @@ function Profile({ feed, user, token, socket, allUsers, loadAllUsers, stars, get
                                     </>}
                                     <button className='btn newConvoBtn' onClick={handleNewConvo}>+new convo</button>
 
-                                    {conversations && 
-                                    conversations.map((convo, idx) => {
-                                        const filteredMessages = allMessages.filter(mess => mess.conversation_id === convo.conversation_id)
-                                        return  <Conversation key={idx} socket={socket} user={user} user2={convo.user2_id} conversation_id={convo.conversation_id} allMessages={filteredMessages} />
-                                    })}
-                                   
+                                    {conversations &&
+                                        conversations.map((convo, idx) => {
+                                            const filteredMessages = allMessages.filter(mess => mess.conversation_id === convo.conversation_id)
+                                            return <Conversation key={idx} socket={socket} user={user} user2={convo.user2_id} conversation_id={convo.conversation_id} allMessages={filteredMessages} />
+                                        })}
+
                                 </>
                             }
 

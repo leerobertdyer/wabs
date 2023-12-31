@@ -7,14 +7,14 @@ const Conversations = ({ socket, user, user2, conversation_id, allMessages }) =>
     const [messageText, setMessageText] = useState('');
     const [showConversation, setShowConversation] = useState(false);
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-    
+
     useEffect(() => {
         if (allMessages && allMessages.length > 0 ) {
         console.log(allMessages);
         setMessages(allMessages)
         }
     }, [allMessages])
-
+  
     useEffect(() => {
         socket.on('message', (message) => {
             setMessages([...messages, message]);
@@ -38,8 +38,7 @@ const Conversations = ({ socket, user, user2, conversation_id, allMessages }) =>
                 })
             });
             if (resp.ok) {
-                const data = await resp.json();
-                console.log(data);
+                //
             }
         }
         await saveMessage();
@@ -54,12 +53,10 @@ const Conversations = ({ socket, user, user2, conversation_id, allMessages }) =>
     return (
         <>
             <div className={showConversation ? "conversation showConversation" : "conversation"}>
+                <h1 className='convoTitle'>{user.userName} & user {user2}</h1>
                 {messages.map((message, index) => (
-                    <>
-                    <h1 className='convoTitle'>{message.receiver} and {message.sender}</h1>
                         <Message key={index} message={message} user={user}  
-                        className={message.user1_id === user.user_id ? 'sentMessage' : 'received message'} />
-                    </> ))
+                        className={message.user1_id === user.user_id ? 'sentMessage' : 'received message'} /> ))
                    }
                 <form className="input-box">
                     <input
@@ -72,7 +69,10 @@ const Conversations = ({ socket, user, user2, conversation_id, allMessages }) =>
                     <input type="submit" className="messageBtn" value="send" onClick={(event) => sendMessage(event)}></input>
                 </form>
             </div>
-                   <button className='btn showConvoBtn' onClick={() => setShowConversation(true)}>Show</button>
+                   {messages.length > 0 && <button 
+                   className='btn showConvoBtn' 
+                   onClick={() => setShowConversation(!showConversation)}>
+                    {showConversation ? 'Close' : 'Show'}</button>}
     </>
   )
 }
