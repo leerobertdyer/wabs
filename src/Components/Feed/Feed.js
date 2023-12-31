@@ -6,12 +6,10 @@ import { Link, useNavigate } from "react-router-dom";
 
 function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, updateStars, stars }) {
     const [sortBy, setSortBy] = useState('Latest');
-    const [currentPost, setCurrentPost] = useState({ id: null, type: null, user_id: null });
+    const [currentPost, setCurrentPost] = useState({  });
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [showPhoto, setShowPhoto] = useState(false);
     const [photo, setPhoto] = useState(null);
-    const [lyrics, setLyrics] = useState('');
-    const [title, setTitle] = useState('');
     const [showLyrics, setShowLyrics] = useState(false);
 
     const page = window.location.href
@@ -85,25 +83,13 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
             : await updateStars(user.user_id, post_id, sortBy, 'collab')
     }
 
-    const handleDeleteClick = (id, type, user_id) => {
+    const handleDeleteClick = (event, id, type, user_id) => {
+        event.stopPropagation();
         const nextCurrentPost = { id: id, type: type, user_id: user_id }
         setCurrentPost(nextCurrentPost)
-        setConfirmDelete(true)
-    }
-
-    const deletePost = async () => {
-        console.log('Deleting Post ', currentPost.id)
-        const resp = await fetch(`${BACKEND_URL}/delete-post?feed_id=${currentPost.id}&feed_type=${currentPost.type}&user_id=${currentPost.user_id}`, {
-            method: "DELETE",
-            credentials: 'include'
-        })
-        if (resp.ok) {
-            const data = await resp.json();
-            console.log(data.message);
-            loadFeed();
-            setCurrentPost({ id: null, type: null, user_id: null })
-            setConfirmDelete(false)
-        }
+        setShowLyrics(false);
+        setShowPhoto(false);
+        setConfirmDelete(true);
     }
 
     const handleCollabClick = (post) => {
@@ -121,14 +107,30 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
         setShowPhoto(true)
     }
 
-    const handleShowLyrics = (lyrics, title) => {
+    const handleShowLyrics = (post) => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
         })
-        setLyrics(lyrics);
-        setTitle(title)
+        setCurrentPost(post)
         setShowLyrics(true);
+    }
+
+
+
+    const deletePost = async () => {
+        console.log('Deleting Post ', currentPost.id)
+        const resp = await fetch(`${BACKEND_URL}/delete-post?feed_id=${currentPost.id}&feed_type=${currentPost.type}&user_id=${currentPost.user_id}`, {
+            method: "DELETE",
+            credentials: 'include'
+        })
+        if (resp.ok) {
+            const data = await resp.json();
+            console.log(data.message);
+            loadFeed();
+            setCurrentPost({ id: null, type: null, user_id: null })
+            setConfirmDelete(false)
+        }
     }
 
     const cardColors = {
@@ -150,9 +152,10 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                     </div>
                     <div className="innerShowLyricDiv">
                        <pre>
-                       <h1 className="lyricTitle">{title}</h1>
-                        {lyrics}
+                       <h1 className="lyricTitle">{currentPost.title}</h1>
+                        {currentPost.lyrics}
                         </pre> 
+                        <button className="collabButton" style={{marginBottom: "-20px"}}onClick={() => (handleCollabClick(currentPost))}>Collaborate!</button>
                     </div>
                 </div>}
 
@@ -200,9 +203,6 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                         backgroundSize: "100vw"
                                     }
                                     : {}}
-                                onClick={(post.type === "profile_pic" || post.type === "profile_background") 
-                                ? () => { handleShowPhoto(post.feed_pic) } 
-                                : post.type === "lyrics" ? (() => { handleShowLyrics(post.lyrics, post.title) }): null}
                                 key={index}>
 
                                 <div className="topPostDiv">
@@ -235,9 +235,14 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                             <p>Stars: {post.stars}</p>
                                         </div>
                                     </div>
-
+ 
 
                                 </div>
+                                <div className={(post.type === "profile_pic" || post.type === "profile_background" || post.type === "lyrics") ? "bottomPostDiv clickMe" : "bottomPostDiv"}
+                                onClick={(post.type === "profile_pic" || post.type === "profile_background") 
+                                ? () => { handleShowPhoto(post.feed_pic) } 
+                                : post.type === "lyrics" ? (() => { handleShowLyrics(post) }): null}>
+
                                 {(post.type === "song" || post.type === "music" || post.type === "collab") && <> <Audio className="feedAudio" source={post.song_file} /> <div></div> </>}
 
                                 {post.type === "lyrics"
@@ -256,8 +261,9 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                 }
                                 {user.user_id === post.user_id && <div className="trash">
                                     <LiaTrashAlt size={40}
-                                        onClick={() => handleDeleteClick(post.feed_id, post.type, user.user_id)} />
+                                        onClick={(event) => handleDeleteClick(event, post.feed_id, post.type, user.user_id)} />
                                 </div>}
+                            </div>
                             </div>
                         )
                     }

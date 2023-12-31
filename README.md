@@ -12,6 +12,7 @@ Still very much in progress
 - Submitting two collabs with the same name both will be deleted if one is finalized.
                 Either prevent by making collab titles have unique names
                 Or give use another method to del().
+- clicking on lyrics is wierd. Also when yo click on them in profile it messes up the view...
 
 # To Do:
 
