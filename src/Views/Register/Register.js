@@ -5,6 +5,9 @@ import { auth, fdb } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 
+
+
+
 function Register({ loadUser }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -15,7 +18,7 @@ function Register({ loadUser }) {
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
     useEffect(() => {
-        const fetchAllUsers = async() => {
+        const fetchAllUsers = async () => {
             const resp = await fetch(`${BACKEND_URL}/auth/get-all-emails`);
             if (resp.ok) {
                 const data = await resp.json();
@@ -42,11 +45,38 @@ function Register({ loadUser }) {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-
-            console.log(user.uid);
-            console.log(username);
-
             const firebaseToken = await user.getIdToken();
+
+            const NINJA_URL = "https://api.api-ninjas.com/v1/"
+            const NINJA_KEY = process.env.REACT_APP_NINJA_API_KEY;
+
+            const UNSPLASH_KEY = process.env.REACT_APP_UNSPLASH_KEY;
+            const unsplashUrl = `https://api.unsplash.com/photos/random?client_id=${UNSPLASH_KEY}`;
+            const getRandomPhoto = async (query) => {
+                const resp = await fetch(`${unsplashUrl}&query=${query}`)
+                if (resp.ok) {
+                    const data = await resp.json();
+                    return data
+                }
+            }
+            const naturePhotoData = await getRandomPhoto('nature');
+            const naturePhotoLink = naturePhotoData.urls.full
+
+            const animalPhotoData = await getRandomPhoto('animals')
+            const animalPhotoLink = animalPhotoData.urls.full
+
+            const fetchNewUserStatus = async () => {
+                const resp = await fetch(`${NINJA_URL}/jokes`, {
+                    headers: { 'X-Api-Key': NINJA_KEY, 'Accept': 'image/jpg' }
+                });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    const joke = data[0].joke
+                    return joke
+                }
+            }
+
+            const status = await fetchNewUserStatus();
 
             const response = await fetch(`${BACKEND_URL}/auth/register`, {
                 method: "POST",
@@ -58,6 +88,9 @@ function Register({ loadUser }) {
                     "username": username.toLowerCase(),
                     "email": email,
                     "UID": user.uid,
+                    "status": status,
+                    "profile_pic": animalPhotoLink,
+                    "background_pic": naturePhotoLink
                 }),
             });
 
@@ -66,6 +99,7 @@ function Register({ loadUser }) {
             }
 
             const data = await response.json();
+            console.log(data);
             loadUser(data);
             setDoc(doc(fdb, "users", username), data);
 
