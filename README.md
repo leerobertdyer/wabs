@@ -12,7 +12,8 @@ Still very much in progress
 - Submitting two collabs with the same name both will be deleted if one is finalized.
                 Either prevent by making collab titles have unique names
                 Or give use another method to del().
--Scoreboard displays winners even when everyone is at 0 points...
+- Scoreboard displays winners even when everyone is at 0 points...
+- Feed only updates for current user
 
 # To Do:
 

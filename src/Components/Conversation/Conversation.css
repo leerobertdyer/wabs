@@ -1,0 +1,62 @@
+.conversation {
+    width: 97%;
+    height: 60px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 25px auto;
+    gap: 10px;
+    border: double white 4px;
+    border-radius: 8px;
+}
+
+.showConversation {
+    height: fit-content;
+    padding: 30px;
+}
+
+.convoTitle {
+    justify-self: flex-start;
+    margin: 0;
+    padding: 0;
+}
+
+.messageInput {
+    background-color: rgb(24, 24, 24);
+    border: solid white 2px;
+    border-radius: 10px;
+    color: white;
+    height: 30px;
+    padding: 4px;
+}
+
+.messageBtn {
+    background-color: aquamarine;
+    border: gold solid 1px;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 10px;
+    width: 45px;
+    margin-left: 10px;
+}
+
+.messageBtn:hover {
+    background-color: gold;
+    border: solid aquamarine 1px;
+    cursor: pointer;
+}
+
+
+
+.showConvoBtn {
+    margin-top: -35px;
+    width: 20%;
+    padding: 0;
+    background-color: black;
+    color: white;
+}
+.showConvoBtn:hover {
+    color: black;
+    background-color: gold;
+}

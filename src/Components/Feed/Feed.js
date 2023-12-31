@@ -5,9 +5,15 @@ import './Feed.css'
 import { Link, useNavigate } from "react-router-dom";
 
 function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, updateStars, stars }) {
-    const [sortBy, setSortBy] = useState('Latest')
-    const [currentPost, setCurrentPost] = useState({ id: null, type: null, user_id: null })
-    const [confirmDelete, setConfirmDelete] = useState(false)
+    const [sortBy, setSortBy] = useState('Latest');
+    const [currentPost, setCurrentPost] = useState({ id: null, type: null, user_id: null });
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [showPhoto, setShowPhoto] = useState(false);
+    const [photo, setPhoto] = useState(null);
+    const [lyrics, setLyrics] = useState('');
+    const [title, setTitle] = useState('');
+    const [showLyrics, setShowLyrics] = useState(false);
+
     const page = window.location.href
     const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
@@ -19,7 +25,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
         const position = window.pageYOffset;
         setScrollPosition(position);
     };
-    
+
     useEffect(() => {
         window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -110,6 +116,21 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
         })
     }
 
+    const handleShowPhoto = (pic) => {
+        setPhoto(pic);
+        setShowPhoto(true)
+    }
+
+    const handleShowLyrics = (lyrics, title) => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
+        setLyrics(lyrics);
+        setTitle(title)
+        setShowLyrics(true);
+    }
+
     const cardColors = {
         song: 'songFeedCard',
         collab: 'collabFeedCard',
@@ -122,9 +143,30 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
 
     return (
         <>
+            {showLyrics &&
+                <div className="showPhotoDiv">
+                    <div className="xBtnContainer">
+                        <button onClick={() => setShowLyrics(false)} className="xBtn" style={{ marginTop: scrollPosition + 10 }} >X</button>
+                    </div>
+                    <div className="innerShowLyricDiv">
+                       <pre>
+                       <h1 className="lyricTitle">{title}</h1>
+                        {lyrics}
+                        </pre> 
+                    </div>
+                </div>}
+
+            {showPhoto &&
+                <div className="showPhotoDiv">
+                    <div className="xBtnContainer">
+                        <button onClick={() => setShowPhoto(false)} className="xBtn" style={{ marginTop: scrollPosition - 25 }} >X</button>
+                    </div>
+                    <div className="innerShowPhotoDiv" style={{ backgroundImage: `url(${photo})`, backgroundSize: 'contain', marginTop: scrollPosition + 30 }}>
+                    </div>
+                </div>}
             {confirmDelete &&
                 <div className="loading">
-                    <div className="deleteDialogBox" style={{ marginTop: scrollPosition - 100 }}>
+                    <div className="deleteDialogBox" style={{ marginTop: scrollPosition + 200 }}>
                         Are you sure?
                         <p>(this can't be undone)</p>
                         <div className="deleteBtnDiv">
@@ -158,6 +200,9 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                         backgroundSize: "100vw"
                                     }
                                     : {}}
+                                onClick={(post.type === "profile_pic" || post.type === "profile_background") 
+                                ? () => { handleShowPhoto(post.feed_pic) } 
+                                : post.type === "lyrics" ? (() => { handleShowLyrics(post.lyrics, post.title) }): null}
                                 key={index}>
 
                                 <div className="topPostDiv">
@@ -196,13 +241,13 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                 {(post.type === "song" || post.type === "music" || post.type === "collab") && <> <Audio className="feedAudio" source={post.song_file} /> <div></div> </>}
 
                                 {post.type === "lyrics"
-                                    && 
+                                    &&
                                     <pre className="lyricsFeed">{post.lyrics}</pre>}
 
                                 {post.type === "status" &&
                                     <>
                                         <h3 className='feedStatus'>{`"${post.feed_status}"`}</h3>
-                                    {post.user_id !== user.user_id && <div></div>}
+                                        {post.user_id !== user.user_id && <div></div>}
                                     </>
                                 }
 

@@ -6,9 +6,9 @@ import { IoCameraSharp } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import FullSongFeed from '../../Components/FullSongFeed/FullSongFeed';
 import { auth } from '../../firebase';
-import Messages from '../../Components/Messages/Messages';
+import Conversation from '../../Components/Conversation/Conversation';
 
-function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
+function Profile({ feed, user, token, socket, allUsers, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
     const [checked, setChecked] = useState(user.collab === 'true');
     const [showSongs, setShowSongs] = useState(false);
@@ -16,17 +16,10 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
     const [showCollab, setShowCollab] = useState(false);
     const [showPosts, setShowPosts] = useState(false);
     const [userDataIsLoaded, setUserDataIsLoaded] = useState(false)
-    const [messages, setMessages] = useState([])
+    const [allMessages, setAllMessages] = useState([])
     const [showMessages, setShowMessages] = useState(false);
-
-
-    useEffect(() => {
-       const getMessagesIfDifferent = async() => {
-        await getMessages();
-       }
-       getMessagesIfDifferent();
-//eslint-disable-next-line
-    }, [messages])
+    const [showNewConvo, setShowNewConvo] = useState(false);
+    const [conversations, setConversations] = useState([]);
 
     useEffect(() => {
         const timer = async () => {
@@ -39,7 +32,7 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
             const fetchData = async () => {
                 await getCollabStatus();
                 await getCurrentCollabList();
-                await getMessages();
+                await getConversations();
                 setUserDataIsLoaded(true)
             }
             fetchData();
@@ -48,21 +41,20 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
     }, [token])
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+    const allOtherUsers = allUsers.filter(other => other.user_id !== user.user_id)
 
-    const getMessages = async () => {
-        const resp = await fetch(`${BACKEND_URL}/profile/get-messages`, {
+    const getConversations = async() => {
+        const resp = await fetch(`${BACKEND_URL}/messages/get-conversations`, {
             headers: {
                 'content-type': 'application/json',
-                'authorization': `Bearer ${token}`,
+                'authorization': `Bearer ${token}`
             }
-        })
+        });
         if (resp.ok) {
             const data = await resp.json();
-            console.log(data.messages);
-            const nextMessages = data.messages.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
-            if (nextMessages.length !== messages.length) {
-                setMessages(nextMessages)
-            }
+            console.log('Conversations: ', data.conversations);
+            setConversations(prev => data.conversations)
+            setAllMessages(prev => data.messages)
         }
     }
 
@@ -138,7 +130,6 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                     type === "profile_pic"
                         ? handleSetProfilePhoto(data.newPhoto)
                         : handleSetBackgroundPhoto(data.newPhoto)
-                    loadFeed();
                     // console.log('photo saved in dbx: ', data.newPhoto);
                 }
                 else {
@@ -212,8 +203,26 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
         if (item === "messages") { setShowMessages(true) }
     }
 
-    const handleRefreshMessages = (nextMessages) => {
-        setMessages(prevMessages => nextMessages)
+    const handleNewConvo = () => {
+        setShowNewConvo(true)
+        
+    }
+
+    const createConversation = async(user2) => {
+        const resp = await fetch(`${BACKEND_URL}/messages/new-conversation`, {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify({
+                user1: user.user_id,
+                user2: user2.user_id
+            })
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            console.log(data.conversations);
+            await getConversations();
+            setShowNewConvo(false);
+        }
     }
 
     const { isLoggedIn } = user
@@ -282,7 +291,7 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                             <button className='btn' onClick={() => handleProfileDisplay('songs')}>Your Songs</button>
                             <button className='btn' onClick={() => handleProfileDisplay('collabs')}>Your Collabs</button>
                             <button className='btn' onClick={() => handleProfileDisplay('posts')}>Your Posts</button>
-                            <button className='btn' onClick={() => handleProfileDisplay('messages')}>Messages</button>
+                            <button className='btn' onClick={() => handleProfileDisplay('messages')}>Messages (fix)</button>
                         </div>
 
                         {showStatus && <>
@@ -321,8 +330,8 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                                 showCollab && <div className='allUserCollabs'>
                                     {userCollab.length > 0
                                         ? <div className='yourDivs'>
-                                    <h3 className='profileFeedTitles'>Your Collabs:</h3>
-                                    <FullSongFeed feed={userCollab} user={user} />    
+                                            <h3 className='profileFeedTitles'>Your Collabs:</h3>
+                                            <FullSongFeed feed={userCollab} user={user} />
                                         </div>
                                         : <>
                                             <div></div>
@@ -341,8 +350,21 @@ function Profile({ feed, user, token, loadAllUsers, stars, getStars, updateStars
                             }
 
                             {
-                                showMessages && messages.length > 0 && <>
-                                    <Messages feed={messages} user={user} handleRefreshMessages={handleRefreshMessages}/>
+                                showMessages && <>
+                                    {showNewConvo && <>
+                                        <p>Who would you like to chat with?</p>
+                                        {allOtherUsers.map((user, idx) => {
+                                            return <p key={idx} className='userChatLink' onClick={() => createConversation(user)}>{user.username}</p>
+                                        })}
+                                    </>}
+                                    <button className='btn newConvoBtn' onClick={handleNewConvo}>+new convo</button>
+
+                                    {conversations && 
+                                    conversations.map((convo, idx) => {
+                                        const filteredMessages = allMessages.filter(mess => mess.conversation_id === convo.conversation_id)
+                                        return  <Conversation key={idx} socket={socket} user={user} user2={convo.user2_id} conversation_id={convo.conversation_id} allMessages={filteredMessages} />
+                                    })}
+                                   
                                 </>
                             }
 

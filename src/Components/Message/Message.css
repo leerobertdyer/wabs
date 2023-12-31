@@ -1,0 +1,55 @@
+.eachMessage {
+    width: 97%;
+    height: fit-content;
+    color: white;
+    background-color: black;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border-radius: 22px;
+}
+
+.messageSender {
+    font-size: 17px;
+}
+
+.messageContent {
+    font-size: 15px;
+    align-self: center;
+}
+
+.deleteMessageBtn {
+    color: black;
+    background-color: rgb(255, 35, 35);
+    border: gold solid 1px;
+    border-radius: 4px;
+    width: 13vw;
+    height: 30px;
+}
+
+.deleteMessageBtn:hover {
+    color: white;
+    background-color: black;
+}
+
+.nameAndMessage {
+    display: flex;
+    flex-grow: 1;
+    gap: 10px;
+    align-items: center;
+    max-width: 80%;
+}
+
+.sentMessage {
+    background-color: rgba(24, 124, 155, .6);
+    width: 40%;
+    align-self: flex-end;
+    border-top-left-radius: 0;
+}
+.receivedMessage {
+    background-color: rgba(214, 55, 230, .6);
+    width: 40%;
+    align-self: flex-start;
+    border-bottom-right-radius: 0;
+}

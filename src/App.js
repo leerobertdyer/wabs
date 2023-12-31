@@ -13,6 +13,9 @@ import Editor from './Views/Editor/Editor';
 import Scoreboard from './Views/Scoreboard/Scoreboard';
 import Home from './Views/Home/Home';
 import { auth } from './firebase';
+import io from 'socket.io-client'; 
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 
 function App() {
   const [user, setUser] = useState({
@@ -34,47 +37,70 @@ function App() {
   const [collabUsers, setCollabUsers] = useState([])
   const [allUsers, setAllUsers] = useState([])
   const [token, setToken] = useState('')
-
+  const [socket, setSocket] = useState(null)
 
   useEffect(() => {
-
+    
     const checkAuthentication = async () => {
       try {
         const firebaseToken = await auth.currentUser.getIdToken();
         setToken(firebaseToken)
         // console.log('Firebase Token:', firebaseToken);
-
         const response = await fetch(`${BACKEND_URL}/auth/check-session`, {
           headers: {
             'content-type': 'application/json',
             'Authorization': `Bearer ${firebaseToken}`,
           },
         });
-
         const data = await response.json();
         // console.log('Response Data:', data);
-
         loadUser(data.user);
+        setSocket(io(BACKEND_URL, {
+          transports: ['websocket'],
+          query: {
+            userId: user.user_id
+          },
+        }))
       }
       catch (error) {
         console.error('Error checking authentication:', error);
       };
     };
-    
     auth.onAuthStateChanged((user) => {
       if (user) {
         // console.log(user);
         checkAuthentication();
       }
     })
-
     loadFeed();
     loadAllUsers();
     // eslint-disable-next-line
   }, []);
+  
+useEffect(() => {
+if (!socket) {
+  return
+}
+  socket.on('connect', () => {
+    console.log(`${user.userName} connected`);
+    socket.emit('sendUserId', user.user_id)
+  });
 
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+socket.on('updateFeed', async() => {
+  console.log('socket event: loading new feed');
+  await loadFeed();
+})
 
+  socket.on('disconnect', () => {
+    console.log('Client Disconnected');
+  });
+  return () => {
+    socket.off('connect');
+    socket.off('disconnect');
+  };
+
+}, [socket, user.user_id, user.userName])
+  
   const loadAllUsers = async () => {
     const resp = await fetch(`${BACKEND_URL}/collab/get-all`)
     const data = await resp.json();
@@ -124,6 +150,7 @@ function App() {
     const nextStars = data.userStars.map(star => Number(star.post_id))
     setStars(nextStars)
   }
+
   const updateStars = async (user_id, post_id, currentSort, page) => {
     if (user.user_id > 0) {
       try {
@@ -138,7 +165,6 @@ function App() {
         } else if (data.message === 'un-starred') {
           setStars(prevStars => stars.filter(star => star.feed_id !== data.post))
         }
-        await loadFeed();
         await getStars(user_id);
 
       } catch (err) {
@@ -215,7 +241,7 @@ function App() {
               <Route path='score' element={<Scoreboard users={allUsers} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
-              <Route path="/profile" element={<Profile user={user} token={token} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/profile" element={<Profile user={user} token={token} socket={socket} allUsers={allUsers} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} loadAllUsers={loadAllUsers} />} />
               <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
               <Route path="/collaborate/editor" element={<Editor user={user} token={token} />} />
