@@ -93,7 +93,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
     }
 
     const handleCollabClick = (post) => {
-        user.userName
+        user.username
             ? navigate(`/collaborate/editor`, { state: { post } })
             : navigate('/login')
         window.scrollTo({

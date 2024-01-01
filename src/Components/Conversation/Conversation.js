@@ -2,10 +2,11 @@ import './Conversation.css'
 import { useState, useEffect } from 'react';
 import Message from '../Message/Message';
 
-const Conversations = ({ socket, user, user2, conversation_id, allMessages }) => {
+const Conversations = ({ socket, user, user1username, user2username, user2_id, conversation_id, allMessages }) => {
     const [messages, setMessages] = useState([]);
     const [messageText, setMessageText] = useState('');
     const [showConversation, setShowConversation] = useState(false);
+
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
     useEffect(() => {
@@ -14,6 +15,7 @@ const Conversations = ({ socket, user, user2, conversation_id, allMessages }) =>
         setMessages(allMessages)
         }
     }, [allMessages])
+
   
     useEffect(() => {
         socket.on('message', (message) => {
@@ -33,7 +35,7 @@ const Conversations = ({ socket, user, user2, conversation_id, allMessages }) =>
                     id: messageId,
                     content: messageText,
                     user1_id: user.user_id,
-                    user2_id: user2,
+                    user2_id: user2_id,
                     conversation_id: conversation_id
                 })
             });
@@ -42,7 +44,7 @@ const Conversations = ({ socket, user, user2, conversation_id, allMessages }) =>
             }
         }
         await saveMessage();
-        socket.emit('sendMessage', { id: messageId, content: messageText, user2 });
+        socket.emit('sendMessage', { id: messageId, content: messageText, user2: user2_id });
         setMessageText('');
     };
 
@@ -53,9 +55,9 @@ const Conversations = ({ socket, user, user2, conversation_id, allMessages }) =>
     return (
         <>
             <div className={showConversation ? "conversation showConversation" : "conversation"}>
-                <h1 className='convoTitle'>{user.userName} & user {user2}</h1>
+                <h1 className='convoTitle'>{user1username} & {user2username}</h1>
                 {messages.map((message, index) => (
-                        <Message key={index} message={message} user={user}  
+                        <Message key={index} message={message} user={user} user1username={user1username} user2username={user2username}
                         className={message.user1_id === user.user_id ? 'sentMessage' : 'received message'} /> ))
                    }
                 <form className="input-box">

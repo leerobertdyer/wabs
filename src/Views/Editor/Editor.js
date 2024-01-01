@@ -157,7 +157,7 @@ const Editor = ({ user, token }) => {
 
               {hasCollab
                 ? <>
-                 <span className='titleAndIcon'><h1>"{title}"</h1><FaRegEdit size={30}/></span><h2>by {post.username} & {user.userName}</h2>
+                 <span className='titleAndIcon'><h1>"{title}"</h1><FaRegEdit size={30}/></span><h2>by {post.username} & {user.username}</h2>
                 </>
                 : <>
                   <span className='titleAndIcon'><h1>"{title}"</h1><FaRegEdit size={30}/></span><h2>by {post.username}</h2>

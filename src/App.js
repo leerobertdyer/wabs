@@ -20,7 +20,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 function App() {
   const [user, setUser] = useState({
     user_id: '',
-    userName: '',
+    username: '',
     email: '',
     isLoggedIn: false,
     user_profile_pic: '',
@@ -55,7 +55,6 @@ function App() {
         });
         const data = await response.json();
         loadUser(data.user);
-    getConversations();
 
         setSocket(io(BACKEND_URL, {
           transports: ['websocket'],
@@ -83,16 +82,17 @@ useEffect(() => {
 if (!socket) {
   return
 }
-  socket.on('connect', () => {
-    console.log(`${user.userName} connected`);
+  socket.on('connect', async() => {
+    console.log(`${user.username} connected`);
     socket.emit('sendUserId', user.user_id)
+    await getConversations();
   });
 
 socket.on('updateFeed', async() => {
   console.log('socket event: loading new feed');
   await loadFeed();
 })
-socket.on('messageReceived', () => {
+socket.on('getConversations', () => {
   getConversations();
 })
 
@@ -104,7 +104,7 @@ socket.on('messageReceived', () => {
     socket.off('disconnect');
   };
 //eslint-disable-next-line
-}, [socket, user.user_id, user.userName])
+}, [socket, user.user_id, user.username])
 
 const getConversations = async () => {
   const resp = await fetch(`${BACKEND_URL}/messages/get-conversations`, {
@@ -220,7 +220,7 @@ const getConversations = async () => {
   const loadUser = (data) => {
     setUser({
       user_id: data.user_id,
-      userName: data.username,
+      username: data.username,
       email: data.user_email,
       datecreated: data.date_user_joined,
       score: data.score,
@@ -235,7 +235,7 @@ const getConversations = async () => {
   const unloadUser = () => {
       setUser({
         user_id: '',
-        userName: '',
+        username: '',
         email: '',
         isLoggedIn: false,
         user_profile_pic: '',

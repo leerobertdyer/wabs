@@ -27,17 +27,21 @@
     max-width: 80%;
 }
 
-.sentMessage {
-    background-color: rgba(24, 124, 155, .6);
-    width: 30%;
-    align-self: flex-end;
-    border-top-left-radius: 0;
-    margin-right: 25px;
-}
 .receivedMessage {
     background-color: rgba(214, 55, 230, .6);
-    width: 30%;
+    width: 35%;
+    min-width: 40vw;
     align-self: flex-start;
+    border-top-left-radius: 0;
+    margin-left: 15%;
+
+}
+.sentMessage {
+    background-color: rgba(24, 124, 155, .6);
+    width: 35%;
+    min-width: 40vw;
+    align-self: flex-end;
     border-bottom-right-radius: 0;
-    margin-left: 25px;
+    margin-right:15%;
+
 }

@@ -193,18 +193,21 @@ function Profile({ feed, user, allMessages, conversations, token, socket, allUse
     }
 
     const createConversation = async (user2) => {
+        console.log(user2.username)
         const resp = await fetch(`${BACKEND_URL}/messages/new-conversation`, {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
-                user1: user.user_id,
-                user2: user2.user_id
+                user1username: user.username,
+                user2username: user2.username,
+                user1_id: user.user_id,
+                user2_id: user2.user_id
             })
         });
         if (resp.ok) {
             const data = await resp.json();
-            console.log(data.conversations);
-            socket.emit('messageReceived')
+            console.log('new convo: ', data.conversations);
+            socket.emit('getConversations')
             setShowNewConvo(false);
         }
     }
@@ -346,7 +349,7 @@ function Profile({ feed, user, allMessages, conversations, token, socket, allUse
                                     {conversations &&
                                         conversations.map((convo, idx) => {
                                             const filteredMessages = allMessages.filter(mess => mess.conversation_id === convo.conversation_id)
-                                            return <Conversation key={idx} socket={socket} user={user} user2={convo.user2_id} conversation_id={convo.conversation_id} allMessages={filteredMessages} />
+                                            return <Conversation key={idx} socket={socket} user={user} user1username = {convo.user1username} user2username={convo.user2username} user2_id={convo.user2_id} conversation_id={convo.conversation_id} allMessages={filteredMessages} />
                                         })}
 
                                 </>

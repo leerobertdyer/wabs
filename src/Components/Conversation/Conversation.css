@@ -12,16 +12,16 @@
 }
 
 .showConversation {
-    height: fit-content;
+    height: 40vh;
 }
 
 .convoTitle {
     justify-self: flex-start;
+    align-self: flex-start;
     background-color: white;
     color: black;
     padding: 10px;
     font-size: 15px;
-    border-bottom-left-radius: 22px;
     border-bottom-right-radius: 22px;
     
 }

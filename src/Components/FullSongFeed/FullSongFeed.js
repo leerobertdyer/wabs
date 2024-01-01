@@ -8,7 +8,7 @@ const navigate = useNavigate();
 let final = false;
 
 const handleCollabClick = (post) => {
-    user && user.userName
+    user && user.username
     ? navigate(`/collaborate/editor`, {state: { post, final }})
     : navigate('/login')
     window.scrollTo({
