@@ -1,0 +1,41 @@
+.mainNotificationsDiv {
+    background-color: rgb(217, 62, 93);
+    color: white;
+    font-family:'Courier New', Courier, monospace;
+    font-size: 12px;
+    text-align: center;
+    width: 20px;
+    border-radius: 50%;
+    padding: 2px;
+    display: inline;
+}
+.mainNotificationsDiv:hover {
+    cursor: pointer;
+}
+
+.notifactionsMenu {
+position: relative;
+display: block;
+width: 300px;
+margin-right: 100px;
+top: 20px;
+max-height: 180px;
+font-size: 12px;
+overflow-y: scroll;
+border: white solid 2px;
+}
+
+.notification {
+    background-color: rgba(217, 62, 93, .8);
+    color: white;
+    border: solid white 1px;
+    border-radius: 2px;
+    padding: 5px;
+}
+
+.notificationsDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+  }

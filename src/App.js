@@ -15,6 +15,7 @@ import Home from './Views/Home/Home';
 import { auth } from './firebase';
 import io from 'socket.io-client'; 
 
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 
 function App() {
@@ -254,7 +255,7 @@ const getConversations = async () => {
       <div className='App'>
         {
           <div id='mainWrapper'>
-            <Nav user={user} unloadUser={unloadUser} />
+            <Nav user={user} unloadUser={unloadUser} token={token} socket={socket}/>
             <div className='spacing'></div>
             <Routes>
               <Route path='/' element={<Home user={user} />} />

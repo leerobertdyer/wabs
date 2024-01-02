@@ -13,9 +13,14 @@ Still very much in progress
                 Either prevent by making collab titles have unique names
                 Or give use another method to del().
 - clicking on lyrics is wierd. Also when yo click on them in profile it messes up the view...
+- NEED TO AUTO REFRESH FIREBASE TOKENS ON USER SIDE 
+- Need to recreate OTHER USER variable to send with collab notification update
 
 # To Do:
 
+-       notes on collabs aren't showing up. Make a pop up window and a link above the fullsongfeed element displaying the note.
+-       Either get rid of collab switch, or explain it
+-       in collab page make it so you can switch list between list of ALL or list of CURRENT collaborators
 -       Add Google/Facebook Sign in to firebase: https://console.firebase.google.com/u/0/project/wabs-e49c4/authentication/providers
 
 -   comments on posts

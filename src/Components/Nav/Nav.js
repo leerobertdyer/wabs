@@ -5,11 +5,13 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useMediaQuery } from 'react-responsive';
 import { GiHamburgerMenu } from "react-icons/gi";
+import Notifications from '../Notifications/Notifications';
 
 
-function Nav({ user, unloadUser }) {
+function Nav({ user, unloadUser, token, socket }) {
     const [isShrunken, setIsShrunken] = useState(false);
     const [showLinks, setShowLinks] = useState(false);
+    const [showLogoutMenu, setShowLogoutMenu] = useState(true);
     const isMobile = useMediaQuery({ query: '(max-width: 500px)' })
     const navigate = useNavigate();
     useEffect(() => {
@@ -78,13 +80,20 @@ function Nav({ user, unloadUser }) {
                 <div className="endOfNavBar">
                     {auth.currentUser ? (
                         <>
+                        <div className='userNameAndNotifications'>
+                                <div className="notificationsDiv" onClick={() => setShowLogoutMenu(!showLogoutMenu)}>
+                                    <Notifications type="all" useClick={true} token={token} socket={socket}/>
+                                    </div>
                             <h3 className={isShrunken ? "shrunkenAboveLogout" : "aboveLogout"}>
                                 {user.username.length > 10 ? `${user.username.slice(0, 10)}...` : user.username}</h3>
+                        </div>
+                        {showLogoutMenu &&
                             <div className="loginBox" >
                                 <div className="loginAndOutLink" to="/signout" onClick={handleSignout}>
                                     Sign Out
                                 </div>
                             </div>
+                        }
                         </>
                     ) : (
                         <div className="loginBox" >

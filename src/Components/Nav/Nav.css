@@ -56,15 +56,17 @@
     justify-content: center;
     align-items: center;
     background-color: white;
-    width: 10vw;
+    width: 70px;
     border-radius: 28px;
     font-size: 15px;
     padding: 6px;
     height: 25px;
+    margin-right: 7px;
   }
 
   .loginBox:hover {
     background-color: gray;
+    cursor: pointer;
   }
 
   .endOfNavBar {
@@ -75,7 +77,7 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    margin-right: 25px;
+    margin-right: 20px;
   }
 
   .shrunkenEndOfNavBar {
@@ -89,7 +91,7 @@
   .aboveLogout {
     transition: 1s;
     margin: 0;
-    font-size: 2vw;
+    font-size: 15px;
   }
 
   .shrunkenAboveLogout {
@@ -101,7 +103,7 @@
   .loginAndOutLink {
     color: blue;
     text-decoration: none;
-    font-size: 1.25vw;
+    font-size: 12px;
   }
 
   .logoContainer {
@@ -134,10 +136,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     color: white;
     gap: 20px;
     position: absolute;
     top: 0;
     padding-top: 120px;
   }
+
+  .userNameAndNotifications {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+

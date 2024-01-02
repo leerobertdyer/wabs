@@ -282,3 +282,10 @@ input:checked+.slider:before {
     margin-top: 35px;
     width: 40%;
 }
+
+.notificationsBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}

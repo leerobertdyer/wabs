@@ -7,8 +7,7 @@ import { CiEdit } from "react-icons/ci";
 import FullSongFeed from '../../Components/FullSongFeed/FullSongFeed';
 import { auth } from '../../firebase';
 import Conversation from '../../Components/Conversation/Conversation';
-
-
+import Notifications from '../../Components/Notifications/Notifications';
 
 function Profile({ feed, user, allMessages, conversations, token, socket, allUsers, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
@@ -20,6 +19,7 @@ function Profile({ feed, user, allMessages, conversations, token, socket, allUse
     const [userDataIsLoaded, setUserDataIsLoaded] = useState(false)
     const [showMessages, setShowMessages] = useState(false);
     const [showNewConvo, setShowNewConvo] = useState(false);
+    const [newNotes, setNewNotes] = useState([])
 
     useEffect(() => {
         const timer = async () => {
@@ -176,16 +176,45 @@ function Profile({ feed, user, allMessages, conversations, token, socket, allUse
 
     }
 
-    const handleProfileDisplay = (item) => {
+    const handleProfileDisplay = async(item) => {
         setShowCollab(false);
         setShowSongs(false);
         setShowStatus(false);
         setShowPosts(false);
         setShowMessages(false);
         if (item === "songs") { setShowSongs(true) }
-        if (item === "collabs") { setShowCollab(true) }
         if (item === "posts") { setShowPosts(true) }
-        if (item === "messages") { setShowMessages(true) }
+        if (item === "collab") { 
+            const resp = await fetch(`${BACKEND_URL}/profile/clear-notification`, {
+                method: "DELETE",
+                headers: {'content-type': 'application/json'},
+                body: JSON.stringify({
+                    type: item,
+                    user_id: user.user_id
+                })
+            });
+            if (resp.ok) {
+                const data = await resp.json();
+
+                console.log(data);
+            }
+            setShowCollab(true) }
+            if (item === "message") { 
+                const resp = await fetch(`${BACKEND_URL}/profile/clear-notification`, {
+                    method: "DELETE",
+                    headers: {'content-type': 'application/json'},
+                    body: JSON.stringify({
+                        type: item,
+                        user_id: user.user_id
+                    })
+                });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    console.log(data.newNotes);
+                    setNewNotes(data.newNotes)
+                }
+                
+                setShowMessages(true) }
     }
 
     const handleNewConvo = () => {
@@ -272,10 +301,16 @@ function Profile({ feed, user, allMessages, conversations, token, socket, allUse
                         </div>
 
                         <div className='profileNav'>
-                            <button className='btn' onClick={() => handleProfileDisplay('songs')}>Your Songs</button>
-                            <button className='btn' onClick={() => handleProfileDisplay('collabs')}>Your Collabs</button>
-                            <button className='btn' onClick={() => handleProfileDisplay('posts')}>Your Posts</button>
-                            <button className='btn' onClick={() => handleProfileDisplay('messages')}>Messages (fix)</button>
+                            <button
+                                className='btn notificationsBtn' onClick={() => handleProfileDisplay('songs')}>Your Songs</button>
+                            <button
+                                className='btn notificationsBtn' onClick={() => handleProfileDisplay('collab')}>
+                                Your Collabs<div className='notificationsDiv inline'><Notifications newNotes={newNotes} type='collab' useClick={false} token={token} socket={socket} /></div>
+                            </button>
+                            <button className='btn notificationsBtn' onClick={() => handleProfileDisplay('posts')}>Your Posts</button>
+                            <button className='btn notificationsBtn' onClick={() => handleProfileDisplay('message')}>
+                                Messages<div className='notificationsDiv inline'><Notifications newNotes={newNotes} type="message" useClick={false} token={token} socket={socket} /></div>
+                            </button>
                         </div>
 
                         {showStatus && <>
@@ -346,7 +381,7 @@ function Profile({ feed, user, allMessages, conversations, token, socket, allUse
                                     {conversations &&
                                         conversations.map((convo, idx) => {
                                             const filteredMessages = allMessages.filter(mess => mess.conversation_id === convo.conversation_id).sort((a, b) => new Date(a.time) - new Date(b.time))
-                                            return <Conversation key={idx} socket={socket} user={user} user1username={convo.user1username} user2username={convo.user2username} user2_id={convo.user2_id} conversation_id={convo.conversation_id} filteredMessages={filteredMessages} />
+                                            return <Conversation key={idx} socket={socket} user={user} user1username={convo.user1username} user2username={convo.user2username} user1_id={convo.user1_id} user2_id={convo.user2_id} conversation_id={convo.conversation_id} filteredMessages={filteredMessages} />
                                         })}
 
                                 </>
