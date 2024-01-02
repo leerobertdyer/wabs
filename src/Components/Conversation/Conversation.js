@@ -14,11 +14,7 @@ const Conversations = ({ socket, user, user1username, user2username, user2_id, c
         if (filteredMessages && filteredMessages.length > 0) {
             setMessages(filteredMessages)
                  if (conversationRef.current) {
-                console.log(conversationRef.current);
-                console.log('Before scrolling:', conversationRef.current.scrollTop);
-                console.log(conversationRef.current.scrollHeight);
-                conversationRef.current.scrollTop = 500;
-                console.log('After scrolling:', conversationRef.current.scrollTop);
+                conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
             }
         }
         
@@ -77,7 +73,7 @@ const Conversations = ({ socket, user, user1username, user2username, user2_id, c
 
     return (
         <>
-            {/* <div   className={showConversation ? 'mainConversationDiv showConversation' : 'mainConversationDiv'}> */}
+            <div   className={showConversation ? 'mainConversationDiv showConversation' : 'mainConversationDiv'}>
                 <div className='convoTitleAndInput'>
                     <h1 className='convoTitle'>{user1username} & {user2username}</h1>
                     <form className="input-box">
@@ -100,7 +96,7 @@ const Conversations = ({ socket, user, user1username, user2username, user2_id, c
                         : null}
 
                 </div>
-            {/* </div> */}
+            </div>
             {messages.length > 0 && <button
                 className='btn showConvoBtn'
                 onClick={() => setShowConversation(!showConversation)}>
