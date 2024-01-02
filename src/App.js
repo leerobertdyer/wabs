@@ -89,11 +89,10 @@ if (!socket) {
   });
 
 socket.on('updateFeed', async() => {
-  console.log('socket event: loading new feed');
   await loadFeed();
 })
-socket.on('getConversations', () => {
-  getConversations();
+socket.on('getConversations', async() => {
+  await getConversations();
 })
 
   socket.on('disconnect', () => {
@@ -246,6 +245,9 @@ const getConversations = async () => {
 
       })
     }
+
+      
+
 
   return (
     <Router>
