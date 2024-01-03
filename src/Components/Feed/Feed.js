@@ -2,15 +2,17 @@ import { useState, useEffect } from "react";
 import { LiaTrashAlt } from "react-icons/lia";
 import Audio from "../Audio/Audio";
 import './Feed.css'
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import ProfileLink from "../ProfileLink/ProfileLink";
 
 function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, updateStars, stars }) {
     const [sortBy, setSortBy] = useState('Latest');
-    const [currentPost, setCurrentPost] = useState({  });
+    const [currentPost, setCurrentPost] = useState({});
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [showPhoto, setShowPhoto] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [showLyrics, setShowLyrics] = useState(false);
+
 
     const page = window.location.href
     const FRONTEND_URL = process.env.REACT_APP_FRONTEND_URL
@@ -151,11 +153,11 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                         <button onClick={() => setShowLyrics(false)} className="xBtn" style={{ marginTop: scrollPosition + 10 }} >X</button>
                     </div>
                     <div className="innerShowLyricDiv">
-                       <pre>
-                       <h1 className="lyricTitle">{currentPost.title}</h1>
-                        {currentPost.lyrics}
-                        </pre> 
-                        <button className="collabButton" style={{marginBottom: "-20px"}}onClick={() => (handleCollabClick(currentPost))}>Collaborate!</button>
+                        <pre>
+                            <h1 className="lyricTitle">{currentPost.title}</h1>
+                            {currentPost.lyrics}
+                        </pre>
+                        <button className="collabButton" style={{ marginBottom: "-20px" }} onClick={() => (handleCollabClick(currentPost))}>Collaborate!</button>
                     </div>
                 </div>}
 
@@ -195,6 +197,8 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                 <div className='allPosts'>
                     {feed.map((post, index) => {
                         const cardColor = cardColors[post.type] || cardColors['default']
+
+
                         return (
                             <div className={`postCard ${cardColor}`}
                                 style={post.type === "profile_pic" || post.type === "profile_background"
@@ -206,9 +210,8 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                 key={index}>
 
                                 <div className="topPostDiv">
-                                    <Link to="/profile" className="thumbnailDiv" style={{ backgroundImage: `url(${post.user_profile_pic})`, backgroundSize: 'cover' }}>
-                                    </Link>
-                                    <Link to="/profile" className="hiddenUser">{post.username}</Link>
+                                    <ProfileLink post={post} />
+
                                     {(post.type === "music" || post.type === "lyrics")
                                         && <div>
                                             <h3 className="postTitle">"{post.title}"</h3>
@@ -235,32 +238,32 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                             <p>Stars: {post.stars}</p>
                                         </div>
                                     </div>
- 
+
 
                                 </div>
-                                <div className={(post.type === "profile_pic" || post.type === "profile_background" || post.type === "lyrics") 
-                                ? "bottomPostDiv clickMe" : "bottomPostDiv"}
-                                onClick={(post.type === "profile_pic" || post.type === "profile_background") 
-                                ? () => { handleShowPhoto(post.feed_pic) } 
-                                : post.type === "lyrics" ? (() => { handleShowLyrics(post) }): null}>
+                                <div className={(post.type === "profile_pic" || post.type === "profile_background" || post.type === "lyrics")
+                                    ? "bottomPostDiv clickMe" : "bottomPostDiv"}
+                                    onClick={(post.type === "profile_pic" || post.type === "profile_background")
+                                        ? () => { handleShowPhoto(post.feed_pic) }
+                                        : post.type === "lyrics" ? (() => { handleShowLyrics(post) }) : null}>
 
-                                {(post.type === "song" || post.type === "music" || post.type === "collab") && <> <Audio className="feedAudio" source={post.song_file} /> <div></div> </>}
+                                    {(post.type === "song" || post.type === "music" || post.type === "collab") && <> <Audio className="feedAudio" source={post.song_file} /> <div></div> </>}
 
-                                {post.type === "lyrics"
-                                    &&
-                                    <pre className="lyricsFeed">{post.lyrics}</pre>}
+                                    {post.type === "lyrics"
+                                        &&
+                                        <pre className="lyricsFeed">{post.lyrics}</pre>}
 
-                                {post.type === "status" &&
-                                    <>
-                                        <h3 className='feedStatus'>{`"${post.feed_status}"`}</h3>
-                                        {post.user_id !== user.user_id && <div></div>}
-                                    </>
-                                }
+                                    {post.type === "status" &&
+                                        <>
+                                            <h3 className='feedStatus'>{`"${post.feed_status}"`}</h3>
+                                            {post.user_id !== user.user_id && <div></div>}
+                                        </>
+                                    }
 
-                                {(post.type === "music" || post.type === "lyrics") && post.user_id !== user.user_id
-                                    && <button className="collabButton" onClick={() => (handleCollabClick(post))}>Collaborate!</button>
-                                }
-                            </div>
+                                    {(post.type === "music" || post.type === "lyrics") && post.user_id !== user.user_id
+                                        && <button className="collabButton" onClick={() => (handleCollabClick(post))}>Collaborate!</button>
+                                    }
+                                </div>
                                 {user.user_id === post.user_id && <div className="trash">
                                     <LiaTrashAlt size={40}
                                         onClick={(event) => handleDeleteClick(event, post.feed_id, post.type, user.user_id)} />

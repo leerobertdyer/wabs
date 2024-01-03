@@ -8,6 +8,7 @@ import FullSongFeed from '../../Components/FullSongFeed/FullSongFeed';
 import { auth } from '../../firebase';
 import Conversation from '../../Components/Conversation/Conversation';
 import Notifications from '../../Components/Notifications/Notifications';
+import { useLocation } from 'react-router-dom';
 
 function Profile({ feed, user, allMessages, conversations, messageNotes, collabNotes, handleSetNotes, token, socket, allUsers, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
@@ -18,29 +19,53 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
     const [userDataIsLoaded, setUserDataIsLoaded] = useState(false)
     const [showMessages, setShowMessages] = useState(false);
     const [showNewConvo, setShowNewConvo] = useState(false);
+    const [profileUser, setProfileUser] = useState(user)
     // const [checked, setChecked] = useState(user.collab === 'true');
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const allOtherUsers = allUsers.filter(other => other.user_id !== user.user_id)
 
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const otherUsername = queryParams.get("otherusername");
+    otherUsername && console.log(otherUsername);
 
     useEffect(() => {
-        const timer = async () => {
-            setTimeout(() => {
-                setUserDataIsLoaded(true)
-            }, 350)
+        if (otherUsername) {
+            return
         }
+        setProfileUser(user)
+    }, [user, otherUsername])
 
-        if (token) {
-            const fetchData = async () => {
-                // await getCollabStatus();
-                await getCurrentCollabList();
-                setUserDataIsLoaded(true)
+
+    useEffect(() => {
+
+        if (otherUsername) {
+            const getOtherUser = async () => {
+                const resp = await fetch(`${BACKEND_URL}/profile/get-other-user?username=${otherUsername}`);
+                if (resp.ok) {
+                    const data = await resp.json();
+                    console.log(data);
+                    setProfileUser(data.newUser);
+                }
             }
-            fetchData();
-        } else { timer(); }
+            getOtherUser();
+
+
+
+        }
         // eslint-disable-next-line
-    }, [token])
+    }, [BACKEND_URL, otherUsername])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            // await getCollabStatus();
+            await getCurrentCollabList();
+            setUserDataIsLoaded(true)
+        }
+        fetchData();
+        //eslint-disable-next-line
+    }, [profileUser])
 
     // const handleCollabSwitch = async () => {
     //     const resp = await fetch(`${BACKEND_URL}/collab/update-collab`, {
@@ -71,19 +96,16 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
     // }
 
     const userSongs = [...feed]
-        .filter((post) => post.user_id === user.user_id && (post.type === "song" || post.type === "collab"))
+        .filter((post) => post.user_id === profileUser.user_id && (post.type === "song" || post.type === "collab"))
         .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
 
     const userPosts = [...feed]
-        .filter(post => post.user_id === user.user_id)
+        .filter(post => post.user_id === profileUser.user_id)
 
     const getCurrentCollabList = async () => {
         try {
-            const resp = await fetch(`${BACKEND_URL}/collab/get-profile-collabs`, {
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
+            const resp = await fetch(`${BACKEND_URL}/collab/get-profile-collabs?user=${profileUser.user_id}`, {
+                headers: { 'content-type': 'application/json' }
             });
             if (resp.ok) {
                 const data = await resp.json();
@@ -185,6 +207,9 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
         if (type === "posts") { setShowPosts(true) }
         if (type === "collab") {
             setShowCollab(true)
+            if (user.user_id !== profileUser.user_id) {
+                return;
+            }
             const resp = await fetch(`${BACKEND_URL}/profile/clear-notification`, {
                 method: "DELETE",
                 headers: { 'content-type': 'application/json' },
@@ -221,6 +246,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
     }
 
     const createConversation = async (user2) => {
+
         const resp = await fetch(`${BACKEND_URL}/messages/new-conversation`, {
             method: "POST",
             headers: { "content-type": "application/json" },
@@ -244,13 +270,13 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                 <div>
                     <div id="Profile">
                         <div id="topBar"
-                            style={{ backgroundImage: `url(${user.profile_background}`, backgroundSize: 'cover' }}>
+                            style={{ backgroundImage: `url(${profileUser.profile_background}`, backgroundSize: 'cover' }}>
                             <div id="picInputStatus">
                                 <div className="picAndInput">
                                     <div className="profilePicContainer">
                                         <label className="picInputLabel clickMe"
-                                            htmlFor="filePicker">
-                                            <div className='profilePic' style={{ backgroundImage: `url(${user.user_profile_pic})`, backgroundSize: 'cover' }}>
+                                            htmlFor={user.user_id !== profileUser.user_id ? null : "filePicker"}>
+                                            <div className='profilePic' style={{ backgroundImage: `url(${profileUser.user_profile_pic})`, backgroundSize: 'cover' }}>
                                             </div>
                                         </label>
                                     </div>
@@ -286,26 +312,29 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                                             ? <p className='setUserCollab'>Collab On</p>
                                             : <p className='setUserCollab'>Collab Off</p>}
                                     </div> */}
-                                    <div className='flexCol gap statusAndPicDiv'>
+                                {user.user_id === profileUser.user_id
+                                    && <div className='flexCol gap statusAndPicDiv'>
                                         <p className='updateBackground padAndShade'
                                             onClick={() => setShowStatus(!showStatus)}>
                                             <CiEdit />Update Status</p>
                                         <label htmlFor="backgroundImagePicker">
                                             <p className='updateBackground padAndShade'><IoCameraSharp />Update Background</p>
                                         </label>
-                                    </div>
+                                    </div>}
                                 {/* </div> */}
                             </div>
                         </div>
 
                         <div className='profileNav'>
                             <button
-                                className='btn notificationsBtn' onClick={() => handleProfileDisplay('songs')}>Your Songs</button>
+                                className='btn notificationsBtn' onClick={() => handleProfileDisplay('songs')}>
+                                {profileUser.user_id === user.user_id ? 'Your Songs' : `${profileUser.username}'s songs`}</button>
                             <button
                                 className='btn notificationsBtn' onClick={() => handleProfileDisplay('collab')}>
-                                Your Collabs<div className='notificationsDiv inline'><Notifications notes={collabNotes} type='collab' useClick={false} token={token} socket={socket} /></div>
+                                {profileUser.user_id === user.user_id ? 'Your Collabs' : `${profileUser.username}'s Collabs`}<div className='notificationsDiv inline'><Notifications notes={collabNotes} type='collab' useClick={false} token={token} socket={socket} /></div>
                             </button>
-                            <button className='btn notificationsBtn' onClick={() => handleProfileDisplay('posts')}>Your Posts</button>
+                            <button className='btn notificationsBtn' onClick={() => handleProfileDisplay('posts')}>
+                                {profileUser.user_id === user.user_id ? 'Your Posts' : `${profileUser.username}'s Posts`}</button>
                             <button className='btn notificationsBtn' onClick={() => handleProfileDisplay('message')}>
                                 Messages<div className='notificationsDiv inline'><Notifications notes={messageNotes} type="message" useClick={false} token={token} socket={socket} /></div>
                             </button>
@@ -331,7 +360,10 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                                     {userSongs.length === 0
                                         ? <>
                                             <div></div>
-                                            <h2 className='noProfileSongs'>You have no songs! <Link className='profileLink' to="/submit">Submit one here</Link></h2>
+                                            {user.user_id === profileUser.user_id ? <>
+                                                <h2 className='noProfileSongs'>You have no songs! <Link className='profileLink' to="/submit">Submit one here</Link></h2>
+                                            </>
+                                                : <h2 className='noProfileSongs'>{profileUser.username} has no songs!</h2>}
                                             <div></div>
                                         </>
                                         : <>
@@ -369,10 +401,11 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                             {
                                 showMessages && <>
                                     {showNewConvo && <>
-                                        <p>Who would you like to chat with?</p>
-                                        {allOtherUsers.map((user, idx) => {
-                                            return <p key={idx} className='userChatLink' onClick={() => createConversation(user)}>{user.username}</p>
+                                        <p className='whoChatWith'>Who would you like to chat with?</p>
+                                        <div className='newConvoBtnDiv'>{allOtherUsers.map((user, idx) => {
+                                            return <button key={idx} className='userChatLink btn' onClick={() => createConversation(user)}>{user.username}</button>
                                         })}
+                                        </div>
                                     </>}
                                     <button className='btn newConvoBtn' onClick={handleNewConvo}>+new convo</button>
 
