@@ -114,7 +114,7 @@ function App() {
       socket.off('disconnect');
     };
     //eslint-disable-next-line
-  }, [socket, user.user_id, user.username])
+  }, [socket])
 
   useEffect(() => {
     const checker = async () => {
@@ -239,9 +239,7 @@ function App() {
   }
 
   const getStars = async (id) => {
-    const resp = await fetch(`${BACKEND_URL}/get-stars?id=${id}`, {
-      credentials: 'include'
-    })
+    const resp = await fetch(`${BACKEND_URL}/get-stars?id=${id}`)
     const data = await resp.json();
     const nextStars = data.userStars.map(star => Number(star.post_id))
     setStars(nextStars)
