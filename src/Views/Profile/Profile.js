@@ -11,7 +11,6 @@ import Notifications from '../../Components/Notifications/Notifications';
 
 function Profile({ feed, user, allMessages, conversations, messageNotes, collabNotes, handleSetNotes, token, socket, allUsers, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
-    const [checked, setChecked] = useState(user.collab === 'true');
     const [showSongs, setShowSongs] = useState(false);
     const [userCollab, setUsercollab] = useState([]);
     const [showCollab, setShowCollab] = useState(false);
@@ -19,6 +18,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
     const [userDataIsLoaded, setUserDataIsLoaded] = useState(false)
     const [showMessages, setShowMessages] = useState(false);
     const [showNewConvo, setShowNewConvo] = useState(false);
+    // const [checked, setChecked] = useState(user.collab === 'true');
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const allOtherUsers = allUsers.filter(other => other.user_id !== user.user_id)
@@ -33,7 +33,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
 
         if (token) {
             const fetchData = async () => {
-                await getCollabStatus();
+                // await getCollabStatus();
                 await getCurrentCollabList();
                 setUserDataIsLoaded(true)
             }
@@ -42,19 +42,33 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
         // eslint-disable-next-line
     }, [token])
 
+    // const handleCollabSwitch = async () => {
+    //     const resp = await fetch(`${BACKEND_URL}/collab/update-collab`, {
+    //         method: 'PUT',
+    //         headers: { 'content-type': 'application/json' },
+    //         body: JSON.stringify({
+    //             id: user.user_id,
+    //         })
+    //     })
+    //     if (resp.ok) {
+    //         const data = await resp.json();
+    //         await changeUserCollab(data.nextCollab)
+    //         setChecked(!checked)
+    //         loadAllUsers();
+    //     }
 
+    // }
 
-
-    const getCollabStatus = async () => {
-        const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
-            headers: {
-                'content-type': 'application/json',
-                'authorization': `Bearer ${token}`,
-            },
-        });
-        const data = await resp.json();
-        setChecked(data.collab === 'true');
-    }
+    // const getCollabStatus = async () => {
+    //     const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
+    //         headers: {
+    //             'content-type': 'application/json',
+    //             'authorization': `Bearer ${token}`,
+    //         },
+    //     });
+    //     const data = await resp.json();
+    //     setChecked(data.collab === 'true');
+    // }
 
     const userSongs = [...feed]
         .filter((post) => post.user_id === user.user_id && (post.type === "song" || post.type === "collab"))
@@ -161,23 +175,6 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
         }
     }
 
-    const handleCollabSwitch = async () => {
-        const resp = await fetch(`${BACKEND_URL}/collab/update-collab`, {
-            method: 'PUT',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({
-                id: user.user_id,
-            })
-        })
-        if (resp.ok) {
-            const data = await resp.json();
-            await changeUserCollab(data.nextCollab)
-            setChecked(!checked)
-            loadAllUsers();
-        }
-
-    }
-
     const handleProfileDisplay = async (type) => {
         setShowCollab(false);
         setShowSongs(false);
@@ -221,7 +218,6 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
 
     const handleNewConvo = () => {
         setShowNewConvo(true)
-
     }
 
     const createConversation = async (user2) => {
@@ -290,7 +286,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                                             ? <p className='setUserCollab'>Collab On</p>
                                             : <p className='setUserCollab'>Collab Off</p>}
                                     </div> */}
-                                    <div className='flexCol gap'>
+                                    <div className='flexCol gap statusAndPicDiv'>
                                         <p className='updateBackground padAndShade'
                                             onClick={() => setShowStatus(!showStatus)}>
                                             <CiEdit />Update Status</p>

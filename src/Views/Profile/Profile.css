@@ -16,7 +16,7 @@
     gap: 8vw;
     text-align: center;
     width: 100%;
-    padding: 20px;
+    padding: 10px;
     border-bottom: gold 2px solid;
 
 }
@@ -76,10 +76,12 @@
 
 .updateBackground {
     display: flex;
-    gap: 5px;
+    height: 40px;
+    gap: 20px;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     color: lightskyblue;
+    font-size: 19px;
 }
 
 .updateBackground:hover {
@@ -288,4 +290,12 @@ input:checked+.slider:before {
     justify-content: center;
     align-items: center;
     gap: 10px;
+}
+
+.statusAndPicDiv {
+    height: 100%;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }

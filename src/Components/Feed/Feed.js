@@ -20,7 +20,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
     const [scrollPosition, setScrollPosition] = useState(0);
 
     const handleScroll = () => {
-        const position = window.pageYOffset;
+        const position = window.scrollY;
         setScrollPosition(position);
     };
 
@@ -79,8 +79,8 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
 
     const handleStarClick = async (post_id) => {
         page === `${FRONTEND_URL}/feed`
-            ? await updateStars(user.user_id, post_id, sortBy, 'home')
-            : await updateStars(user.user_id, post_id, sortBy, 'collab')
+            ? await updateStars(user.user_id, post_id)
+            : await updateStars(user.user_id, post_id)
     }
 
     const handleDeleteClick = (event, id, type, user_id) => {
@@ -238,7 +238,8 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
  
 
                                 </div>
-                                <div className={(post.type === "profile_pic" || post.type === "profile_background" || post.type === "lyrics") ? "bottomPostDiv clickMe" : "bottomPostDiv"}
+                                <div className={(post.type === "profile_pic" || post.type === "profile_background" || post.type === "lyrics") 
+                                ? "bottomPostDiv clickMe" : "bottomPostDiv"}
                                 onClick={(post.type === "profile_pic" || post.type === "profile_background") 
                                 ? () => { handleShowPhoto(post.feed_pic) } 
                                 : post.type === "lyrics" ? (() => { handleShowLyrics(post) }): null}>
@@ -259,11 +260,11 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                                 {(post.type === "music" || post.type === "lyrics") && post.user_id !== user.user_id
                                     && <button className="collabButton" onClick={() => (handleCollabClick(post))}>Collaborate!</button>
                                 }
+                            </div>
                                 {user.user_id === post.user_id && <div className="trash">
                                     <LiaTrashAlt size={40}
                                         onClick={(event) => handleDeleteClick(event, post.feed_id, post.type, user.user_id)} />
                                 </div>}
-                            </div>
                             </div>
                         )
                     }
