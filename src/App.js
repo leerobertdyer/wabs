@@ -143,19 +143,23 @@ const getNotifications = async () => {
       setMessageNotes(nextMessageNotes);
       const nextCollabNotes = data.notifications.filter(n => n.type === "collab");
       setCollabNotes(nextCollabNotes);
-    }
-  }
+      return [data.notifications]
+    } 
+    else { return [] }
+  } 
 }
 
 
-const handleSetNotes = (newNotes, type) => {
-  console.log('handle log:', newNotes, type);
-  type === "all"
-  ? setAllNotes(newNotes)
-  : type === "collab"
-  ? setCollabNotes(newNotes)
-  : type === "message" 
-  && setMessageNotes(newNotes)
+const handleSetNotes = async(newNotes, type) => {
+  if (type === "collab"){
+    setCollabNotes(newNotes)
+  }
+  else if (type === "message"){
+    setMessageNotes(newNotes)
+  }
+  const data = await getNotifications();
+  console.log(data);
+  setAllNotes(data)
 }
 
 const getConversations = async () => {

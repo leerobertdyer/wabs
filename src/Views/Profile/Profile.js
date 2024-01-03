@@ -43,7 +43,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
     }, [token])
 
 
-    
+
 
     const getCollabStatus = async () => {
         const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
@@ -178,7 +178,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
 
     }
 
-    const handleProfileDisplay = async(type) => {
+    const handleProfileDisplay = async (type) => {
         setShowCollab(false);
         setShowSongs(false);
         setShowStatus(false);
@@ -186,10 +186,11 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
         setShowMessages(false);
         if (type === "songs") { setShowSongs(true) }
         if (type === "posts") { setShowPosts(true) }
-        if (type === "collab") { 
+        if (type === "collab") {
+            setShowCollab(true)
             const resp = await fetch(`${BACKEND_URL}/profile/clear-notification`, {
                 method: "DELETE",
-                headers: {'content-type': 'application/json'},
+                headers: { 'content-type': 'application/json' },
                 body: JSON.stringify({
                     type: type,
                     user_id: user.user_id
@@ -197,27 +198,26 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
             });
             if (resp.ok) {
                 const data = await resp.json();
-                console.log(data.newNotes);
-                handleSetNotes(data.newNotes, type)
+                handleSetNotes(data.newNotes, 'collab');
             }
-            setShowCollab(true) }
-            if (type === "message") { 
-                const resp = await fetch(`${BACKEND_URL}/profile/clear-notification`, {
-                    method: "DELETE",
-                    headers: {'content-type': 'application/json'},
-                    body: JSON.stringify({
-                        type: type,
-                        user_id: user.user_id
-                    })
-                });
-                if (resp.ok) {
-                    const data = await resp.json();
-                    console.log('resp ok: ', data.newNotes);
-                    handleSetNotes(data.newNotes, type)
-                }
-                setShowMessages(true) }
+        }
+        if (type === "message") {
+            setShowMessages(true)
+            const resp = await fetch(`${BACKEND_URL}/profile/clear-notification`, {
+                method: "DELETE",
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                    type: type,
+                    user_id: user.user_id
+                })
+            });
+            if (resp.ok) {
+                const data = await resp.json();
+                console.log('resp ok: ', data.newNotes);
+                handleSetNotes(data.newNotes, 'message')
+            }
+        }
     }
-
 
     const handleNewConvo = () => {
         setShowNewConvo(true)
@@ -276,7 +276,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                                             onChange={(event) => handlePhotoSubmit(event, 'profile_background')}
                                         />
                                     </form></div>
-                                <div className='underSwitchDiv'>
+                                {/* <div className='underSwitchDiv'>
                                     <div className='switchDiv'>
                                         <label className="switch">
 
@@ -289,7 +289,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                                         {user.collab === "true"
                                             ? <p className='setUserCollab'>Collab On</p>
                                             : <p className='setUserCollab'>Collab Off</p>}
-                                    </div>
+                                    </div> */}
                                     <div className='flexCol gap'>
                                         <p className='updateBackground padAndShade'
                                             onClick={() => setShowStatus(!showStatus)}>
@@ -298,7 +298,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                                             <p className='updateBackground padAndShade'><IoCameraSharp />Update Background</p>
                                         </label>
                                     </div>
-                                </div>
+                                {/* </div> */}
                             </div>
                         </div>
 

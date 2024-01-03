@@ -8,7 +8,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import Notifications from '../Notifications/Notifications';
 
 
-function Nav({ user, unloadUser, token, socket }) {
+function Nav({ user, unloadUser, token, socket, notes }) {
     const [isShrunken, setIsShrunken] = useState(false);
     const [showLinks, setShowLinks] = useState(false);
     const [showLogoutMenu, setShowLogoutMenu] = useState(true);
@@ -29,11 +29,6 @@ function Nav({ user, unloadUser, token, socket }) {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
-
-    const handleLinkClick = (link) => {
-        setShowLinks(false); // Close the links before navigating
-        navigate(link);
-      };
 
     const handleSignout = () => {
         signOut(auth).then(() => {
@@ -82,7 +77,7 @@ function Nav({ user, unloadUser, token, socket }) {
                         <>
                         <div className='userNameAndNotifications'>
                                 <div className="notificationsDiv" onClick={() => setShowLogoutMenu(!showLogoutMenu)}>
-                                    <Notifications type="all" useClick={true} token={token} socket={socket}/>
+                                    <Notifications user={user} useClick={true} token={token} socket={socket} notes={notes} />
                                     </div>
                             <h3 className={isShrunken ? "shrunkenAboveLogout" : "aboveLogout"}>
                                 {user.username.length > 10 ? `${user.username.slice(0, 10)}...` : user.username}</h3>

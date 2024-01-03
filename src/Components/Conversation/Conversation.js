@@ -56,7 +56,8 @@ const Conversations = ({ socket, user, user1username, user2username, user1_id, u
         if (messageText.length === 0) { return }
         const messageId = generateUniqueId();
             
-            const resp = await fetch(`${BACKEND_URL}/messages/new-message`, {
+
+        const resp = await fetch(`${BACKEND_URL}/messages/new-message`, {
                 method: "POST",
                 headers: { 'content-type': 'application/json' },
                 body: JSON.stringify({
@@ -64,7 +65,7 @@ const Conversations = ({ socket, user, user1username, user2username, user1_id, u
                     content: messageText,
                     user1_id: user.user_id,
                     user2_id: otherId,
-                    user2_username: otherUsername,
+                    user2username: otherUsername,
                     conversation_id: conversation_id
                 })
             });
