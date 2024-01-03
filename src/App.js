@@ -235,7 +235,7 @@ function App() {
     } else if (type === 'collab') {
       setCollabFeed(nextFeed)
     } 
-    // console.log('sorted by ', method, ' on ', type)
+    console.log(user.username, 'sorted by ', method, ' on ', type)
   }
 
   const getStars = async (id) => {
