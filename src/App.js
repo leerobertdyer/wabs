@@ -37,7 +37,6 @@ function App() {
   const [feed, setFeed] = useState([])
   const [collabFeed, setCollabFeed] = useState([])
   const [stars, setStars] = useState([])
-  const [collabUsers, setCollabUsers] = useState([])
   const [allUsers, setAllUsers] = useState([])
   const [token, setToken] = useState('')
   const [socket, setSocket] = useState(null)
@@ -46,7 +45,8 @@ function App() {
   const [allNotes, setAllNotes] = useState([]);
   const [collabNotes, setCollabNotes] = useState([]);
   const [messageNotes, setMessageNotes] = useState([]);
-  const [onlineUsers, setOnlineUsers] = useState([])
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [collabUsers, setCollabUsers] = useState([])
 
   useEffect(() => {
 
@@ -79,16 +79,27 @@ function App() {
     auth.onAuthStateChanged((user) => {
       if (user) {
         // console.log(user);
-
         checkAuthentication();
-
-
       }
     })
     loadAllUsers();
     loadFeed();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    const users = collabFeed.map(post => post.username)
+const usernames = []
+for (const person of users) {
+    if (!usernames.includes(person)) {
+        if (person !== user.username)
+        usernames.push(person)
+    }
+}
+const filteredUsers = usernames.filter(person => person.username !== user.username)
+console.log('filterd: ', filteredUsers);
+setCollabUsers(filteredUsers)
+  }, [collabFeed, user.username])
 
 
   useEffect(() => {
@@ -193,7 +204,6 @@ function App() {
   const loadAllUsers = async () => {
     const resp = await fetch(`${BACKEND_URL}/collab/get-all`)
     const data = await resp.json();
-    setCollabUsers(data.collabUsers)
     setAllUsers(data.allUsers)
   }
 

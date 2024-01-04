@@ -80,3 +80,15 @@
 .clearCollab:hover {
     cursor: pointer;
 }
+
+.orSubmitYourOwn {
+    margin-top: 25px;
+}
+
+.collabSubmitLink {
+    padding: 10px;
+    border: black solid 1px;
+}
+.collabSubmitLink:hover {
+    border: red solid 1px;
+}

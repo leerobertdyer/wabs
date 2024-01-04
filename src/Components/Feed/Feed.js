@@ -156,7 +156,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                         <button onClick={() => setShowLyrics(false)} className="xBtn" style={{ marginTop: scrollPosition + 10 }} >X</button>
                     </div>
                     <div className="innerShowLyricDiv">
-                        <pre>
+                        <pre className="innerShowLyricPre">
                             <h1 className="lyricTitle">{currentPost.title}</h1>
                             {currentPost.lyrics}
                         </pre>
