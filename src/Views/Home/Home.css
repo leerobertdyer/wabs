@@ -31,7 +31,7 @@ padding-bottom: 200px;
 }
 
 .headerText {
-    font-size: 2.7vmax;
+    font-size: 2.2vmax;
 }
 
 .writeabadsong {
@@ -72,23 +72,6 @@ padding-bottom: 200px;
     width: 80%;
 }
 
-
-@keyframes bad {
-   
-    from {
-        color: pink;
-        text-decoration: none;
-    } 
-    to {
-        font-size: 55px;
-        color: red;
-        text-decoration: line-through;
-        
-    }
-}
-
-
-
 .signUpLink {
     width: 100%;
     max-width: 350px;
@@ -103,4 +86,18 @@ padding-bottom: 200px;
     font-family: 'Amatic SC', sans-serif;
     font-size: 25px;
     font-weight: 800;
+}
+
+@keyframes bad {
+   
+    from {
+        color: pink;
+        text-decoration: none;
+    } 
+    to {
+        font-size: 55px;
+        color: red;
+        text-decoration: line-through;
+        
+    }
 }

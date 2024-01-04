@@ -10,7 +10,7 @@ import Conversation from '../../Components/Conversation/Conversation';
 import Notifications from '../../Components/Notifications/Notifications';
 import { useLocation } from 'react-router-dom';
 
-function Profile({ feed, user, allMessages, conversations, messageNotes, collabNotes, handleSetNotes, token, socket, allUsers, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
+function Profile({ feed, user, allMessages, onlineUsers, conversations, messageNotes, collabNotes, handleSetNotes, token, socket, allUsers, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
     const [showSongs, setShowSongs] = useState(false);
     const [userCollab, setUsercollab] = useState([]);
@@ -23,7 +23,11 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
     // const [checked, setChecked] = useState(user.collab === 'true');
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-    const allOtherUsers = allUsers.filter(other => other.user_id !== user.user_id)
+    const allOtherUsers = allUsers.filter(other => other.user_id !== user.user_id).sort((a, b) => {
+        const aIsOnline = onlineUsers && onlineUsers.includes(a.username);
+        const bIsOnline = onlineUsers && onlineUsers.includes(b.username);
+        return bIsOnline - aIsOnline;
+    })
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -340,8 +344,9 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                             <div className='flexCol gap flexCtr padTen'>
                                 <p>"{user.status}"</p>
                                 <div className='flexRow gap'>
-                                    <form>
+                                    <form className='flexcol center'>
                                         <input type='text' placeholder='new status...' onChange={(event) => changedStatus = event.target.value}></input>
+                                        <br/> <br/>
                                         <input type="submit" className='btn' onClick={(event) => handleStatusChange(event)}></input>
                                     </form>
                                 </div>
@@ -399,7 +404,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                                     {showNewConvo && <>
                                         <p className='whoChatWith'>Who would you like to chat with?</p>
                                         <div className='newConvoBtnDiv'>{allOtherUsers.map((user, idx) => {
-                                            return <button key={idx} className='userChatLink btn' onClick={() => createConversation(user)}>{user.username}</button>
+                                            return <button key={idx} className={onlineUsers && onlineUsers.includes(user.username) ? 'online userChatLink btn' : 'userChatLink btn'} onClick={() => createConversation(user)}>{user.username}</button>
                                         })}
                                         </div>
                                     </>}

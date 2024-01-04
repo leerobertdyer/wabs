@@ -310,8 +310,22 @@ input:checked+.slider:before {
 
 .newConvoBtnDiv {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
     gap: 5px;
-    width: 30vw;
+    width: 80vw;
+    flex-wrap: wrap;
+}
+
+.userChatLink {
+    border: coral solid 2px;
+    width: 100px;
+    background-color: white;
+}
+
+.online {
+    border: solid white 2px;
+    background-color:rgb(0, 110, 166);
+    color: white;
 }

@@ -46,7 +46,7 @@ function App() {
   const [allNotes, setAllNotes] = useState([]);
   const [collabNotes, setCollabNotes] = useState([]);
   const [messageNotes, setMessageNotes] = useState([]);
-  const [flag, setFlag] = useState(false)
+  const [onlineUsers, setOnlineUsers] = useState([])
 
   useEffect(() => {
 
@@ -61,7 +61,7 @@ function App() {
           },
         });
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         loadUser(data.user);
 
         setSocket(io(BACKEND_URL, {
@@ -95,10 +95,20 @@ function App() {
     if (!socket) {
       return
     }
+    const getCurrentUsers = async() => {
+      const resp = await fetch(`${BACKEND_URL}/messages/get-connected-users`);
+     if (resp.ok) {
+         const data = await resp.json();
+          // console.log(nextOnlineUsers);
+         setOnlineUsers(data.connectedUsers)
+     }
+  }
+
     socket.on('connect', async () => {
       console.log(`${user.username} connected`);
       socket.emit('sendUserId', user.user_id)
       await getConversations();
+      await getCurrentUsers();
     });
 
     socket.on('updateFeed', async () => {
@@ -349,7 +359,7 @@ function App() {
               <Route path='score' element={<Scoreboard users={allUsers} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
               <Route path="/register" element={<Register loadUser={loadUser}  />} />
-              <Route path="/profile" element={<Profile handleSetNotes={handleSetNotes} messageNotes={messageNotes} collabNotes={collabNotes} user={user} token={token} allMessages={allMessages} conversations={conversations} socket={socket} allUsers={allUsers} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/profile" element={<Profile handleSetNotes={handleSetNotes} onlineUsers={onlineUsers} messageNotes={messageNotes} collabNotes={collabNotes} user={user} token={token} allMessages={allMessages} conversations={conversations} socket={socket} allUsers={allUsers} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} loadAllUsers={loadAllUsers} />} />
               <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
               <Route path="/collaborate/editor" element={<Editor user={user} token={token} />} />
