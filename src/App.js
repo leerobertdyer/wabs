@@ -46,6 +46,20 @@ function App() {
   const [allNotes, setAllNotes] = useState([]);
   const [collabNotes, setCollabNotes] = useState([]);
   const [messageNotes, setMessageNotes] = useState([]);
+  const [userIsRegistered, setUserIsRegistered] = useState(false)
+
+  useEffect(() => {
+
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // console.log(user);
+        setUserIsRegistered(true)
+      }
+    })
+    loadAllUsers();
+    loadFeed();
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
 
@@ -73,16 +87,12 @@ function App() {
         console.error('Error checking authentication:', error);
       };
     };
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        // console.log(user);
-        checkAuthentication();
-      }
-    })
-    loadAllUsers();
-    loadFeed();
-    // eslint-disable-next-line
-  }, []);
+
+    if (userIsRegistered) {
+      checkAuthentication();
+    }
+    //eslint-disable-next-line
+  }, [userIsRegistered])
 
   useEffect(() => {
     if (!socket) {
@@ -127,6 +137,7 @@ function App() {
     checker();
     //eslint-disable-next-line
   }, [token, socket])
+
 
   const getNotifications = async () => {
     const resp = await fetch(`${BACKEND_URL}/profile/get-notifications`, {
@@ -227,14 +238,14 @@ function App() {
           const nextUser = { ...user, sortfeed: method };
           setUser(nextUser)
         }
-    }
+      }
     }
 
     if (type === 'home') {
       setFeed(nextFeed)
     } else if (type === 'collab') {
       setCollabFeed(nextFeed)
-    } 
+    }
     console.log(user.username, 'sorted by ', method, ' on ', type)
   }
 

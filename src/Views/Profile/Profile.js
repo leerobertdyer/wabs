@@ -28,7 +28,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const otherUsername = queryParams.get("otherusername");
-    otherUsername && console.log(otherUsername);
+    // otherUsername && console.log(otherUsername);
 
     useEffect(() => {
         if (otherUsername) {
@@ -45,7 +45,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                 const resp = await fetch(`${BACKEND_URL}/profile/get-other-user?username=${otherUsername}`);
                 if (resp.ok) {
                     const data = await resp.json();
-                    console.log(data);
+                    // console.log(data);
                     setProfileUser(data.newUser);
                 }
             }
@@ -136,7 +136,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                 formData.append('user_id', user.user_id);
                 formData.append('photo', photo);
                 let resp;
-                console.log('userId, photo: ', user.user_id, photo);
+                // console.log('userId, photo: ', user.user_id, photo);
                 if (type === "profile_pic") {
                     resp = await fetch(`${BACKEND_URL}/profile/upload-profile-pic`, {
                         method: "PUT",
@@ -235,7 +235,7 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
             });
             if (resp.ok) {
                 const data = await resp.json();
-                console.log('resp ok: ', data.newNotes);
+                // console.log('resp ok: ', data.newNotes);
                 handleSetNotes(data.newNotes, 'message')
             }
         }

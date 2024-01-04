@@ -6,8 +6,6 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 
 
-
-
 function Register({ loadUser }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -77,7 +75,6 @@ function Register({ loadUser }) {
             }
 
             const status = await fetchNewUserStatus();
-
             const response = await fetch(`${BACKEND_URL}/auth/register`, {
                 method: "POST",
                 headers: {
@@ -99,7 +96,7 @@ function Register({ loadUser }) {
             }
 
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             loadUser(data);
             setDoc(doc(fdb, "users", username), data);
 
@@ -120,7 +117,7 @@ function Register({ loadUser }) {
                 const authUrlData = await authUrlResponse.json();
                 const authUrl = authUrlData.authUrl;
 
-                console.log(authUrl);
+                // console.log(authUrl);
                 //   window.open(authUrl, '_blank');
                 window.location.href = authUrl
 

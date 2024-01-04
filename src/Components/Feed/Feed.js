@@ -37,21 +37,21 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
     useEffect(() => {
         setSortBy('Latest')
         handleSort('Latest')
-        console.log('inside useEffect (page) ', sortBy);
+        // console.log('inside useEffect (page) ', sortBy);
         // eslint-disable-next-line
     }, [page])
 
     useEffect(() => {
         if (user.user_id) {
             getStars(user.user_id);
-            console.log('inside useEffect(user): ', sortBy);
+            // console.log('inside useEffect(user): ', sortBy);
         }
         // eslint-disable-next-line
     }, [user])
 
     useEffect(() => {
         if (page === `${FRONTEND_URL}/feed`) {
-            console.log('inside useEffect (stars): ', sortBy);
+            // console.log('inside useEffect (stars): ', sortBy);
             sortFeed(sortBy, feed, 'home')
         } else if (page === `${FRONTEND_URL}/collaborate`) {
             sortFeed(sortBy, collabFeed, 'collab')
@@ -68,7 +68,6 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                 sortFeed(event, feed, 'home')
                 setSortBy(event)
             } else {
-                console.log('inside Handle Sort', event);
                 sortFeed(event, feed, 'home')
                 setSortBy(event)
             }
@@ -132,7 +131,7 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
         })
         if (resp.ok) {
             const data = await resp.json();
-            console.log(data.message);
+            // console.log(data.message);
             loadFeed();
             setCurrentPost({ id: null, type: null, user_id: null })
             setConfirmDelete(false)
