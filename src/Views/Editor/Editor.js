@@ -135,7 +135,9 @@ const Editor = ({ user, token }) => {
   return (
     <>
     {isLoading && <div className='loading'>
-                <ReactLoading type={'spinningBubbles'} color={'orange'} height={'20%'} width={'20%'} />
+                <ReactLoading type={'spinningBubbles'} color={'orange'} height={'30%'} width={'30%'} />
+                <p className='loadingToDbx'>Uploading To Dropbox...</p>
+                <p className='savingToDb'>Saving To Database...</p>
                 </div>}
       <div className='mainEditorDiv'>
         {final && <button className='finalizeBtn editorFinalBtn'

@@ -16,7 +16,6 @@
     text-align: center;
 }
 
-
 .firstPopup {
     display: flex;
     flex-direction: column;
@@ -66,7 +65,8 @@ display: none;
     border-radius: 5px;
     padding: 5px 35px 25px 35px;
     margin: 0 45px;
-    background: linear-gradient(to bottom, goldenrod, orange);
+    background-color: black;
+    color: white;
     width: 70vw;
     display: flex;
     flex-direction: column;
@@ -76,7 +76,6 @@ display: none;
 }
 
 .submitSongLegend {
-    color: rgb(24, 24, 24);
     padding: 10px
 }
 
@@ -106,19 +105,10 @@ display: none;
     overflow: hidden;
 }
 
-.scrollingText {
-    color: white;
-    transform: translateX(100%);
-    animation: scroll 100s infinite linear;
-}
-
-.golden {
-    color: goldenrod;
-}
-
 .testingSong {
     width: 100%;
 }
+
 
 
 @keyframes scroll {
@@ -129,4 +119,9 @@ display: none;
     100% {
         transform: translateX(-20%);
     }
+}
+
+.lyricsTextArea {
+    border-radius: 4px;
+    padding: 10px 0 0 100px;
 }

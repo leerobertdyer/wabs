@@ -104,10 +104,10 @@ function Submit(props) {
             {isLoading &&  
             <>
             <div className='loading'>
-                <ReactLoading type={'spinningBubbles'} color={'orange'} height={'20%'} width={'20%'} />
+                <ReactLoading type={'spinningBubbles'} color={'orange'} height={'30%'} width={'30%'} />
+                <p className='loadingToDbx'>Uploading To Dropbox...</p>
+                <p className='savingToDb'>Saving To Database...</p>
                 </div>
-                <p className='loadingToDbx golden scrollingText'>Uploading To Dropbox...</p>
-                <p className='savingToDb golden scrollingText'>Saving To Database...</p>
             </>
                 }
             {isLoggedIn && userDataIsLoaded ? (
@@ -155,8 +155,6 @@ function Submit(props) {
                                 method="post"
                                 encType="multipart/form-data">
 
-                                <legend className='submitSongLegend'>Submit A Song!</legend>
-
                                 <div className='formBlock'>
                                     <label htmlFor="songTitle"
                                         className='clickMe black submitLabel'>Title</label>
@@ -171,7 +169,7 @@ function Submit(props) {
 
                                 {showLyrics && (
                                     <><div className='formBlock'>
-                                        <textarea onChange={(event) => setLyrics(event.target.value)} />
+                                        <textarea className="lyricsTextArea paper" placeholder="lyrics..."onChange={(event) => setLyrics(event.target.value)} />
                                         </div>
                                     </>
                                 )}

@@ -197,14 +197,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .loading {
+    padding-top: 35px;
     width: 100vw;
     height: 2000px;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     background-color: rgba(24, 24, 24, .8);
     position: absolute;
     z-index: 900;
+    gap: 30px;
 }
 
 .clickMe:hover {
@@ -213,4 +216,30 @@ h1, h2, h3, h4, h5, h6 {
 
 .inline {
     display: inline;
+}
+
+.scrollingText {
+    color: white;
+    transform: translateX(100%);
+    animation: scroll 100s infinite linear;
+}
+
+.golden {
+    color: goldenrod;
+}
+
+.loadingToDbx {
+    color:lightskyblue;
+    animation: scroll 9s infinite ease-in-out;
+    font-size: 30px;
+    margin: -50vh 0 0 0;
+    width: 100%;
+}
+
+.savingToDb {
+    color: coral;
+    font-size: 30px;
+    margin: 0 -20vw 0 0;
+    animation: scroll 9s infinite ease-in-out ;
+    width: 100%;
 }

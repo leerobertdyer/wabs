@@ -329,3 +329,28 @@ input:checked+.slider:before {
     background-color:rgb(0, 110, 166);
     color: white;
 }
+.blueBox {
+    width: 30px;
+    height: 30px;
+    background-color: rgb(0, 110, 166);
+}
+
+.redBox {
+    width: 30px;
+    height: 30px;
+    background-color: coral;
+}
+
+.boxText {
+    display: inline;
+    margin-left: 5px;
+    width: 50px;
+}
+
+.convoStatusBoxDiv {
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+    gap: 5px;
+}

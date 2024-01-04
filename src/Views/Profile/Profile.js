@@ -346,7 +346,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                                 <div className='flexRow gap'>
                                     <form className='flexcol center'>
                                         <input type='text' placeholder='new status...' onChange={(event) => changedStatus = event.target.value}></input>
-                                        <br/> <br/>
+                                        <br /> <br />
                                         <input type="submit" className='btn' onClick={(event) => handleStatusChange(event)}></input>
                                     </form>
                                 </div>
@@ -403,6 +403,12 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                                 showMessages && <>
                                     {showNewConvo && <>
                                         <p className='whoChatWith'>Who would you like to chat with?</p>
+                                        <div className='convoStatusBoxDiv'>
+                                            <div className='blueBox'></div><p className='boxText'>Online</p>
+                                        </div>
+                                        <div className='convoStatusBoxDiv'>
+                                            <div className='redBox'></div><p className='boxText'>Offline</p>
+                                        </div>
                                         <div className='newConvoBtnDiv'>{allOtherUsers.map((user, idx) => {
                                             return <button key={idx} className={onlineUsers && onlineUsers.includes(user.username) ? 'online userChatLink btn' : 'userChatLink btn'} onClick={() => createConversation(user)}>{user.username}</button>
                                         })}
