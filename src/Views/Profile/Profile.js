@@ -39,7 +39,6 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
 
 
     useEffect(() => {
-
         if (otherUsername) {
             const getOtherUser = async () => {
                 const resp = await fetch(`${BACKEND_URL}/profile/get-other-user?username=${otherUsername}`);
@@ -50,9 +49,6 @@ function Profile({ feed, user, allMessages, conversations, messageNotes, collabN
                 }
             }
             getOtherUser();
-
-
-
         }
         // eslint-disable-next-line
     }, [BACKEND_URL, otherUsername])

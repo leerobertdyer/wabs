@@ -41,10 +41,6 @@ function Register({ loadUser }) {
         }
 
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-            const firebaseToken = await user.getIdToken();
-
             const NINJA_URL = "https://api.api-ninjas.com/v1/"
             const NINJA_KEY = process.env.REACT_APP_NINJA_API_KEY;
 
@@ -73,14 +69,15 @@ function Register({ loadUser }) {
                     return joke
                 }
             }
-
             const status = await fetchNewUserStatus();
+
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            const firebaseToken = await user.getIdToken();
+
             const response = await fetch(`${BACKEND_URL}/auth/register`, {
                 method: "POST",
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ${firebaseToken}`,
-                },
+                headers: {'content-type': 'application/json'},
                 body: JSON.stringify({
                     "username": username.toLowerCase(),
                     "email": email,
@@ -96,7 +93,7 @@ function Register({ loadUser }) {
             }
 
             const data = await response.json();
-            // console.log(data);
+            console.log('user after /auth/register: ', data);
             loadUser(data);
             setDoc(doc(fdb, "users", username), data);
 
@@ -107,7 +104,6 @@ function Register({ loadUser }) {
                         'content-type': 'application/json',
                         'Authorization': `Bearer ${firebaseToken}`,
                     },
-
                 });
 
                 if (!authUrlResponse.ok) {

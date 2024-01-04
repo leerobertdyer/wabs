@@ -30,7 +30,6 @@ const [loginPassword, setLoginPassword] = useState('')
     // const user = userCredential.user;
     // console.log(user);
     navigate('/profile')
-
   })
   .catch((error) => {
     const errorCode = error.code;

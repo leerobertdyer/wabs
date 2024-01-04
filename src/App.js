@@ -46,20 +46,7 @@ function App() {
   const [allNotes, setAllNotes] = useState([]);
   const [collabNotes, setCollabNotes] = useState([]);
   const [messageNotes, setMessageNotes] = useState([]);
-  const [userIsRegistered, setUserIsRegistered] = useState(false)
-
-  useEffect(() => {
-
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        // console.log(user);
-        setUserIsRegistered(true)
-      }
-    })
-    loadAllUsers();
-    loadFeed();
-    // eslint-disable-next-line
-  }, []);
+  const [flag, setFlag] = useState(false)
 
   useEffect(() => {
 
@@ -74,6 +61,7 @@ function App() {
           },
         });
         const data = await response.json();
+        console.log(data);
         loadUser(data.user);
 
         setSocket(io(BACKEND_URL, {
@@ -88,11 +76,20 @@ function App() {
       };
     };
 
-    if (userIsRegistered) {
-      checkAuthentication();
-    }
-    //eslint-disable-next-line
-  }, [userIsRegistered])
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // console.log(user);
+
+          checkAuthentication();
+
+
+      }
+    })
+    loadAllUsers();
+    loadFeed();
+    // eslint-disable-next-line
+  }, []);
+
 
   useEffect(() => {
     if (!socket) {
@@ -351,7 +348,7 @@ function App() {
               <Route path='/feed' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
               <Route path='score' element={<Scoreboard users={allUsers} />} />
               <Route path="/login" element={<Login loadUser={loadUser} />} />
-              <Route path="/register" element={<Register loadUser={loadUser} />} />
+              <Route path="/register" element={<Register loadUser={loadUser}  />} />
               <Route path="/profile" element={<Profile handleSetNotes={handleSetNotes} messageNotes={messageNotes} collabNotes={collabNotes} user={user} token={token} allMessages={allMessages} conversations={conversations} socket={socket} allUsers={allUsers} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} loadAllUsers={loadAllUsers} />} />
               <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
