@@ -220,7 +220,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
             });
             if (resp.ok) {
                 const data = await resp.json();
-                handleSetNotes(data.newNotes, 'collab');
+                handleSetNotes(data.newNotes);
             }
         }
         if (type === "message") {
