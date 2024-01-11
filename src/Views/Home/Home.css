@@ -6,10 +6,8 @@ padding-bottom: 200px;
 }
 
 .homeTopImage {
-    background-image: url('../../../public/Assets/mozartOutline.jpeg');
-    background-size: 120vmax;
-    background-position-y: -180px;
-    background-position-x: -45px;
+    background-image: url('../../../public/Assets/mozartcolory.png');
+    background-size: cover;
     width: 100vw;
     height: 300px;
     padding: 20px;
@@ -101,3 +99,4 @@ padding-bottom: 200px;
         
     }
 }
+
