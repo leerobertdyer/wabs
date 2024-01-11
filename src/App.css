@@ -224,6 +224,7 @@ h1, h2, h3, h4, h5, h6 {
     animation: scroll 100s infinite linear;
 }
 
+
 .golden {
     color: goldenrod;
 }
@@ -243,3 +244,4 @@ h1, h2, h3, h4, h5, h6 {
     animation: scroll 9s infinite ease-in-out ;
     width: 100%;
 }
+

@@ -12,6 +12,9 @@ function Register({ loadUser }) {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('')
     const [allUsers, setAllUsers] = useState([]);
+    const [profilePic, setProfilePic] = useState('');
+    const [backgroundPic, setBackgroundPic] = useState('')
+    const [status, setStatus] = useState('');
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -23,7 +26,49 @@ function Register({ loadUser }) {
                 setAllUsers(data.allUsers)
             }
         }
+
         fetchAllUsers();
+        const setRandomProfile = async () => {
+            try {
+                const NINJA_URL = "https://api.api-ninjas.com/v1/"
+                const NINJA_KEY = process.env.REACT_APP_NINJA_API_KEY;
+
+                const UNSPLASH_KEY = process.env.REACT_APP_UNSPLASH_KEY;
+                const unsplashUrl = `https://api.unsplash.com/photos/random?client_id=${UNSPLASH_KEY}`;
+                const getRandomPhoto = async (query) => {
+                    const resp = await fetch(`${unsplashUrl}&query=${query}`)
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        return data
+                    }
+                }
+                const naturePhotoData = await getRandomPhoto('nature');
+                const naturePhotoLink = naturePhotoData.urls.full
+                setBackgroundPic(naturePhotoLink)
+
+                const animalPhotoData = await getRandomPhoto('animals')
+                const animalPhotoLink = animalPhotoData.urls.full
+                setProfilePic(animalPhotoLink)
+
+                const fetchNewUserStatus = async () => {
+                    const resp = await fetch(`${NINJA_URL}/jokes`, {
+                        headers: { 'X-Api-Key': NINJA_KEY, 'Accept': 'image/jpg' }
+                    });
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        const joke = data[0].joke
+                        return joke
+                    }
+                }
+                const newStatus = await fetchNewUserStatus();
+                setStatus(newStatus)
+
+            } catch (error) {
+                console.error(`error setting up new profile (register.js): ${error}`)
+            }
+        }
+        setRandomProfile();
+
     }, [BACKEND_URL])
 
     const onRegisterSubmit = async (event) => {
@@ -41,50 +86,20 @@ function Register({ loadUser }) {
         }
 
         try {
-            const NINJA_URL = "https://api.api-ninjas.com/v1/"
-            const NINJA_KEY = process.env.REACT_APP_NINJA_API_KEY;
-
-            const UNSPLASH_KEY = process.env.REACT_APP_UNSPLASH_KEY;
-            const unsplashUrl = `https://api.unsplash.com/photos/random?client_id=${UNSPLASH_KEY}`;
-            const getRandomPhoto = async (query) => {
-                const resp = await fetch(`${unsplashUrl}&query=${query}`)
-                if (resp.ok) {
-                    const data = await resp.json();
-                    return data
-                }
-            }
-            const naturePhotoData = await getRandomPhoto('nature');
-            const naturePhotoLink = naturePhotoData.urls.full
-
-            const animalPhotoData = await getRandomPhoto('animals')
-            const animalPhotoLink = animalPhotoData.urls.full
-
-            const fetchNewUserStatus = async () => {
-                const resp = await fetch(`${NINJA_URL}/jokes`, {
-                    headers: { 'X-Api-Key': NINJA_KEY, 'Accept': 'image/jpg' }
-                });
-                if (resp.ok) {
-                    const data = await resp.json();
-                    const joke = data[0].joke
-                    return joke
-                }
-            }
-            const status = await fetchNewUserStatus();
-
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             const firebaseToken = await user.getIdToken();
 
             const response = await fetch(`${BACKEND_URL}/auth/register`, {
                 method: "POST",
-                headers: {'content-type': 'application/json'},
+                headers: { 'content-type': 'application/json' },
                 body: JSON.stringify({
                     "username": username.toLowerCase(),
                     "email": email,
                     "UID": user.uid,
                     "status": status,
-                    "profile_pic": animalPhotoLink,
-                    "background_pic": naturePhotoLink
+                    "profile_pic": profilePic,
+                    "background_pic": backgroundPic
                 }),
             });
 
