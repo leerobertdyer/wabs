@@ -11,11 +11,6 @@ const [showClearFilter, setShowClearFilter] = useState(false)
 const [currentSelectedUser, setCurrentSelectedUser] = useState(null)
 
 
-const displayCollaborators = [];
-// const displayCollaborators = showAll
-//     ? collabUsers
-//     : filteredUsers.slice(0, 3)
-
 const handleSetCollabByUser = (username) => {
     setOldCollab(prevFeed => [...collabFeed])
     setCurrentSelectedUser(username)

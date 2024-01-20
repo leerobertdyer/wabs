@@ -11,9 +11,13 @@ const Home = () => {
           <p className='headerText'>Some of us need to</p>
           <p className='headerText'><span className='writeabadsong'>Write a <span className='bad'>bad </span>song</span> first.</p>
         </div>
-        {!auth.currentUser && <Link to='/register' className='signUpLink'>
+        {!auth.currentUser 
+        ? <Link to='/register' className='signUpLink'>
           <button className='btn signUpBtn'>Sign Up!</button>
-          </Link>}
+          </Link>
+        : <Link to='/profile' className='signUpLink'>
+          <button className='btn signUpBtn'>Get A Prompt!</button>
+        </Link> }
       </div>
       <div className='secondDiv'>
         <p className='headerText center '>Writing is a muscle...</p>

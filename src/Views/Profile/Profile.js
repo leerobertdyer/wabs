@@ -9,6 +9,7 @@ import { auth } from '../../firebase';
 import Conversation from '../../Components/Conversation/Conversation';
 import Notifications from '../../Components/Notifications/Notifications';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 function Profile({ feed, user, allMessages, onlineUsers, conversations, messageNotes, collabNotes, handleSetNotes, token, socket, allUsers, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
@@ -19,7 +20,10 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
     const [userDataIsLoaded, setUserDataIsLoaded] = useState(false)
     const [showMessages, setShowMessages] = useState(false);
     const [showNewConvo, setShowNewConvo] = useState(false);
-    const [profileUser, setProfileUser] = useState(user)
+    const [profileUser, setProfileUser] = useState(user);
+    const [showPromptsFull, setShowPromptsFull] = useState(false)
+    const [showPrompts, setShowPrompts] = useState(false);
+    const [prompts, setPrompts] = useState([])
     // const [checked, setChecked] = useState(user.collab === 'true');
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -34,14 +38,15 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
     const otherUsername = queryParams.get("otherusername");
     // otherUsername && console.log(otherUsername);
 
+    
     useEffect(() => {
         if (otherUsername) {
             return
         }
         setProfileUser(user)
     }, [user, otherUsername])
-
-
+    
+    
     useEffect(() => {
         if (otherUsername) {
             const getOtherUser = async () => {
@@ -56,7 +61,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
         }
         // eslint-disable-next-line
     }, [BACKEND_URL, otherUsername])
-
+    
     useEffect(() => {
         const fetchData = async () => {
             // await getCollabStatus();
@@ -67,42 +72,61 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
         //eslint-disable-next-line
     }, [profileUser])
 
+    useEffect(() => {
+        const fetchPrompts = async() => {
+            const resp = await fetch(`${BACKEND_URL}/user-prompts`, 
+           { headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }})
+            const data = await resp.json()
+            const userPrompts = data.prompts.map(prompt => prompt.prompt)
+            setPrompts(userPrompts)
+        } 
+       if (user.isLoggedIn){
+           fetchPrompts()
+
+       } 
+    }, [user])
+    
     // const handleCollabSwitch = async () => {
-    //     const resp = await fetch(`${BACKEND_URL}/collab/update-collab`, {
-    //         method: 'PUT',
-    //         headers: { 'content-type': 'application/json' },
-    //         body: JSON.stringify({
-    //             id: user.user_id,
-    //         })
-    //     })
-    //     if (resp.ok) {
-    //         const data = await resp.json();
-    //         await changeUserCollab(data.nextCollab)
-    //         setChecked(!checked)
-    //         loadAllUsers();
-    //     }
+        //     const resp = await fetch(`${BACKEND_URL}/collab/update-collab`, {
+            //         method: 'PUT',
+            //         headers: { 'content-type': 'application/json' },
+            //         body: JSON.stringify({
+                //             id: user.user_id,
+                //         })
+                //     })
+                //     if (resp.ok) {
+                    //         const data = await resp.json();
+                    //         await changeUserCollab(data.nextCollab)
+                    //         setChecked(!checked)
+                    //         loadAllUsers();
+                    //     }
+                    
+                    // }
+                    
+                    // const getCollabStatus = async () => {
+                        //     const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
+                            //         headers: {
+                                //             'content-type': 'application/json',
+                                //             'authorization': `Bearer ${token}`,
+                                //         },
+                                //     });
+                                //     const data = await resp.json();
+                                //     setChecked(data.collab === 'true');
+                                // }
+                                
 
-    // }
-
-    // const getCollabStatus = async () => {
-    //     const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
-    //         headers: {
-    //             'content-type': 'application/json',
-    //             'authorization': `Bearer ${token}`,
-    //         },
-    //     });
-    //     const data = await resp.json();
-    //     setChecked(data.collab === 'true');
-    // }
-
-    const userSongs = [...feed]
-        .filter((post) => post.user_id === profileUser.user_id && (post.type === "song" || post.type === "collab"))
-        .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
-
-    const userPosts = [...feed]
-        .filter(post => post.user_id === profileUser.user_id)
-
-    const getCurrentCollabList = async () => {
+                               
+                                const userSongs = [...feed]
+                                .filter((post) => post.user_id === profileUser.user_id && (post.type === "song" || post.type === "collab"))
+                                .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
+                                
+                                const userPosts = [...feed]
+                                .filter(post => post.user_id === profileUser.user_id)
+                                
+                                const getCurrentCollabList = async () => {
         try {
             const resp = await fetch(`${BACKEND_URL}/collab/get-profile-collabs?user=${profileUser.user_id}`, {
                 headers: { 'content-type': 'application/json' }
@@ -262,6 +286,20 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
         }
     }
 
+    const getPrompt = async() => {
+        try {
+             const resp = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/get-prompt`, {userId: user.user_id})
+            if (resp.data.message) {
+                setShowPromptsFull(true)
+            } else {
+                console.log(resp.data.gptResponse)
+            }
+        } catch (error) {
+            console.error(`error getting prompt: ${error}`)
+        }
+       
+    }
+
     const { isLoggedIn } = user
 
     return (
@@ -355,7 +393,8 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                         </>}
 
                         <div className='profileBottomDiv'>
-
+                            <button className='btn getPromptsBtn' onClick={getPrompt}>Get A Prompt</button>
+                            <button className='btn' onClick={() => setShowPrompts(true)}>Show Prompts</button>
                             {
                                 showSongs && <>
                                     {userSongs.length === 0
@@ -424,6 +463,23 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
 
                                 </>
                             }
+
+                            {
+                            showPromptsFull &&
+                            <div className='promptsFullDiv' onClick={() => setShowPromptsFull(false)}>
+                                You've hit the 2 prompts/month limit :)
+                                 <span style={{fontSize: "33px", display: "block", textAlign: "center", color: "red", cursor: "pointer"}}>X</span></div>
+                                 }
+                                 {
+                                    showPrompts && 
+                                    <div className='promptsDiv'>
+                                        {prompts.map((prompt, key) => (
+                                           <div class="prompt">
+                                           <p>{prompt}</p>
+                                           </div> 
+                                        ))}
+                                        </div>
+                                 }
 
                         </div>
                     </div>

@@ -14,7 +14,6 @@ import Scoreboard from './Views/Scoreboard/Scoreboard';
 import Home from './Views/Home/Home';
 import { auth } from './firebase';
 import io from 'socket.io-client';
-import Prompts from './Components/Prompts/Prompts';
 
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
@@ -98,7 +97,7 @@ for (const person of users) {
     }
 }
 const filteredUsers = usernames.filter(person => person.username !== user.username)
-console.log('filterd: ', filteredUsers);
+// console.log('filterd: ', filteredUsers);
 setCollabUsers(filteredUsers)
   }, [collabFeed, user.username])
 
@@ -261,7 +260,7 @@ setCollabUsers(filteredUsers)
     } else if (type === 'collab') {
       setCollabFeed(nextFeed)
     }
-    console.log(user.username, 'sorted by ', method, ' on ', type)
+    // console.log(user.username, 'sorted by ', method, ' on ', type)
   }
 
   const getStars = async (id) => {
@@ -371,7 +370,6 @@ setCollabUsers(filteredUsers)
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} loadAllUsers={loadAllUsers} />} />
               <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
               <Route path="/collaborate/editor" element={<Editor user={user} token={token} />} />
-              <Route path='/get-prompt' element={<Prompts />} />
             </Routes>
 
             <Footer />

@@ -354,3 +354,13 @@ input:checked+.slider:before {
     margin-bottom: 5px;
     gap: 5px;
 }
+
+.getPromptsBtn {
+    margin-top: 25px;
+}
+
+.prompt {
+    border: double white 8px;
+    border-radius: 12px;
+    padding: 10px;
+}
