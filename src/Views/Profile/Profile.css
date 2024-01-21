@@ -362,5 +362,51 @@ input:checked+.slider:before {
 .prompt {
     border: double white 8px;
     border-radius: 12px;
+    padding: 30px;
+    width: 80%;
+    margin: 0 auto;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.showPromptsBtn {
+    margin: 25px auto;
+    width: 50%;
+}
+
+.submitPromptBtn {
+    width: 30%;
+    color: black;
+    background-color: coral;
+    align-self: center;
+    justify-self: center;
+}
+
+.promptCheckPopup {
+    position: absolute;
+    background-color: rgba(24, 24, 24, .8);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.promptCheckForm {
+    width: 80%;
     padding: 10px;
+    border: double white 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bigRedX {
+    color: red;
+    font-size: 45px;
+}
+.bigRedX:hover {
+    cursor: pointer;
 }

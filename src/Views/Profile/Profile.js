@@ -24,6 +24,10 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
     const [showPromptsFull, setShowPromptsFull] = useState(false)
     const [showPrompts, setShowPrompts] = useState(false);
     const [prompts, setPrompts] = useState([])
+    const [showPromptCheck, setShowPromptCheck] = useState(false);
+    const [songTitle, setSongTitle] = useState('');
+    const [songLyrics, setSongLyrics] = useState('');
+    const [promptToCheck, setPromptToCheck] = useState('')
     // const [checked, setChecked] = useState(user.collab === 'true');
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -38,15 +42,15 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
     const otherUsername = queryParams.get("otherusername");
     // otherUsername && console.log(otherUsername);
 
-    
+
     useEffect(() => {
         if (otherUsername) {
             return
         }
         setProfileUser(user)
     }, [user, otherUsername])
-    
-    
+
+
     useEffect(() => {
         if (otherUsername) {
             const getOtherUser = async () => {
@@ -61,7 +65,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
         }
         // eslint-disable-next-line
     }, [BACKEND_URL, otherUsername])
-    
+
     useEffect(() => {
         const fetchData = async () => {
             // await getCollabStatus();
@@ -73,60 +77,64 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
     }, [profileUser])
 
     useEffect(() => {
-        const fetchPrompts = async() => {
-            const resp = await fetch(`${BACKEND_URL}/user-prompts`, 
-           { headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }})
+        const fetchPrompts = async () => {
+            const resp = await fetch(`${BACKEND_URL}/user-prompts`,
+                {
+                    headers: {
+                        'content-type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    }
+                })
             const data = await resp.json()
             const userPrompts = data.prompts.map(prompt => prompt.prompt)
             setPrompts(userPrompts)
-        } 
-       if (user.isLoggedIn){
-           fetchPrompts()
+            if (userPrompts.length > 1) {
+                setShowPromptsFull(true)
+            }
+        }
+        if (user.isLoggedIn) {
+            fetchPrompts()
+        }
+    }, [user, token, BACKEND_URL])
 
-       } 
-    }, [user])
-    
     // const handleCollabSwitch = async () => {
-        //     const resp = await fetch(`${BACKEND_URL}/collab/update-collab`, {
-            //         method: 'PUT',
-            //         headers: { 'content-type': 'application/json' },
-            //         body: JSON.stringify({
-                //             id: user.user_id,
-                //         })
-                //     })
-                //     if (resp.ok) {
-                    //         const data = await resp.json();
-                    //         await changeUserCollab(data.nextCollab)
-                    //         setChecked(!checked)
-                    //         loadAllUsers();
-                    //     }
-                    
-                    // }
-                    
-                    // const getCollabStatus = async () => {
-                        //     const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
-                            //         headers: {
-                                //             'content-type': 'application/json',
-                                //             'authorization': `Bearer ${token}`,
-                                //         },
-                                //     });
-                                //     const data = await resp.json();
-                                //     setChecked(data.collab === 'true');
-                                // }
-                                
+    //     const resp = await fetch(`${BACKEND_URL}/collab/update-collab`, {
+    //         method: 'PUT',
+    //         headers: { 'content-type': 'application/json' },
+    //         body: JSON.stringify({
+    //             id: user.user_id,
+    //         })
+    //     })
+    //     if (resp.ok) {
+    //         const data = await resp.json();
+    //         await changeUserCollab(data.nextCollab)
+    //         setChecked(!checked)
+    //         loadAllUsers();
+    //     }
 
-                               
-                                const userSongs = [...feed]
-                                .filter((post) => post.user_id === profileUser.user_id && (post.type === "song" || post.type === "collab"))
-                                .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
-                                
-                                const userPosts = [...feed]
-                                .filter(post => post.user_id === profileUser.user_id)
-                                
-                                const getCurrentCollabList = async () => {
+    // }
+
+    // const getCollabStatus = async () => {
+    //     const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
+    //         headers: {
+    //             'content-type': 'application/json',
+    //             'authorization': `Bearer ${token}`,
+    //         },
+    //     });
+    //     const data = await resp.json();
+    //     setChecked(data.collab === 'true');
+    // }
+
+
+
+    const userSongs = [...feed]
+        .filter((post) => post.user_id === profileUser.user_id && (post.type === "song" || post.type === "collab"))
+        .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
+
+    const userPosts = [...feed]
+        .filter(post => post.user_id === profileUser.user_id)
+
+    const getCurrentCollabList = async () => {
         try {
             const resp = await fetch(`${BACKEND_URL}/collab/get-profile-collabs?user=${profileUser.user_id}`, {
                 headers: { 'content-type': 'application/json' }
@@ -227,6 +235,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
         setShowStatus(false);
         setShowPosts(false);
         setShowMessages(false);
+        setShowPrompts(false)
         if (type === "songs") { setShowSongs(true) }
         if (type === "posts") { setShowPosts(true) }
         if (type === "collab") {
@@ -286,9 +295,9 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
         }
     }
 
-    const getPrompt = async() => {
+    const getPrompts = async () => {
         try {
-             const resp = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/get-prompt`, {userId: user.user_id})
+            const resp = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/get-prompt`, { userId: user.user_id })
             if (resp.data.message) {
                 setShowPromptsFull(true)
             } else {
@@ -297,7 +306,30 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
         } catch (error) {
             console.error(`error getting prompt: ${error}`)
         }
-       
+    }
+
+    const handlePromptClick = (prompt) => {
+        setPromptToCheck(prompt)
+        setShowPromptCheck(true)
+    }
+
+    const handlePromptSubmit = async (event, songTitle, songLyrics, prompt) => {
+        event.preventDefault()
+        console.log(songTitle, songLyrics, prompt);
+        const resp = await fetch(`${BACKEND_URL}/check-prompt`, {
+            method: "PUT",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+                songTitle: songTitle,
+                songLyrics: songLyrics,
+                prompt: prompt,
+                userId: user.user_id
+            })
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            console.log(data);
+        }
     }
 
     const { isLoggedIn } = user
@@ -393,8 +425,45 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                         </>}
 
                         <div className='profileBottomDiv'>
-                            <button className='btn getPromptsBtn' onClick={getPrompt}>Get A Prompt</button>
-                            <button className='btn' onClick={() => setShowPrompts(true)}>Show Prompts</button>
+
+                            {
+                                showPromptCheck &&
+                                <div className='promptCheckPopup'>
+                                    <p className='bigRedX' onClick={() => setShowPromptCheck(false)}>X</p>
+                                    <form className='promptCheckForm'>
+                                    <input type='text' onChange={(e) => setSongTitle(e.target.value)} className="promptTitle"placeholder='Title' required></input>
+                                    <textarea className="promptLyrics" onChange={(e) => setSongLyrics(e.target.value)} placeholder='your lyrics...' required></textarea>
+                                    <button type="submit" onClick={(event) => handlePromptSubmit(event, songTitle, songLyrics, promptToCheck)}className='btn'>Submit Prompt</button>
+
+                                    </form>
+                                </div>
+                            }
+
+                            {
+                                !showPromptsFull && <button className='btn getPromptsBtn' onClick={getPrompts}>Get A Prompt</button>
+                            }
+                            {
+                                showPrompts
+                                    ? <button className='btn showPromptsBtn' onClick={() => setShowPrompts(false)}>Hide Prompts</button>
+                                    : <button className='btn showPromptsBtn' onClick={() => setShowPrompts(true)}>Show Prompts</button>
+                            }
+
+                            {
+                                showPrompts &&
+                                <div className='promptsDiv'>
+                                    {prompts.map((prompt, key) => (
+                                        <div class="prompt">
+                                            <p>Prompt {key + 1}</p>
+                                            <br />
+                                            <p>{prompt}</p>
+                                            <button className='btn submitPromptBtn'
+                                                onClick={() => handlePromptClick(prompt)}>Submit</button>
+                                        </div>
+                                    ))}
+                                </div>
+                            }
+
+
                             {
                                 showSongs && <>
                                     {userSongs.length === 0
@@ -464,22 +533,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                                 </>
                             }
 
-                            {
-                            showPromptsFull &&
-                            <div className='promptsFullDiv' onClick={() => setShowPromptsFull(false)}>
-                                You've hit the 2 prompts/month limit :)
-                                 <span style={{fontSize: "33px", display: "block", textAlign: "center", color: "red", cursor: "pointer"}}>X</span></div>
-                                 }
-                                 {
-                                    showPrompts && 
-                                    <div className='promptsDiv'>
-                                        {prompts.map((prompt, key) => (
-                                           <div class="prompt">
-                                           <p>{prompt}</p>
-                                           </div> 
-                                        ))}
-                                        </div>
-                                 }
+
 
                         </div>
                     </div>
