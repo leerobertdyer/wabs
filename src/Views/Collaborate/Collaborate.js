@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Feed from '../../Components/Feed/Feed'
 import { MdMoreHoriz } from "react-icons/md";
 import './Collaborate.css'
-const Collaborate = ({ stars, handleSetCollabFeed, setCollabByUser, collabUsers, getStars, updateStars, collabFeed, user, sortFeed }) => {
+const Collaborate = ({ stars, handleSetCollabFeed, setCollabByUser, collabUsers, getStars, updateStars, collabFeed, user }) => {
 const [showAll, setShowAll] = useState(false);
 const [oldCollab, setOldCollab] = useState([])
 const [showClearFilter, setShowClearFilter] = useState(false)
@@ -54,7 +54,7 @@ const handleClear = () => {
         </div>
         <h3 className='orSubmitYourOwn'>Or <Link to="/submit" className='btn collabSubmitLink'>Submit</Link> your own!</h3>
         <div className='collabFeedDiv' id="collabFeedMarker">
-    <Feed  getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} collabFeed={collabFeed} feed={collabFeed} user={user} sortFeed={sortFeed} />
+    <Feed  getStars={getStars} stars={stars} updateStars={updateStars} collabFeed={collabFeed} feed={collabFeed} user={user}  />
         </div>
     </div>
     </>

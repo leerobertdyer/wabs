@@ -10,8 +10,10 @@ import Conversation from '../../Components/Conversation/Conversation';
 import Notifications from '../../Components/Notifications/Notifications';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import confetti from 'canvas-confetti';
+import ReactLoading from 'react-loading';
 
-function Profile({ feed, user, allMessages, onlineUsers, conversations, messageNotes, collabNotes, handleSetNotes, token, socket, allUsers, loadAllUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, sortFeed, changeUserStatus }) {
+function Profile({ feed, user, allMessages, onlineUsers, conversations, messageNotes, collabNotes, handleSetNotes, token, socket, allUsers, stars, getStars, updateStars, changeUserProfile, changeUserPic, changeUserCollab, loadFeed, changeUserStatus }) {
     const [showStatus, setShowStatus] = useState(false);
     const [showSongs, setShowSongs] = useState(false);
     const [userCollab, setUsercollab] = useState([]);
@@ -28,6 +30,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
     const [songTitle, setSongTitle] = useState('');
     const [songLyrics, setSongLyrics] = useState('');
     const [promptToCheck, setPromptToCheck] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
     // const [checked, setChecked] = useState(user.collab === 'true');
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -97,36 +100,6 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
         }
     }, [user, token, BACKEND_URL])
 
-    // const handleCollabSwitch = async () => {
-    //     const resp = await fetch(`${BACKEND_URL}/collab/update-collab`, {
-    //         method: 'PUT',
-    //         headers: { 'content-type': 'application/json' },
-    //         body: JSON.stringify({
-    //             id: user.user_id,
-    //         })
-    //     })
-    //     if (resp.ok) {
-    //         const data = await resp.json();
-    //         await changeUserCollab(data.nextCollab)
-    //         setChecked(!checked)
-    //         loadAllUsers();
-    //     }
-
-    // }
-
-    // const getCollabStatus = async () => {
-    //     const resp = await fetch(`${BACKEND_URL}/collab/collab-status`, {
-    //         headers: {
-    //             'content-type': 'application/json',
-    //             'authorization': `Bearer ${token}`,
-    //         },
-    //     });
-    //     const data = await resp.json();
-    //     setChecked(data.collab === 'true');
-    // }
-
-
-
     const userSongs = [...feed]
         .filter((post) => post.user_id === profileUser.user_id && (post.type === "song" || post.type === "collab"))
         .sort((a, b) => new Date(b.song_date) - new Date(a.song_date));
@@ -168,7 +141,6 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                 formData.append('user_id', user.user_id);
                 formData.append('photo', photo);
                 let resp;
-                // console.log('userId, photo: ', user.user_id, photo);
                 if (type === "profile_pic") {
                     resp = await fetch(`${BACKEND_URL}/profile/upload-profile-pic`, {
                         method: "PUT",
@@ -185,7 +157,6 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                     type === "profile_pic"
                         ? handleSetProfilePhoto(data.newPhoto)
                         : handleSetBackgroundPhoto(data.newPhoto)
-                    // console.log('photo saved in dbx: ', data.newPhoto);
                 }
                 else {
                     console.log(`Failed to upload your photo to dropbox: ${resp.status}`);
@@ -268,7 +239,6 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
             });
             if (resp.ok) {
                 const data = await resp.json();
-                // console.log('resp ok: ', data.newNotes);
                 handleSetNotes(data.newNotes, 'message')
             }
         }
@@ -315,7 +285,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
 
     const handlePromptSubmit = async (event, songTitle, songLyrics, prompt) => {
         event.preventDefault()
-        console.log(songTitle, songLyrics, prompt);
+        setIsLoading(true)
         const resp = await fetch(`${BACKEND_URL}/check-prompt`, {
             method: "PUT",
             headers: { "content-type": "application/json" },
@@ -329,6 +299,23 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
         if (resp.ok) {
             const data = await resp.json();
             console.log(data);
+            if (data.pass) {
+                setShowPromptCheck(false)
+                setPromptToCheck(false)
+                //setShowSuccessMessage(true)
+                const nextPrompts = prompts.filter(prompt => prompt !== promptToCheck)
+                setPrompts(nextPrompts)
+                confetti({
+                    disableForReducedMotion: true,
+                    particleCount: 2200,
+                    startVelocity: 50,
+                    spread: 150,
+                });
+
+                setIsLoading(false)
+            } else if (!data.pass) {
+
+            }
         }
     }
 
@@ -338,6 +325,12 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
         <div>
             {isLoggedIn ? (
                 <div>
+                    {isLoading &&
+                        <div className='loading profileLoading' >
+                            <ReactLoading type={'spinningBubbles'} color={'orange'} height={'30%'} width={'30%'} />
+                            <p className='scrollingText checkingPromptText'>Checking your prompt...</p>
+                        </div>
+                    }
                     <div id="Profile">
                         <div id="topBar"
                             style={{ backgroundImage: `url(${profileUser.profile_background}`, backgroundSize: 'cover' }}>
@@ -368,20 +361,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                                             onChange={(event) => handlePhotoSubmit(event, 'profile_background')}
                                         />
                                     </form></div>
-                                {/* <div className='underSwitchDiv'>
-                                    <div className='switchDiv'>
-                                        <label className="switch">
 
-                                            <input type="checkbox" id="collabSwitch" checked={!!checked}
-                                                onChange={() => { }}
-                                                onClick={() => handleCollabSwitch()} />
-
-                                            <span className="slider"></span>
-                                        </label>
-                                        {user.collab === "true"
-                                            ? <p className='setUserCollab'>Collab On</p>
-                                            : <p className='setUserCollab'>Collab Off</p>}
-                                    </div> */}
                                 {user.user_id === profileUser.user_id
                                     && <div className='flexCol gap statusAndPicDiv'>
                                         <p className='updateBackground padAndShade'
@@ -391,7 +371,6 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                                             <p className='updateBackground padAndShade'><IoCameraSharp />Update Background</p>
                                         </label>
                                     </div>}
-                                {/* </div> */}
                             </div>
                         </div>
 
@@ -429,11 +408,12 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                             {
                                 showPromptCheck &&
                                 <div className='promptCheckPopup'>
-                                    <p className='bigRedX' onClick={() => setShowPromptCheck(false)}>X</p>
                                     <form className='promptCheckForm'>
-                                    <input type='text' onChange={(e) => setSongTitle(e.target.value)} className="promptTitle"placeholder='Title' required></input>
-                                    <textarea className="promptLyrics" onChange={(e) => setSongLyrics(e.target.value)} placeholder='your lyrics...' required></textarea>
-                                    <button type="submit" onClick={(event) => handlePromptSubmit(event, songTitle, songLyrics, promptToCheck)}className='btn'>Submit Prompt</button>
+                                    <p className='bigRedX' onClick={() => setShowPromptCheck(false)}>X</p>
+                                        <p className='prompt' style={{ backgroundColor: "black" }}>{promptToCheck}</p>
+                                        <input type='text' onChange={(e) => setSongTitle(e.target.value)} className="promptTitle promptInput" placeholder='Title' required></input>
+                                        <textarea className="promptLyrics promptInput" onChange={(e) => setSongLyrics(e.target.value)} placeholder='your lyrics...' required></textarea>
+                                        <button type="submit" onClick={(event) => handlePromptSubmit(event, songTitle, songLyrics, promptToCheck)} className='btn'>Submit Prompt</button>
 
                                     </form>
                                 </div>
@@ -445,7 +425,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                             {
                                 showPrompts
                                     ? <button className='btn showPromptsBtn' onClick={() => setShowPrompts(false)}>Hide Prompts</button>
-                                    : <button className='btn showPromptsBtn' onClick={() => setShowPrompts(true)}>Show Prompts</button>
+                                    : prompts && prompts.length > 0 && <button className='btn showPromptsBtn' onClick={() => setShowPrompts(true)}>Show Prompts</button>
                             }
 
                             {
@@ -478,7 +458,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                                         : <>
                                             <div className='yourDivs'>
                                                 <h3 className='profileFeedTitles'>Your Songs:</h3>
-                                                <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} sortFeed={sortFeed} />
+                                                <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userSongs} loadFeed={loadFeed} />
                                             </div>
                                         </>}
                                 </>
@@ -503,7 +483,7 @@ function Profile({ feed, user, allMessages, onlineUsers, conversations, messageN
                             {
                                 showPosts && userPosts.length > 0 && <div className='yourDivs'>
                                     <h3 className='profileFeedTitles'>Your Posts:</h3>
-                                    <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userPosts} loadFeed={loadFeed} sortFeed={sortFeed} />
+                                    <Feed user={user} stars={stars} getStars={getStars} updateStars={updateStars} showSort={false} feed={userPosts} loadFeed={loadFeed} />
                                 </div>
                             }
 

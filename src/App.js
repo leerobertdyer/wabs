@@ -31,7 +31,6 @@ function App() {
     datecreated: '',
     collab: 'false',
     profile_background: '',
-    sortfeed: ''
   })
 
   const [feed, setFeed] = useState([])
@@ -211,56 +210,12 @@ setCollabUsers(filteredUsers)
   const loadFeed = async () => {
     const resp = await fetch(`${BACKEND_URL}/feed`)
     const data = await resp.json();
-    let method = 'Latest'
-    if (user.sortfeed) {
-      method = user.sortfeed
-    }
-    sortFeed(method, data.newFeed, 'home')
-    sortFeed(method, data.filteredFeed, 'collab')
+    setFeed(data.newFeed)
+    setCollabFeed(data.filteredFeed)
   }
 
   const handleSetCollabFeed = (newFeed) => {
     setCollabFeed(prevFeed => [...newFeed])
-  }
-
-  const sortFeed = async (method, currentFeed, type) => {
-    let nextFeed
-    if (method === "Oldest") {
-      nextFeed = [...currentFeed].sort((a, b) => a.feed_id - b.feed_id)
-    }
-    else if (method === "Latest") {
-      nextFeed = [...currentFeed].sort((a, b) => b.feed_id - a.feed_id)
-    }
-    else if (method === "Most Popular") {
-      nextFeed = [...currentFeed].sort((a, b) => b.stars - a.stars)
-    }
-    else {
-      console.log('nothing changed...')
-      nextFeed = [...currentFeed]
-    }
-    if (user.user_id) {
-      const resp = await fetch(`${BACKEND_URL}/update-sortfeed`, {
-        method: "PUT",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          user_id: user.user_id,
-          sortfeed: method
-        })
-      });
-      if (resp.ok) {
-        if (user.sortfeed !== method) {
-          const nextUser = { ...user, sortfeed: method };
-          setUser(nextUser)
-        }
-      }
-    }
-
-    if (type === 'home') {
-      setFeed(nextFeed)
-    } else if (type === 'collab') {
-      setCollabFeed(nextFeed)
-    }
-    // console.log(user.username, 'sorted by ', method, ' on ', type)
   }
 
   const getStars = async (id) => {
@@ -331,7 +286,6 @@ setCollabUsers(filteredUsers)
       status: data.user_status,
       collab: data.collab,
       profile_background: data.profile_background,
-      sortfeed: data.sortfeed
     })
   }
 
@@ -346,7 +300,6 @@ setCollabUsers(filteredUsers)
       datecreated: '',
       collab: false,
       profile_background: '',
-      sortfeed: ''
     })
   }
 
@@ -362,13 +315,13 @@ setCollabUsers(filteredUsers)
             <div className='spacing'></div>
             <Routes>
               <Route path='/' element={<Home user={user} />} />
-              <Route path='/feed' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} showSort={true} feed={feed} user={user} loadFeed={loadFeed} sortFeed={sortFeed} />} />
+              <Route path='/feed' element={<Feed getStars={getStars} stars={stars} updateStars={updateStars} feed={feed} user={user} loadFeed={loadFeed} />} />
               <Route path='score' element={<Scoreboard users={allUsers} />} />
-              <Route path="/login" element={<Login loadUser={loadUser} />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register loadUser={loadUser} />} />
-              <Route path="/profile" element={<Profile handleSetNotes={handleSetNotes} onlineUsers={onlineUsers} messageNotes={messageNotes} collabNotes={collabNotes} user={user} token={token} allMessages={allMessages} conversations={conversations} socket={socket} allUsers={allUsers} loadAllUsers={loadAllUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} loadUser={loadUser} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} sortFeed={sortFeed} unloadUser={unloadUser} />} />
+              <Route path="/profile" element={<Profile handleSetNotes={handleSetNotes} onlineUsers={onlineUsers} messageNotes={messageNotes} collabNotes={collabNotes} user={user} token={token} allMessages={allMessages} conversations={conversations} socket={socket} allUsers={allUsers} changeUserProfile={changeUserProfile} stars={stars} getStars={getStars} updateStars={updateStars} changeUserPic={changeUserPic} changeUserCollab={changeUserCollab} changeUserStatus={changeUserStatus} feed={feed} loadFeed={loadFeed} unloadUser={unloadUser} />} />
               <Route path="/submit" element={<Submit user={user} loadFeed={loadFeed} loadAllUsers={loadAllUsers} />} />
-              <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user} sortFeed={sortFeed} />} />
+              <Route path="/collaborate" element={<Collaborate handleSetCollabFeed={handleSetCollabFeed} collabUsers={collabUsers} setCollabByUser={setCollabByUser} stars={stars} getStars={getStars} updateStars={updateStars} collabFeed={collabFeed} user={user}  />} />
               <Route path="/collaborate/editor" element={<Editor user={user} token={token} />} />
             </Routes>
 

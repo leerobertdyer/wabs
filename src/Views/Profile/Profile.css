@@ -385,13 +385,14 @@ input:checked+.slider:before {
 }
 
 .promptCheckPopup {
-    position: absolute;
+    margin: 25px 0 250px 0;
     background-color: rgba(24, 24, 24, .8);
     width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+
 }
 
 .promptCheckForm {
@@ -401,12 +402,33 @@ input:checked+.slider:before {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
+    background-color: black;
 }
 
 .bigRedX {
     color: red;
     font-size: 45px;
+    border: red solid 3px;
+    border-radius: 8px;
+    width: 35px;
+    text-align: center;
+    background-color: black;
 }
 .bigRedX:hover {
     cursor: pointer;
+}
+
+.promptInput {
+    border-radius: 12px;
+    width: 80%;
+    padding: 10px;
+    border: violet solid 3px;
+}
+.checkingPromptText {
+    font-size: 33px;
+    margin-top: -150px;
+}
+.profileLoading {
+    padding-top: 350px;
 }

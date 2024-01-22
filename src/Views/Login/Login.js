@@ -36,27 +36,6 @@ const [loginPassword, setLoginPassword] = useState('')
     const errorMessage = error.message;
 alert(`${errorCode}: ${errorMessage}`);
   });
-
-    //Old Version:
-    // fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
-    //   method: 'POST',
-    //   headers: { 'content-type': 'application/json' },
-    //   body: JSON.stringify({
-    //     email: loginEmail,
-    //     password: loginPassword
-    //   }),
-    //   credentials: 'include'
-    // })
-    //   .then(resp => resp.json())
-    //   .then(user => {
-    //     // console.log('successful login...')
-    //     // console.log('allcookies after login: ', document.cookie)
-    //     if (user.user_id) {
-    //       props.loadUser(user);
-    //       navigate('/profile');
-    //     }
-
-    //   })
   }
 
     return (

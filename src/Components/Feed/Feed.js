@@ -5,8 +5,7 @@ import './Feed.css'
 import { useNavigate } from "react-router-dom";
 import ProfileLink from "../ProfileLink/ProfileLink";
 
-function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, updateStars, stars }) {
-    const [sortBy, setSortBy] = useState('Latest');
+function Feed({ feed, collabFeed, user, loadFeed, getStars, updateStars, stars }) {
     const [currentPost, setCurrentPost] = useState({});
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [showPhoto, setShowPhoto] = useState(false);
@@ -35,52 +34,14 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
     }, []);
 
     useEffect(() => {
-        setSortBy('Latest')
-        handleSort('Latest')
-        // console.log('inside useEffect (page) ', sortBy);
-        // eslint-disable-next-line
-    }, [page])
-
-    useEffect(() => {
         if (user.user_id) {
             getStars(user.user_id);
-            // console.log('inside useEffect(user): ', sortBy);
         }
         // eslint-disable-next-line
     }, [user])
 
-    useEffect(() => {
-        if (page === `${FRONTEND_URL}/feed`) {
-            // console.log('inside useEffect (stars): ', sortBy);
-            sortFeed(sortBy, feed, 'home')
-        } else if (page === `${FRONTEND_URL}/collaborate`) {
-            sortFeed(sortBy, collabFeed, 'collab')
-        }
-        // eslint-disable-next-line
-    }, [stars])
-
     const starHollow = '../../../Assets/star.png'
     const starFilled = '../../../Assets/starFilled.png'
-
-    const handleSort = (event) => {
-        if (page === `${FRONTEND_URL}/feed`) {
-            if (event === 'Latest') {
-                sortFeed(event, feed, 'home')
-                setSortBy(event)
-            } else {
-                sortFeed(event, feed, 'home')
-                setSortBy(event)
-            }
-        } else if (page === `${FRONTEND_URL}/collaborate`) {
-            if (event === 'Latest') {
-                sortFeed(event, feed, 'collab')
-                setSortBy(event)
-            } else {
-                sortFeed(event, feed, 'collab')
-                setSortBy(event)
-            }
-        }
-    }
 
     const handleStarClick = async (post_id) => {
         page === `${FRONTEND_URL}/feed`
@@ -130,8 +91,6 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
             credentials: 'include'
         })
         if (resp.ok) {
-            const data = await resp.json();
-            // console.log(data.message);
             loadFeed();
             setCurrentPost({ id: null, type: null, user_id: null })
             setConfirmDelete(false)
@@ -184,18 +143,6 @@ function Feed({ feed, collabFeed, user, loadFeed, sortFeed, showSort, getStars, 
                     </div>
                 </div>}
             <div className="outerFeedDiv">
-                {showSort && <>
-                    <div className="titleBox">
-                        <div className='sortSongs'>
-                            <h3 className="sortBy">Sort by: </h3>
-                            <p className='sort' onClick={() => handleSort('Most Popular')}>Most Popular</p>
-                            <p className='sort' onClick={() => handleSort("Oldest")}>Oldest</p>
-                            <p className='sort' onClick={() => handleSort("Latest")}>Latest</p>
-                        </div>
-                    </div>
-                    <h1 className="sortByTitle">{sortBy} Posts:</h1>
-                </>
-                }
 
                 <div className='allPosts'>
                     {feed.map((post, index) => {
