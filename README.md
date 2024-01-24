@@ -23,26 +23,25 @@ LIVE SITE HERE -------->
 - Need to recreate OTHER USER variable to send with collab notification update
 
 # To Do:
+-       prompts:
+                -Fix the submission so that it uses an actual song submission
+-       song feed
+                -Show lyrics link on finished songs/collabs
+
+- Replace DBX with firebase storage || or figure out how to use dbx more effectively (ie no 3rd party cookies)
 
 -       notes on collabs aren't showing up. Make a pop up window and a link above the fullsongfeed element displaying the note.
--       Either get rid of collab switch, or explain it
--       in collab page make it so you can switch list between list of ALL or list of CURRENT collaborators
+
 -       Add Google/Facebook Sign in to firebase: https://console.firebase.google.com/u/0/project/wabs-e49c4/authentication/providers
 
 -   comments on posts
--   DM messaging capability
--   noticications number and dropdown by username above login bar and in profile nav
+- fix notification menu
 -   notifications via email and/or text
--   follow other users (notifications for their posts at least, but maybe tie in dm with follow)
-
--   link user names to user profiles 
--   make profile pages dynamic
 
 -   delete Collabs from profile (fullsongfeed)
 -   make delete function actually delete from dbx
 -   Add option to edit instead of delete.
 
--   Add first time marker in database to give TOUR of PROFILE options
 -   Add/update bio
 - add function to move background pic around
 

@@ -430,5 +430,9 @@ input:checked+.slider:before {
     margin-top: -150px;
 }
 .profileLoading {
-    padding-top: 350px;
+    padding-top: 250px;
+}
+
+.promptNoSongsDiv {
+    text-align: center;
 }
