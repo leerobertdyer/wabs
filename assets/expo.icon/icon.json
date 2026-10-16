@@ -6,8 +6,8 @@
     {
       "layers" : [
         {
-          "image-name" : "expo-symbol 2.svg",
-          "name" : "expo-symbol 2",
+          "image-name" : "wabs_logo.png",
+          "name" : "WABS logo",
           "position" : {
             "scale" : 1,
             "translation-in-points" : [
@@ -17,7 +17,7 @@
           }
         },
         {
-          "image-name" : "grid.png",
+          "image-name" : "logo_background.png",
           "name" : "grid"
         }
       ],
