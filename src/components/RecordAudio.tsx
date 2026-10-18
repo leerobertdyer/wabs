@@ -1,5 +1,6 @@
+import * as Crypto from "expo-crypto";
 import { useEffect } from "react";
-import { View, Button, Alert } from "react-native";
+import { View, Alert } from "react-native";
 import {
   useAudioRecorder,
   AudioModule,
@@ -7,20 +8,46 @@ import {
   setAudioModeAsync,
   useAudioRecorderState,
 } from "expo-audio";
+import { useSQLiteContext } from "expo-sqlite";
 import Btn from "@/components/buttons/Btn";
+import { getOrCreateLocalUserId } from "@/db/secureStore";
+import { storeAudio } from "@/db/dml";
 
 export default function RecordAudio() {
-  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  const RECORDING_OPTIONS = {
+    ...RecordingPresets.HIGH_QUALITY,
+    directory: "document" as const,
+  };
+  const audioRecorder = useAudioRecorder(RECORDING_OPTIONS);
   const recorderState = useAudioRecorderState(audioRecorder);
 
+  const db = useSQLiteContext();
+
   const record = async () => {
-    await audioRecorder.prepareToRecordAsync({ directory: "document" });
+    await audioRecorder.prepareToRecordAsync(); // arms the recorder with RECORDING_OPTIONS
     audioRecorder.record();
   };
 
   const stopRecording = async () => {
     // The recording will be available on `audioRecorder.uri`.
     await audioRecorder.stop();
+
+    const recordingUri = audioRecorder.uri; // e.g. ".../Documents/ExpoAudio/recording-123.m4a"
+    if (!recordingUri) return;
+    const relativePath = recordingUri.split("Documents/").pop();
+
+    const userId = await getOrCreateLocalUserId();
+    const title = "fuckin test it bro"; // TODO USE INPUT FOR TITLE USE TITLE PLUS _CRYPTO FOR ID USE INPUT FOR TYPE/NOTES/LYRICS
+    await storeAudio(
+      db,
+      {
+        id: Crypto.randomUUID(),
+        audioPath: relativePath!,
+        title,
+        type: "riff",
+      },
+      userId,
+    );
   };
 
   useEffect(() => {

@@ -2,8 +2,11 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useColorScheme } from "react-native";
 import "../../global.css";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import Home from "@/app";
+import { SQLiteProvider } from "expo-sqlite";
+import { DB_NAME, migrate } from "@/db/migrate";
+import { MyText } from "@/components/MyText";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,7 +26,11 @@ export default function App() {
   const colorScheme = useColorScheme();
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Home />
+      <Suspense fallback={<MyText>Loading...</MyText>}>
+        <SQLiteProvider databaseName={DB_NAME} onInit={migrate} useSuspense>
+          <Home />
+        </SQLiteProvider>
+      </Suspense>
     </ThemeProvider>
   );
 }

@@ -1,22 +1,22 @@
-import { View, Button } from "react-native";
+import { View } from "react-native";
 import {
   useAudioPlayer,
   setAudioModeAsync,
   useAudioPlayerStatus,
 } from "expo-audio";
 import { useEffect, useState } from "react";
-import { songMeta } from "@/types";
+import { RawAudio } from "@/types";
 import Btn from "@/components/buttons/Btn";
+import { getFullAudioPath } from "@/db/util";
 
 interface IPlayAudio {
-  audioSource: string;
-  songMeta?: songMeta;
+  audio: RawAudio;
 }
 
-export default function PlayAudio({ audioSource, songMeta }: IPlayAudio) {
+export default function PlayAudio({ audio }: IPlayAudio) {
   const [isPlaying, setIsPlaying] = useState(false);
-
-  const player = useAudioPlayer({ uri: audioSource });
+  const localPath = getFullAudioPath(audio);
+  const player = useAudioPlayer(localPath);
   const status = useAudioPlayerStatus(player);
 
   useEffect(() => {
@@ -32,11 +32,11 @@ export default function PlayAudio({ audioSource, songMeta }: IPlayAudio) {
   useEffect(() => {
     if (status.error) {
       console.error("Audio Player Error:", status.error);
-    } else console.error("WTF")
+    }
   }, [status.error]);
 
   const handlePlay = () => {
-    player.setActiveForLockScreen(true, songMeta);
+    player.setActiveForLockScreen(true, audio);
     player.play();
     setIsPlaying(true);
   };

@@ -1,10 +1,25 @@
 import { MyText } from "@/components/MyText";
 import PlayAudio from "@/components/PlayAudio";
 import RecordAudio from "@/components/RecordAudio";
+import { getAudio } from "@/db/dml";
+import { RawAudio } from "@/types";
+import { useSQLiteContext } from "expo-sqlite";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
+  const [audio, setAudio] = useState<RawAudio>()
+  const db = useSQLiteContext();
+
+  useEffect(() => {
+    async function getRecentRecording() {
+      const song = await getAudio(db, "62aee577-e940-4825-91cb-3ebdfd13a830");
+      if (song) setAudio(song)
+    }
+    getRecentRecording();
+  }, []);
+
   return (
     <View>
       <SafeAreaView>
@@ -13,7 +28,7 @@ export default function Home() {
             Write A Bad Song
           </MyText>
           <RecordAudio />
-          <PlayAudio audioSource="https://pub-746994d88a84421fa902c7e8a72ab0ce.r2.dev/themeSong.mp3" />
+          {audio && <PlayAudio audio={audio} />}
         </View>
       </SafeAreaView>
     </View>
