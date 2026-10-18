@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+
+    /* Fonts */
+    --font-gowun: 'gowun', sans-serif;
+    --font-wdx: 'wdx', sans-serif;
+
+
+    /* Colors */
+    --color-my-red-light: #f54263;
+    --color-my-red-base: #f2055c;
+    --color-my-red-dark: #ad0241;
+
+    --color-my-green-light: #3be3ad;
+    --color-my-green-base: #00cf8d;
+    --color-my-green-dark: #076346;
+
+    --color-my-blue-light: #69f2ff;
+    --color-my-blue-base: #0edbed;
+    --color-my-blue-dark: #038894;
+
+    --color-my-white-light: #fff2d9;
+    --color-my-white-base: #ffe0a3;
+    --color-my-white-dark: #fcca68;
+
+    --color-my-black-light: #484848;
+    --color-my-black-base: #242424;
+    --color-my-black-dark: #121212;
+
+    @keyframes march {
+        0% {
+            stroke-dashoffset: 0;
+        }
+        100% {
+            stroke-dashoffset: -100;
+        }
+    }
+
+    @keyframes glow {
+        0% {
+            filter: drop-shadow(0 0 0 var(--color-my-green-dark));
+        }
+        50% {
+            filter: drop-shadow(0 0 10px var(--color-my-green-dark));
+        }
+        100% {
+            filter: drop-shadow(0 0 0 var(--color-my-green-dark));
+        }
+    }
+
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+
+  }
