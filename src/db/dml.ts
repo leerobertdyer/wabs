@@ -34,3 +34,16 @@ export async function getAudio(
   });
   // TODO finish this object
 }
+
+export async function updateAudioTitle(
+  db: SQLiteDatabase,
+  songId: string,
+  newTitle: string,
+): Promise<void> {
+  const result = await db.runAsync(
+    `UPDATE songs
+         SET title = ?
+         WHERE id = ?`,
+    [newTitle, songId],
+  );
+}

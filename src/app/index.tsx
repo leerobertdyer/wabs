@@ -1,5 +1,5 @@
 import { MyText } from "@/components/MyText";
-import PlayAudio from "@/components/PlayAudio";
+import AudioRow from "@/components/AudioRow";
 import RecordAudio from "@/components/RecordAudio";
 import { getAudio } from "@/db/dml";
 import { getOrCreateLocalUserId } from "@/db/secureStore";
@@ -13,13 +13,14 @@ export default function Home() {
   const [audioFiles, setAudioFiles] = useState<RawAudio[]>([]);
   const db = useSQLiteContext();
 
+  async function refreshAudio() {
+    const userId = await getOrCreateLocalUserId();
+    const files = await getAudio(db, userId);
+    if (files) setAudioFiles(files);
+  }
+
   useEffect(() => {
-    async function getRecentRecording() {
-      const userId = await getOrCreateLocalUserId();
-      const files = await getAudio(db, userId);
-      if (files) setAudioFiles(files);
-    }
-    getRecentRecording();
+    refreshAudio();
   }, []);
 
   return (
@@ -31,7 +32,7 @@ export default function Home() {
           </MyText>
           <RecordAudio />
           {audioFiles.map((file) => (
-            <PlayAudio audio={file} />
+            <AudioRow key={file.id} audio={file} refreshAudio={refreshAudio} />
           ))}
         </View>
       </SafeAreaView>
