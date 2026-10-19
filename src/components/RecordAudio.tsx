@@ -12,6 +12,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import Btn from "@/components/buttons/Btn";
 import { getOrCreateLocalUserId } from "@/db/secureStore";
 import { storeAudio } from "@/db/dml";
+import { enableRecordingMode } from "@/audioUtils";
 
 export default function RecordAudio() {
   const RECORDING_OPTIONS = {
@@ -24,6 +25,7 @@ export default function RecordAudio() {
   const db = useSQLiteContext();
 
   const record = async () => {
+    await enableRecordingMode()
     await audioRecorder.prepareToRecordAsync(); // arms the recorder with RECORDING_OPTIONS
     audioRecorder.record();
   };
@@ -54,16 +56,9 @@ export default function RecordAudio() {
     (async () => {
       const status = await AudioModule.requestRecordingPermissionsAsync();
       if (!status.granted) {
-        // TODO add Linking.s
+        // TODO add Linking.settings bit
         Alert.alert("Permission to access microphone was denied");
       }
-
-      setAudioModeAsync({
-        playsInSilentMode: true,
-        allowsRecording: true,
-        // To record in the background, also set allowsBackgroundRecording: true
-        // and enable the enableBackgroundRecording config plugin option.
-      });
     })();
   }, []);
 

@@ -1,57 +1,22 @@
 import { View } from "react-native";
-import {
-  useAudioPlayer,
-  setAudioModeAsync,
-  useAudioPlayerStatus,
-} from "expo-audio";
-import { useEffect, useState } from "react";
 import { RawAudio } from "@/types";
 import Btn from "@/components/buttons/Btn";
-import { getFullAudioPath } from "@/db/util";
+import { MyText } from "@/components/MyText";
+import { usePlayback } from "@/context/audio/PlaybackProvider";
 
-interface IPlayAudio {
-  audio: RawAudio;
-}
-
-export default function PlayAudio({ audio }: IPlayAudio) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const localPath = getFullAudioPath(audio);
-  const player = useAudioPlayer(localPath);
-  const status = useAudioPlayerStatus(player);
-
-  useEffect(() => {
-    // Configure audio session for background playback
-    setAudioModeAsync({
-      playsInSilentMode: true,
-      shouldPlayInBackground: true,
-      interruptionMode: "doNotMix",
-    });
-  }, []);
-
-  // Monitor status changes & handle errors
-  useEffect(() => {
-    if (status.error) {
-      console.error("Audio Player Error:", status.error);
-    }
-  }, [status.error]);
-
-  const handlePlay = () => {
-    player.setActiveForLockScreen(true, audio);
-    player.play();
-    setIsPlaying(true);
-  };
-
-  const handleStop = () => {
-    player.pause();
-    player.setActiveForLockScreen(false);
-    setIsPlaying(false);
-  };
-
+export default function PlayAudio({ audio }: { audio: RawAudio }) {
+  const { currentId, playing, toggle } = usePlayback();
+  const active = currentId === audio.id && playing;
   return (
-    <View>
+    <View className="flex-row justify-between items-center w-full bg-orange-100 p-2 rounded-xs">
+      <MyText className="bg-white p-[2px] rounded-xs" numberOfLines={1}>
+        {audio.title}
+      </MyText>
       <Btn
-        text={isPlaying ? "Pause" : "Play"}
-        onPress={isPlaying ? handleStop : handlePlay}
+        btnClass="w-[4rem] bg-blue-200 rounded-md p-2"
+        txtClass="text-sm w-full text-center"
+        text={active ? "Pause" : "Play"}
+        onPress={() => toggle(audio)}
       />
     </View>
   );

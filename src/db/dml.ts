@@ -14,22 +14,23 @@ export async function storeAudio(
       ) VALUES (?, ?, ?, ?, ?, ?, ?);`,
     [song.id, userId, song.title, song.type, song.audioPath, now, now],
   );
-  console.log("storeAudio Result: ", result)
 }
 
 export async function getAudio(
-    db: SQLiteDatabase,
-    songId: string,
-): Promise<RawAudio | null> {
-    const result: RawAudioDB | null = await db.getFirstAsync(
-        `SELECT * FROM songs WHERE id = ?`, [songId]
-    )
-    console.log("getAudio RESULT: ", result)
-    if (!result) return null;
+  db: SQLiteDatabase,
+  userId: string,
+): Promise<RawAudio[]> {
+  const result: RawAudioDB[] = await db.getAllAsync(
+    `SELECT * FROM songs WHERE user_id = ?`,
+    [userId],
+  );
+  return result.map((file) => {
     return {
-        id: result.id,
-        title: result.title,
-        audioPath: result.audio_path,
-        type: result.type as RawAudioType
-    } // TODO finish this object
+      id: file.id,
+      title: file.title,
+      audioPath: file.audio_path,
+      type: file.type as RawAudioType,
+    } as RawAudio;
+  });
+  // TODO finish this object
 }

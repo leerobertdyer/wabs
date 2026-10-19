@@ -2,6 +2,7 @@ import { MyText } from "@/components/MyText";
 import PlayAudio from "@/components/PlayAudio";
 import RecordAudio from "@/components/RecordAudio";
 import { getAudio } from "@/db/dml";
+import { getOrCreateLocalUserId } from "@/db/secureStore";
 import { RawAudio } from "@/types";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
@@ -9,13 +10,14 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
-  const [audio, setAudio] = useState<RawAudio>()
+  const [audioFiles, setAudioFiles] = useState<RawAudio[]>([]);
   const db = useSQLiteContext();
 
   useEffect(() => {
     async function getRecentRecording() {
-      const song = await getAudio(db, "62aee577-e940-4825-91cb-3ebdfd13a830");
-      if (song) setAudio(song)
+      const userId = await getOrCreateLocalUserId();
+      const files = await getAudio(db, userId);
+      if (files) setAudioFiles(files);
     }
     getRecentRecording();
   }, []);
@@ -28,7 +30,9 @@ export default function Home() {
             Write A Bad Song
           </MyText>
           <RecordAudio />
-          {audio && <PlayAudio audio={audio} />}
+          {audioFiles.map((file) => (
+            <PlayAudio audio={file} />
+          ))}
         </View>
       </SafeAreaView>
     </View>

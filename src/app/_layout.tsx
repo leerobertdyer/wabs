@@ -7,6 +7,7 @@ import Home from "@/app";
 import { SQLiteProvider } from "expo-sqlite";
 import { DB_NAME, migrate } from "@/db/migrate";
 import { MyText } from "@/components/MyText";
+import { PlaybackProvider } from "@/context/audio/PlaybackProvider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,7 +29,9 @@ export default function App() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Suspense fallback={<MyText>Loading...</MyText>}>
         <SQLiteProvider databaseName={DB_NAME} onInit={migrate} useSuspense>
-          <Home />
+          <PlaybackProvider>
+            <Home />
+          </PlaybackProvider>
         </SQLiteProvider>
       </Suspense>
     </ThemeProvider>
